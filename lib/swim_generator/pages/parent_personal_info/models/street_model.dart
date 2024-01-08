@@ -1,0 +1,33 @@
+import 'package:formz/formz.dart';
+
+// Definition der Validierungsfehler für StreetModel
+enum StreetValidationError {
+  required('Straßenname darf nicht leer sein'),
+  invalid('Der eingegebene Straßenname ist ungültig.');
+
+  final String message;
+
+  const StreetValidationError(this.message);
+}
+
+// StreetModel-Klasse, die von FormzInput erbt
+class StreetModel extends FormzInput<String, StreetValidationError> {
+  const StreetModel.pure() : super.pure('');
+
+  const StreetModel.dirty([super.value = '']) : super.dirty();
+
+  // Regulärer Ausdruck zur Validierung von Straßennamen
+  static final _streetNameRegex = RegExp(
+      r"[a-zA-ZäöüßÄÖÜ0-9]+(([',. -][a-zA-ZäöüßÄÖÜ0-9 ])?[a-zA-ZäöüßÄÖÜ0-9]*)*$");
+
+  @override
+  StreetValidationError? validator(String value) {
+    if (value.isEmpty) {
+      return StreetValidationError.required;
+    }
+    if (!_streetNameRegex.hasMatch(value)) {
+      return StreetValidationError.invalid;
+    }
+    return null; // Kein Fehler
+  }
+}
