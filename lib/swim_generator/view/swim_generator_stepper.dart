@@ -37,7 +37,7 @@ class SwimGeneratorStepper extends StatelessWidget {
                 },
               ),
               header(state.activeStepperIndex),
-              body(state.activeStepperIndex),
+              body(state.activeStepperIndex, state.shouldUseFutureBuilder),
             ],
           ),
         );
@@ -95,13 +95,13 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   /// Returns the body.
-  Widget body(int activeStepperIndex) {
+  Widget body(int activeStepperIndex, bool shouldUseFutureBuilder) {
     switch (activeStepperIndex) {
       case 0:
         return const SwimLevelPage();
 
       case 1:
-        return const BirthDayPage();
+        return BirthDayPage(shouldUseFutureBuilder: shouldUseFutureBuilder);
 
       case 2:
         return SwimCoursePage(graphQLClient: graphQLClient);

@@ -15,6 +15,7 @@ class SwimCourseForm extends StatefulWidget {
 }
 
 class _SwimCourseForm extends State<SwimCourseForm> {
+
   @override
   void initState() {
     super.initState();
@@ -130,7 +131,7 @@ class _SwimCourseRadioButton extends StatelessWidget {
           context.read<SwimCourseBloc>().add(const LoadSwimCourseOptions());
           return BlocBuilder<SwimCourseBloc, SwimCourseState>(
               builder: (context, state) {
-            return !state.loadingCourseStatus.isSuccess
+                return !state.loadingCourseStatus.isSuccess
                 ? const SpinKitWaveSpinner(
                     color: Colors.lightBlueAccent,
                     size: 50.0,

@@ -10,7 +10,8 @@ import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/birth_day_bloc.dart';
 
 class BirthDayForm extends StatefulWidget {
-  const BirthDayForm({super.key});
+  const BirthDayForm({super.key, required this.shouldUseFutureBuilder});
+  final bool shouldUseFutureBuilder;
 
   @override
   State<BirthDayForm> createState() => _BirthDayForm();
@@ -27,6 +28,7 @@ class _BirthDayForm extends State<BirthDayForm> {
 
   @override
   Widget build(BuildContext context) {
+    final formBloc = BlocProvider.of<BirthDayBloc>(context);
     return BlocListener<BirthDayBloc, BirthDayState>(
       listener: (context, state) {
         if (state.birthDay.value != null) {
@@ -46,7 +48,9 @@ class _BirthDayForm extends State<BirthDayForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          _BirthDataInput(controller: _birthDayController),
+          _BirthDataInput(controller: _birthDayController,
+              userFuture: formBloc.userRepository.getUser(),
+              shouldUseFutureBuilder: widget.shouldUseFutureBuilder),
           const SizedBox(
             height: 16.0,
           ),
@@ -68,19 +72,49 @@ class _BirthDayForm extends State<BirthDayForm> {
 
 class _BirthDataInput extends StatelessWidget {
   final TextEditingController controller;
+  final Future<User?> userFuture;
+  final bool shouldUseFutureBuilder;
 
   const _BirthDataInput({
     required this.controller,
+    required this.userFuture,
+    required this.shouldUseFutureBuilder,
   });
 
   // Define _textField as an instance variable.
 
   @override
   Widget build(BuildContext context) {
+    // Verwenden Sie FutureBuilder, wenn shouldUseFutureBuilder true ist
+    if (shouldUseFutureBuilder) {
+      return FutureBuilder<User?>(
+        future: userFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Fehler beim Laden der Daten');
+          } else if (snapshot.hasData && snapshot.data != null) {
+            User user = snapshot.data!;
+            if (user.birthDay.birthDay != null) {
+              controller.text =
+                  DateFormat('dd.MM.yyyy').format(user.birthDay.birthDay!);
+              context.read<BirthDayBloc>().add(BirthDayChanged(user.birthDay.birthDay!));
+            }
+          }
+          return buildTextField();
+        },
+      );
+    }
+    // Verwenden Sie einfach das TextFormField, wenn shouldUseFutureBuilder false ist
+    return buildTextField();
+  }
+
+  Widget buildTextField() {
     return BlocBuilder<BirthDayBloc, BirthDayState>(
       buildWhen: (previous, current) => previous.birthDay != current.birthDay,
       builder: (context, state) {
-        return TextField(
+        return TextFormField(
           key: const Key('personalInfoForm_birthDayInput_textField'),
           // onChanged: (birthday) => context
           //     .read<PersonalInfoBloc>()
@@ -94,13 +128,13 @@ class _BirthDataInput extends StatelessWidget {
                 locale: LocaleType.de,
                 maxTime: DateTime.now().subtract(const Duration(days: 730)),
                 onConfirm: (date) {
-              // Set the date in the text field.
-              // (Note: We need to use DateFormat to format the date.)
-              var formattedDate = DateFormat('dd.MM.yyyy').format(date);
-              // Set the text of the text field.
-              controller.text = formattedDate;
-              context.read<BirthDayBloc>().add(BirthDayChanged(date));
-            });
+                  // Set the date in the text field.
+                  // (Note: We need to use DateFormat to format the date.)
+                  var formattedDate = DateFormat('dd.MM.yyyy').format(date);
+                  // Set the text of the text field.
+                  controller.text = formattedDate;
+                  context.read<BirthDayBloc>().add(BirthDayChanged(date));
+                });
           },
           keyboardType: TextInputType.datetime,
           decoration: InputDecoration(
@@ -123,12 +157,59 @@ class _BirthDataInput extends StatelessWidget {
               ),
             ),
             errorText:
-                state.birthDay.isValid ? state.birthDay.error?.message : null,
+            state.birthDay.isValid ? state.birthDay.error?.message : null,
           ),
         );
       },
     );
   }
+
+  // void _showDatePickerDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         insetPadding:
+  //         EdgeInsets.all(0.0), // Entfernen Sie Padding um den Dialog
+  //         child: Container(
+  //           width: MediaQuery.of(context)
+  //               .size
+  //               .width, // Setzt die Breite auf die volle Bildschirmbreite
+  //           height: 200, // Legen Sie eine angemessene Höhe für den Picker fest
+  //           child: DropdownDatePicker(
+  //             locale: "de_DE",
+  //             inputDecoration: InputDecoration(
+  //                 enabledBorder: const OutlineInputBorder(
+  //                   borderSide: BorderSide(color: Colors.grey, width: 1.0),
+  //                 ),
+  //                 border: OutlineInputBorder(
+  //                     borderRadius: BorderRadius.circular(10))), // optional
+  //             isDropdownHideUnderline: true, // optional
+  //             isFormValidator: true, // optional
+  //             startYear: 1900, // optional
+  //             endYear: 2020, // optional
+  //             width: 10, // optional
+  //             // selectedDay: 14, // optional
+  //             selectedMonth: 10, // optional
+  //             selectedYear: 1993, // optional
+  //             onChangedDay: (value) => print('onChangedDay: $value'),
+  //             onChangedMonth: (value) => print('onChangedMonth: $value'),
+  //             onChangedYear: (value) => print('onChangedYear: $value'),
+  //             //boxDecoration: BoxDecoration(
+  //             // border: Border.all(color: Colors.grey, width: 1.0)), // optional
+  //             // showDay: false,// optional
+  //             // dayFlex: 2,// optional
+  //             // locale: "zh_CN",// optional
+  //             hintDay: 'Day', // optional
+  //             // hintMonth: 'Month', // optional
+  //             // hintYear: 'Year', // optional
+  //             // hintTextStyle: TextStyle(color: Colors.grey), // optional
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 class _SubmitButton extends StatelessWidget {

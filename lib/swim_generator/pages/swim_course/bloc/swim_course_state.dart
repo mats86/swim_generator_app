@@ -7,6 +7,7 @@ class SwimCourseState extends Equatable {
     this.swimCourseOptions = const [],
     this.swimCourse = const SwimCourseModel.pure(),
     this.selectedCourse = const SwimCourse.empty(),
+    this.hasFixedDate = 0,
     this.isValid = false,
     this.loadingSeasonStatus = FormzSubmissionStatus.initial,
     this.loadingCourseStatus = FormzSubmissionStatus.initial,
@@ -18,6 +19,7 @@ class SwimCourseState extends Equatable {
   final List<SwimCourse> swimCourseOptions;
   final SwimCourseModel swimCourse;
   final SwimCourse selectedCourse;
+  final int hasFixedDate;
   final bool isValid;
   final FormzSubmissionStatus loadingSeasonStatus;
   final FormzSubmissionStatus loadingCourseStatus;
@@ -29,6 +31,7 @@ class SwimCourseState extends Equatable {
     List<SwimCourse>? swimCourseOptions,
     SwimCourseModel? swimCourse,
     SwimCourse? selectedCourse,
+    int? hasFixedDate,
     bool? isValid,
     FormzSubmissionStatus? loadingSeasonStatus,
     FormzSubmissionStatus? loadingCourseStatus,
@@ -40,6 +43,7 @@ class SwimCourseState extends Equatable {
       swimCourseOptions: swimCourseOptions ?? this.swimCourseOptions,
       swimCourse: swimCourse ?? this.swimCourse,
       selectedCourse: selectedCourse ?? this.selectedCourse,
+      hasFixedDate: hasFixedDate ?? this.hasFixedDate,
       isValid: isValid ?? this.isValid,
       loadingSeasonStatus: loadingSeasonStatus ?? this.loadingSeasonStatus,
       loadingCourseStatus: loadingCourseStatus ?? this.loadingCourseStatus,
@@ -54,6 +58,7 @@ class SwimCourseState extends Equatable {
         swimSeason,
         swimCourseOptions,
         swimCourse,
+        hasFixedDate,
         loadingSeasonStatus,
         loadingCourseStatus,
         submissionStatus,

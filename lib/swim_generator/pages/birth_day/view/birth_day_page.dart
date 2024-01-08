@@ -8,11 +8,12 @@ import 'birth_day_form.dart';
 
 
 class BirthDayPage extends StatelessWidget {
-  const BirthDayPage({super.key});
+  const BirthDayPage({super.key, required this.shouldUseFutureBuilder});
+  final bool shouldUseFutureBuilder;
 
-  static Route route() {
+  Route route() {
     return MaterialPageRoute<void>(
-      builder: (_) => const BirthDayPage(),
+      builder: (_) => BirthDayPage(shouldUseFutureBuilder: shouldUseFutureBuilder,),
     );
   }
 
@@ -24,7 +25,7 @@ class BirthDayPage extends StatelessWidget {
         create: (context) => BirthDayBloc(
           userRepository: context.read<UserRepository>(),
         ),
-        child: const BirthDayForm(),
+        child: BirthDayForm(shouldUseFutureBuilder: shouldUseFutureBuilder,),
       ),
     );
   }

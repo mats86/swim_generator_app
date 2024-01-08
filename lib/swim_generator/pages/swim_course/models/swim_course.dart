@@ -45,7 +45,7 @@ class SwimCourse {
         maxAge = 0,
         price = 0,
         description = '',
-        hasFixedDates = 0,
+        hasFixedDates = 1,
         duration = '',
         isVisible = 0,
         swimLevelId = 0;

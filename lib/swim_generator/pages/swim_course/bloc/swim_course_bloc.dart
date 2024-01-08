@@ -43,10 +43,12 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
   void _onSwimCourseChanged(
       SwimCourseChanged event, Emitter<SwimCourseState> emit) {
     final swimCourse = SwimCourseModel.dirty(event.swimCourse);
+    final hasFixedDate = event.course.hasFixedDates;
     emit(
       state.copyWith(
         swimCourse: swimCourse,
         selectedCourse: event.course,
+        hasFixedDate: hasFixedDate,
         isValid: Formz.validate(
           [state.swimSeason, swimCourse],
         ),

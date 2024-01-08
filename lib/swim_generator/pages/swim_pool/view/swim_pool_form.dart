@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
+import 'package:intl/intl.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/swim_pool_bloc.dart';
@@ -22,6 +24,18 @@ class _SwimPoolForm extends State<SwimPoolForm> {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController desiredDateController1 =
+    TextEditingController();
+    final TextEditingController desiredTimeController1 =
+    TextEditingController();
+    final TextEditingController desiredDateController2 =
+    TextEditingController();
+    final TextEditingController desiredTimeController2 =
+    TextEditingController();
+    final TextEditingController desiredDateController3 =
+    TextEditingController();
+    final TextEditingController desiredTimeController3 =
+    TextEditingController();
     return BlocListener<SwimPoolBloc, SwimPoolState>(
       listener: (context, state) {
         if (state.toggleStatus.isFailure) {
@@ -34,6 +48,30 @@ class _SwimPoolForm extends State<SwimPoolForm> {
       },
       child: Column(
         children: [
+          DesiredDateTimeInput(
+            dateController: desiredDateController1,
+            timeController: desiredTimeController1,
+            title: 'Wunschtermin 1',
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          DesiredDateTimeInput(
+            dateController: desiredDateController2,
+            timeController: desiredTimeController2,
+            title: 'Wunschtermin 2',
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          DesiredDateTimeInput(
+            dateController: desiredDateController3,
+            timeController: desiredTimeController3,
+            title: 'Wunschtermin 3',
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           const Align(
             alignment: Alignment.centerLeft,
             child: Text("Welche Bäder kommen für dich in Frage? *"),
@@ -69,6 +107,119 @@ class _SwimPoolForm extends State<SwimPoolForm> {
         ],
       ),
     );
+  }
+}
+
+class DesiredDateTimeInput extends StatelessWidget {
+  final TextEditingController dateController;
+  final TextEditingController timeController;
+  final String title;
+
+  const DesiredDateTimeInput({
+    super.key,
+    required this.dateController,
+    required this.timeController,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(3.0),
+              ),
+              const Text('*',
+                  style: TextStyle(color: Colors.red, fontSize: 14)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: dateController,
+                  readOnly: true,
+                  onTap: () async {
+                    await _selectDate(context);
+                    await _selectTime(context);
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Datum',
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10), // Abstand zwischen den Feldern
+              Expanded(
+                child: TextField(
+                  controller: timeController,
+                  readOnly: true,
+                  onTap: () async {
+                    await _selectTime(context);
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Uhrzeit',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      locale: LocaleType.de,
+      maxTime: DateTime.now().subtract(const Duration(days: 730)),
+    );
+
+    if (pickedDate != null) {
+      var formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
+      dateController.text = formattedDate;
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedTime != null) {
+      // Eigene Formatierung für das 24-Stunden-Format
+      var formattedTime = _formatTimeOfDay(pickedTime);
+      timeController.text = formattedTime;
+    }
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat.Hm(); // Verwenden des 24-Stunden-Formats
+    return format.format(dt);
   }
 }
 
