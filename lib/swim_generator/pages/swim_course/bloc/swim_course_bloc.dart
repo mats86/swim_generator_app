@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -24,6 +23,8 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
     on<SwimCourseChanged>(_onSwimCourseChanged);
     on<LoadSwimSeasonOptions>(_onLoadSwimSeasonOptions);
     on<LoadSwimCourseOptions>(_onLoadSwimCourseOptions);
+    on<SelectFlexDate>(_onSelectFlexDate);
+    on<SelectFixDate>(_onSelectFixDate);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -77,7 +78,9 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
       final user = await userRepository.getUser();
       if (user?.birthDay != null) {
         final swimCourses = await service.getSwimCoursesByLevelNameAndFutureAge(
-            user!.swimLevel.swimLevelString, user.birthDay.birthDay!, DateTime(2024, 6, 1));
+            user!.swimLevel.swimLevelString,
+            user.birthDay.birthDay!,
+            DateTime(2024, 6, 1));
         emit(state.copyWith(
             swimCourseOptions: swimCourses,
             loadingCourseStatus: FormzSubmissionStatus.success));
@@ -90,6 +93,16 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
       print('Fehler beim Laden der Schwimmkurse: $e');
       emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.failure));
     }
+  }
+
+  void _onSelectFlexDate(
+      SelectFlexDate event, Emitter<SwimCourseState> emit) async {
+    emit(state.copyWith(flexFixDate: false));
+  }
+
+  void _onSelectFixDate(
+      SelectFixDate event, Emitter<SwimCourseState> emit) async {
+    emit(state.copyWith(flexFixDate: true));
   }
 
   void _onFormSubmitted(

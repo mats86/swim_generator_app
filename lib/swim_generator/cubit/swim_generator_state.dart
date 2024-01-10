@@ -3,23 +3,23 @@ part of 'swim_generator_cubit.dart';
 class SwimGeneratorState extends Equatable {
   const SwimGeneratorState({
     this.activeStepperIndex = 0,
-    this.shouldUseFutureBuilder = false,
+    required this.shouldUseFutureBuilderList,
   });
 
   final int activeStepperIndex;
-  final bool shouldUseFutureBuilder;
+  final List<bool> shouldUseFutureBuilderList;
 
   SwimGeneratorState copyWith({
     int? activeStepperIndex,
-    bool? shouldUseFutureBuilder,
+    List<bool>? shouldUseFutureBuilderList,
   }) {
     return SwimGeneratorState(
       activeStepperIndex: activeStepperIndex ?? this.activeStepperIndex,
-      shouldUseFutureBuilder:
-      shouldUseFutureBuilder ?? this.shouldUseFutureBuilder,
+      shouldUseFutureBuilderList:
+      shouldUseFutureBuilderList ?? this.shouldUseFutureBuilderList,
     );
   }
 
   @override
-  List<Object> get props => [activeStepperIndex];
+  List<Object> get props => [activeStepperIndex, shouldUseFutureBuilderList];
 }

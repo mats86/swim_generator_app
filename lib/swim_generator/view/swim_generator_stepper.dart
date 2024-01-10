@@ -20,7 +20,7 @@ class SwimGeneratorStepper extends StatelessWidget {
             children: [
               NumberStepper(
                 enableNextPreviousButtons: false,
-                enableStepTapping: false,
+                enableStepTapping: true,
                 activeStepColor: Colors.lightBlueAccent,
                 numbers: const [
                   1,
@@ -37,7 +37,8 @@ class SwimGeneratorStepper extends StatelessWidget {
                 },
               ),
               header(state.activeStepperIndex),
-              body(state.activeStepperIndex, state.shouldUseFutureBuilder),
+              body(state.activeStepperIndex,
+                  state.shouldUseFutureBuilderList[state.activeStepperIndex]),
             ],
           ),
         );
@@ -98,7 +99,7 @@ class SwimGeneratorStepper extends StatelessWidget {
   Widget body(int activeStepperIndex, bool shouldUseFutureBuilder) {
     switch (activeStepperIndex) {
       case 0:
-        return const SwimLevelPage();
+        return SwimLevelPage(shouldUseFutureBuilder: shouldUseFutureBuilder);
 
       case 1:
         return BirthDayPage(shouldUseFutureBuilder: shouldUseFutureBuilder);

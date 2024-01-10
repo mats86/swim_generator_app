@@ -6,11 +6,14 @@ import 'package:user_repository/user_repository.dart';
 import 'swim_level_form.dart';
 
 class SwimLevelPage extends StatelessWidget {
-  const SwimLevelPage({super.key});
+  const SwimLevelPage({super.key, required this.shouldUseFutureBuilder});
+  final bool shouldUseFutureBuilder;
 
-  static route() {
+  route() {
     return MaterialPageRoute<void>(
-        builder: (_) => const SwimLevelPage(),
+      builder: (_) => SwimLevelPage(
+        shouldUseFutureBuilder: shouldUseFutureBuilder,
+      ),
     );
   }
 
@@ -22,7 +25,9 @@ class SwimLevelPage extends StatelessWidget {
         create: (context) => SwimLevelBloc(
           userRepository: context.read<UserRepository>(),
         ),
-        child: const SwimLevelForm(),
+        child: SwimLevelForm(
+          shouldUseFutureBuilder: shouldUseFutureBuilder,
+        ),
       ),
     );
   }

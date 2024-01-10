@@ -8,6 +8,7 @@ class SwimCourseState extends Equatable {
     this.swimCourse = const SwimCourseModel.pure(),
     this.selectedCourse = const SwimCourse.empty(),
     this.hasFixedDate = 0,
+    this.flexFixDate = false,
     this.isValid = false,
     this.loadingSeasonStatus = FormzSubmissionStatus.initial,
     this.loadingCourseStatus = FormzSubmissionStatus.initial,
@@ -20,6 +21,7 @@ class SwimCourseState extends Equatable {
   final SwimCourseModel swimCourse;
   final SwimCourse selectedCourse;
   final int hasFixedDate;
+  final bool flexFixDate;
   final bool isValid;
   final FormzSubmissionStatus loadingSeasonStatus;
   final FormzSubmissionStatus loadingCourseStatus;
@@ -32,6 +34,7 @@ class SwimCourseState extends Equatable {
     SwimCourseModel? swimCourse,
     SwimCourse? selectedCourse,
     int? hasFixedDate,
+    bool? flexFixDate,
     bool? isValid,
     FormzSubmissionStatus? loadingSeasonStatus,
     FormzSubmissionStatus? loadingCourseStatus,
@@ -44,6 +47,7 @@ class SwimCourseState extends Equatable {
       swimCourse: swimCourse ?? this.swimCourse,
       selectedCourse: selectedCourse ?? this.selectedCourse,
       hasFixedDate: hasFixedDate ?? this.hasFixedDate,
+      flexFixDate: flexFixDate ?? this.flexFixDate,
       isValid: isValid ?? this.isValid,
       loadingSeasonStatus: loadingSeasonStatus ?? this.loadingSeasonStatus,
       loadingCourseStatus: loadingCourseStatus ?? this.loadingCourseStatus,
@@ -52,15 +56,15 @@ class SwimCourseState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [
-        swimSeasons,
-        swimSeason,
-        swimCourseOptions,
-        swimCourse,
-        hasFixedDate,
-        loadingSeasonStatus,
-        loadingCourseStatus,
-        submissionStatus,
-      ];
+  List<Object?> get props => [
+    swimSeasons,
+    swimSeason,
+    swimCourseOptions,
+    swimCourse,
+    hasFixedDate,
+    flexFixDate,
+    loadingSeasonStatus,
+    loadingCourseStatus,
+    submissionStatus,
+  ];
 }

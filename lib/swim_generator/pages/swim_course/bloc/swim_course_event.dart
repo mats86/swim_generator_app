@@ -10,8 +10,7 @@ abstract class SwimCourseEvent extends Equatable {
 class SwimCourseChanged extends SwimCourseEvent {
   final String swimCourse;
   final SwimCourse course;
-  const SwimCourseChanged(this.swimCourse,
-      this.course);
+  const SwimCourseChanged(this.swimCourse, this.course);
 
   @override
   List<Object> get props => [swimCourse, course];
@@ -30,5 +29,9 @@ class LoadSwimSeasonOptions extends SwimCourseEvent {}
 class LoadSwimCourseOptions extends SwimCourseEvent {
   const LoadSwimCourseOptions();
 }
+
+class SelectFlexDate extends SwimCourseEvent {}
+
+class SelectFixDate extends SwimCourseEvent {}
 
 class FormSubmitted extends SwimCourseEvent {}

@@ -3,9 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:swim_generator_app/swim_generator/swim_generator.dart';
 
+enum SpecialFeatureMode {
+  disabled,
+  mode1,
+  mode2,
+  // Weitere Modi hier
+}
+
 void main() {
   //final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
-  final HttpLink httpLink = HttpLink('https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
+  final HttpLink httpLink = HttpLink(
+      'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
 
   final ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
@@ -46,21 +54,47 @@ class AppView extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeData>(
       builder: (_, theme) {
         return MaterialApp(
+          onGenerateRoute: _generateRoute,
           debugShowCheckedModeBanner: false,
           theme: theme,
-          home: MyHomePage(
-            graphQLClient: graphQLClient,
-          ),
         );
       },
     );
+  }
+
+  Route _generateRoute(RouteSettings settings) {
+    Widget page;
+    switch (settings.name) {
+      case '/':
+        page = MyHomePage(
+          graphQLClient: graphQLClient,
+          specialFeatureMode: SpecialFeatureMode.disabled,
+        );
+        break;
+      case '/index1':
+        page = MyHomePage(
+          graphQLClient: graphQLClient,
+          specialFeatureMode: SpecialFeatureMode.mode1,
+        );
+        break;
+    // Hier können Sie weitere Fälle für andere Routen hinzufügen
+      default:
+        page = MyHomePage(graphQLClient: graphQLClient); // Fallback-Seite
+    }
+
+    return MaterialPageRoute(builder: (_) => page);
   }
 }
 
 class MyHomePage extends StatelessWidget {
   final GraphQLClient graphQLClient;
+  final SpecialFeatureMode specialFeatureMode;
 
-  const MyHomePage({super.key, required this.graphQLClient});
+  const MyHomePage({
+    super.key,
+    required this.graphQLClient,
+    this.specialFeatureMode = SpecialFeatureMode.disabled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +120,7 @@ class MyHomePage extends StatelessWidget {
       body: SwimGeneratorPage(
           graphQLClient: graphQLClient,
           title:
-              "title"), // This trailing comma makes auto-formatting nicer for build methods.
+          "title"), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
