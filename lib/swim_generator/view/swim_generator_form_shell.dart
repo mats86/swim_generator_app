@@ -15,7 +15,7 @@ class SwimGeneratorFormShell extends StatelessWidget {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color(0xFFF1F5F9),
+      backgroundColor: const Color(0xFFF1F5F9),
       body: Stack(
         children: [
           // Hintergrundbild

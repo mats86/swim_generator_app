@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../bloc/kind_personal_info_bloc.dart';
 import 'kind_personal_info_form.dart';
@@ -20,7 +19,6 @@ class KindPersonalInfoPage extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: BlocProvider(
         create: (context) => KindPersonalInfoBloc(
-          userRepository: context.read<UserRepository>(),
         ),
         child: const KindPersonalInfoForm(),
       ),

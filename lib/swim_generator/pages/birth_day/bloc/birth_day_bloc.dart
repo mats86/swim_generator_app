@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../models/birth_day_model.dart';
 
@@ -10,9 +9,8 @@ part 'birth_day_event.dart';
 part 'birth_day_state.dart';
 
 class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
-  final UserRepository userRepository;
 
-  BirthDayBloc({required this.userRepository}) : super(const BirthDayState()) {
+  BirthDayBloc() : super(const BirthDayState()) {
     on<BirthDayChanged>(_onBirthDayChanged);
     on<FormSubmitted>(_onFormSubmitted);
   }
@@ -22,7 +20,6 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
     Emitter<BirthDayState> emit,
   ) {
     final birthDay = BirthDayModel.dirty(event.birthDay);
-
     // Aktualisieren Sie den Status basierend auf der Gültigkeit des Formulars
     emit(
       state.copyWith(
@@ -45,9 +42,9 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
     );
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      await userRepository.updateBirthDay(
-        birthDay: birthDay.value!,
-      );
+      // await userRepository.updateBirthDay(
+      //   birthDay: birthDay.value!,
+      // );
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     }
   }

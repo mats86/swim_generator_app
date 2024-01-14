@@ -1,52 +1,52 @@
 class SwimCourse {
-  final int id;
-  final String name;
-  final double minAge;
-  final double maxAge;
-  final double price;
-  final String description;
-  final int hasFixedDates;
-  final String duration;
-  final int isVisible;
-  final int swimLevelId;
+  final int swimCourseID;
+  final String swimCourseName;
+  final double swimCourseMinAge;
+  final double swimCourseMaxAge;
+  final double swimCoursePrice;
+  final String swimCourseDescription;
+  final bool swimCourseHasFixedDate;
+  final String swimCourseDuration;
+  final bool isSwimCourseVisible;
+  final int swimLevelID;
 
   SwimCourse({
-    required this.id,
-    required this.name,
-    required this.minAge,
-    required this.maxAge,
-    required this.price,
-    required this.description,
-    required this.hasFixedDates,
-    required this.duration,
-    required this.isVisible,
-    required this.swimLevelId,
+    required this.swimCourseID,
+    required this.swimCourseName,
+    required this.swimCourseMinAge,
+    required this.swimCourseMaxAge,
+    required this.swimCoursePrice,
+    required this.swimCourseDescription,
+    required this.swimCourseHasFixedDate,
+    required this.swimCourseDuration,
+    required this.isSwimCourseVisible,
+    required this.swimLevelID,
   });
 
   factory SwimCourse.fromJson(Map<String, dynamic> json) {
     return SwimCourse(
-      id: json['id'],
-      name: json['name'],
-      minAge: json['minAge'],
-      maxAge: json['maxAge'],
-      price: json['price'].toDouble(),
-      description: json['description'],
-      hasFixedDates: json['hasFixedDates'],
-      duration: json['duration'],
-      isVisible: json['isVisible'],
-      swimLevelId: json['swimLevelId'],
+      swimCourseID: json['swimCourseID'],
+      swimCourseName: json['swimCourseName'],
+      swimCourseMinAge: json['swimCourseMinAge'],
+      swimCourseMaxAge: json['swimCourseMaxAge'],
+      swimCoursePrice: json['swimCoursePrice'].toDouble(),
+      swimCourseDescription: json['swimCourseDescription'],
+      swimCourseHasFixedDate: json['swimCourseHasFixedDate'],
+      swimCourseDuration: json['swimCourseDuration'],
+      isSwimCourseVisible: json['isSwimCourseVisible'],
+      swimLevelID: json['swimLevelID'],
     );
   }
 
   const SwimCourse.empty()
-      : id = 0,
-        name = '',
-        minAge = 0,
-        maxAge = 0,
-        price = 0,
-        description = '',
-        hasFixedDates = 1,
-        duration = '',
-        isVisible = 0,
-        swimLevelId = 0;
+      : swimCourseID = 0,
+        swimCourseName = '',
+        swimCourseMinAge = 0,
+        swimCourseMaxAge = 0,
+        swimCoursePrice = 0,
+        swimCourseDescription = '',
+        swimCourseHasFixedDate = false,
+        swimCourseDuration = '',
+        isSwimCourseVisible = false,
+        swimLevelID = 0;
 }

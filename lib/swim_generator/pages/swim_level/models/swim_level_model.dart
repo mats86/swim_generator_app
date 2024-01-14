@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
+
+import '../../../models/swim_level.dart';
 
 
 enum SwimLevelValidationError {
@@ -18,7 +19,6 @@ class SwimLevelModel extends FormzInput<SwimLevelEnum?, SwimLevelValidationError
     if (value == null) {
       return SwimLevelValidationError.required;
     }
-    // Hier können Sie bei Bedarf weitere Validierungen hinzufügen
     return null;
   }
 }

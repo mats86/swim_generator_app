@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../models/models.dart';
 
@@ -14,9 +13,8 @@ part 'parent_personal_info_state.dart';
 class ParentPersonalInfoBloc
     extends Bloc<ParentPersonalInfoEvent, ParentPersonalInfoState> {
   final ParentPersonalInfoRepository service;
-  final UserRepository userRepository;
 
-  ParentPersonalInfoBloc(this.service, this.userRepository)
+  ParentPersonalInfoBloc(this.service)
       : super(const ParentPersonalInfoState()) {
     on<LoadParentTitleOptions>(_onLoadParentTitleOptions);
     on<TitleChanged>(_onTitleChanged);
@@ -364,19 +362,19 @@ class ParentPersonalInfoBloc
     );
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      await userRepository.updatePersonalInfo(
-        title: state.title.value,
-        firstName: state.firstName.value,
-        lastName: state.lastName.value,
-        street: state.street.value,
-        streetNumber: state.streetNumber.value,
-        zipCode: state.zipCode.value,
-        city: state.city.value,
-        email: state.email.value,
-        emailConfirm: state.emailConfirm.value,
-        phoneNumber: state.phoneNumber.value,
-        phoneNumberConfirm: state.phoneNumberConfirm.value,
-      );
+      // await userRepository.updatePersonalInfo(
+      //   title: state.title.value,
+      //   firstName: state.firstName.value,
+      //   lastName: state.lastName.value,
+      //   street: state.street.value,
+      //   streetNumber: state.streetNumber.value,
+      //   zipCode: state.zipCode.value,
+      //   city: state.city.value,
+      //   email: state.email.value,
+      //   emailConfirm: state.emailConfirm.value,
+      //   phoneNumber: state.phoneNumber.value,
+      //   phoneNumberConfirm: state.phoneNumberConfirm.value,
+      // );
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     }
   }

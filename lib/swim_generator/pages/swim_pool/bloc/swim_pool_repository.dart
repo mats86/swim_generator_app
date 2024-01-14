@@ -1,7 +1,6 @@
 part of 'swim_pool_bloc.dart';
 
-class SwimPoolRepository
-{
+class SwimPoolRepository {
   final GraphQLClient graphQLClient;
 
   SwimPoolRepository({required this.graphQLClient});
@@ -12,19 +11,18 @@ class SwimPoolRepository
     );
 
     final result = await graphQLClient.query(options);
+
+    // Überprüfen Sie, ob eine Ausnahme vorliegt, und werfen Sie diese gegebenenfalls
     if (result.hasException) {
+      if (kDebugMode) {
+        print(
+            "Ausnahme beim Abrufen von SwimPools: ${result.exception.toString()}");
+      }
       throw result.exception!;
     }
-    if (result.hasException) {
-      // Fehlerbehandlung
-      if (kDebugMode) {
-        print(result.exception.toString());
-      }
-      return [];
-    }
 
+    // Überprüfen Sie, ob Daten vorhanden sind
     if (result.data == null || result.data!['swimPools'] == null) {
-      // Behandeln Sie den Fall, wenn keine Daten vorhanden sind
       if (kDebugMode) {
         print("Keine Daten gefunden");
       }
@@ -32,8 +30,39 @@ class SwimPoolRepository
     }
 
     List<dynamic> swimPoolsJson = result.data!['swimPools'];
+
     // Konvertieren Sie jeden JSON-Eintrag in ein SwimPool-Objekt
     return swimPoolsJson.map((json) => SwimPool.fromJson(json)).toList();
   }
 
+  Future<List<FixDate>> loadFixDates() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQLQueries.getFixDatesBySwimCourseID),
+      variables: const {
+        'swimCourseID': 1,
+      },
+    );
+
+    final result = await graphQLClient.query(options);
+
+    // Überprüfen Sie, ob eine Ausnahme vorliegt, und werfen Sie diese gegebenenfalls
+    if (result.hasException) {
+      if (kDebugMode) {
+        print(
+            "Ausnahme beim Abrufen von SwimPools: ${result.exception.toString()}");
+      }
+      throw result.exception!;
+    }
+
+    // Überprüfen Sie, ob Daten vorhanden sind
+    if (result.data == null || result.data!['fixDatesBySwimCourseID'] == null) {
+      if (kDebugMode) {
+        print("Keine Daten gefunden");
+      }
+      return [];
+    }
+
+    List<dynamic> swimPoolsJson = result.data!['fixDatesBySwimCourseID'];
+    return swimPoolsJson.map((json) => FixDate.fromJson(json)).toList();
+  }
 }

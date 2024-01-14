@@ -4,9 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/bloc/result_bloc.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 import '../../../cubit/swim_generator_cubit.dart';
 
@@ -15,217 +13,218 @@ class ResultForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-      future: context.read<UserRepository>().getUser(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: SpinKitWaveSpinner(
-              color: Colors.lightBlueAccent,
-              size: 50.0,
-            ),
-          );
+    return BlocListener<ResultBloc, ResultState>(
+      listener: (context, state) {
+        if (state.submissionStatus.isFailure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Something went wrong!')),
+            );
         }
-        final User user = snapshot.data!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _CustomHeader('Kind Information'),
-            _CustomText(
-                'Name',
-                '${user.kidsPersonalInfo.firstName} '
-                    '${user.kidsPersonalInfo.lastName}'),
-            _CustomText('Geburtstag',
-                DateFormat('dd.MM.yyy').format(user.birthDay.birthDay!)),
-            const SizedBox(
-              height: 12.0,
-            ),
-            const _CustomHeader('Erziehungsberechtigten Information'),
-            _CustomText(
-                'Name',
-                '${user.personalInfo.firstName} '
-                    '${user.personalInfo.lastName}'),
-            _CustomText(
-                'Adress',
-                '${user.personalInfo.street} '
-                    '${user.personalInfo.streetNumber}, '
-                    '${user.personalInfo.zipCode}, '
-                    '${user.personalInfo.city}'),
-            _CustomText(
-              'E-Mail',
-              '${user.personalInfo.email} '),
-            _CustomText(
-                'Handynummer',
-                '${user.personalInfo.phoneNumber} '),
-            const SizedBox(
-              height: 12.0,
-            ),
-            const _CustomHeader('Kurs Information'),
-            _CustomText(
-                'Kurs:',
-                '${user.swimCourseInfo.swimCourseName} '
-                    '${user.swimCourseInfo.swimCoursePrice} €'),
-            _CustomText(
-                'Schwimmbäder',
-                user.swimPools
-                    .map((swimPool) => swimPool.swimPoolName)
-                    .join(', ')),
-            const Divider(),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Mit Deiner Anmeldebestätigung (Email) erhältst Du eine "
-                "Aufforderung zur Überweisung der Anzahlung von 100€. "
-                "Dieser Betrag muss innerhalb 7 Werktagen bei uns verbucht "
-                "sein. Andernfalls würden wir den Kursplatz wieder "
-                "freigeben - Deine Buchung stornieren.",
-              ),
-            ),
-            const SizedBox(
-              height: 24.0,
-            ),
-            const Row(
-              children: [
-                Text(
-                  'Bestätigung ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '*',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Center(
-              child: Row(
-                children: <Widget>[
-                  BlocBuilder<ResultBloc, ResultState>(
-                    builder: (context, state) {
-                      return Checkbox(
-                        activeColor: Colors.lightBlueAccent,
-                        value: state.isConfirmed.value,
-                        onChanged: (val) {
-                          context
-                              .read<ResultBloc>()
-                              .add(ConfirmedChanged(val!));
-                        },
-                      );
-                    },
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'Mir ist bewusst, dass ich bis zu 30 Minuten Anfahrt '
-                      'in Kauf nehmen muss.',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 24.0,
-            ),
-            const Row(
-              children: [
-                Text(
-                  'Stornierung ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '*',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Center(
-              child: Row(
-                children: <Widget>[
-                  BlocBuilder<ResultBloc, ResultState>(
-                    builder: (context, state) {
-                      return Checkbox(
-                        activeColor: Colors.lightBlueAccent,
-                        value: state.isCancellation.value,
-                        onChanged: (val) {
-                          context
-                              .read<ResultBloc>()
-                              .add(CancellationChanged(val!));
-                        },
-                      );
-                    },
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'Bei Stornierung nach dem 28.02. verfällt die Anzahlung.',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 24.0,
-            ),
-            const Row(
-              children: [
-                Text(
-                  'DSGVO-Einverständnis ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  '*',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Center(
-              child: Row(
-                children: <Widget>[
-                  BlocBuilder<ResultBloc, ResultState>(
-                    builder: (context, state) {
-                      return Checkbox(
-                        activeColor: Colors.lightBlueAccent,
-                        value: state.isConsentGDPR.value,
-                        onChanged: (val) {
-                          context
-                              .read<ResultBloc>()
-                              .add(ConsentGDPRChanged(val!));
-                        },
-                      );
-                    },
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'Ich willige ein, dass diese Website meine übermittelten '
-                      'Informationen speichert, sodass meine Anfrage '
-                      'beantwortet werden kann.',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 16.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(child: _CancelButton()),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                Expanded(child: _SubmitButton())
-              ],
-            )
-          ],
-        );
       },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _CustomHeader('Kind Information'),
+          _CustomText(
+              'Name', ''
+              // '${user.kidsPersonalInfo.firstName} '
+              //     '${user.kidsPersonalInfo.lastName}',
+          ),
+          _CustomText('Geburtstag', ''
+              // DateFormat('dd.MM.yyy').format(user.birthDay.birthDay!),
+          ),
+          const SizedBox(
+            height: 12.0,
+          ),
+          const _CustomHeader('Erziehungsberechtigten Information'),
+          _CustomText(
+              'Name', ''
+              // '${user.personalInfo.firstName} '
+              //     '${user.personalInfo.lastName}',
+          ),
+          _CustomText(
+              'Adress', ''
+              // '${user.personalInfo.street} '
+              //     '${user.personalInfo.streetNumber}, '
+              //     '${user.personalInfo.zipCode}, '
+              //     '${user.personalInfo.city}',
+          ),
+          _CustomText('E-Mail', ''
+            // '${user.personalInfo.email} ',
+          ),
+          _CustomText('Handynummer', ''
+              // '${user.personalInfo.phoneNumber} ',
+          ),
+          const SizedBox(
+            height: 12.0,
+          ),
+          const _CustomHeader('Kurs Information'),
+          _CustomText(
+              'Kurs:', ''
+              // '${user.swimCourseInfo.swimCourseName} '
+              //     '${user.swimCourseInfo.swimCoursePrice} €',
+          ),
+          _CustomText(
+              'Schwimmbäder', ''
+              // user.swimPools
+              //     .map((swimPool) => swimPool.swimPoolName)
+              //     .join(', '),
+    ),
+          const Divider(),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Mit Deiner Anmeldebestätigung (Email) erhältst Du eine "
+              "Aufforderung zur Überweisung der Anzahlung von 100€. "
+              "Dieser Betrag muss innerhalb 7 Werktagen bei uns verbucht "
+              "sein. Andernfalls würden wir den Kursplatz wieder "
+              "freigeben - Deine Buchung stornieren.",
+            ),
+          ),
+          const SizedBox(
+            height: 24.0,
+          ),
+          const Row(
+            children: [
+              Text(
+                'Bestätigung ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '*',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Center(
+            child: Row(
+              children: <Widget>[
+                BlocBuilder<ResultBloc, ResultState>(
+                  builder: (context, state) {
+                    return Checkbox(
+                      activeColor: Colors.lightBlueAccent,
+                      value: state.isConfirmed.value,
+                      onChanged: (val) {
+                        context.read<ResultBloc>().add(ConfirmedChanged(val!));
+                      },
+                    );
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    'Mir ist bewusst, dass ich bis zu 30 Minuten Anfahrt '
+                    'in Kauf nehmen muss.',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 24.0,
+          ),
+          const Row(
+            children: [
+              Text(
+                'Stornierung ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '*',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Center(
+            child: Row(
+              children: <Widget>[
+                BlocBuilder<ResultBloc, ResultState>(
+                  builder: (context, state) {
+                    return Checkbox(
+                      activeColor: Colors.lightBlueAccent,
+                      value: state.isCancellation.value,
+                      onChanged: (val) {
+                        context
+                            .read<ResultBloc>()
+                            .add(CancellationChanged(val!));
+                      },
+                    );
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    'Bei Stornierung nach dem 28.02. verfällt die Anzahlung.',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 24.0,
+          ),
+          const Row(
+            children: [
+              Text(
+                'DSGVO-Einverständnis ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '*',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Center(
+            child: Row(
+              children: <Widget>[
+                BlocBuilder<ResultBloc, ResultState>(
+                  builder: (context, state) {
+                    return Checkbox(
+                      activeColor: Colors.lightBlueAccent,
+                      value: state.isConsentGDPR.value,
+                      onChanged: (val) {
+                        context
+                            .read<ResultBloc>()
+                            .add(ConsentGDPRChanged(val!));
+                      },
+                    );
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    'Ich willige ein, dass diese Website meine übermittelten '
+                    'Informationen speichert, sodass meine Anfrage '
+                    'beantwortet werden kann.',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(child: _CancelButton()),
+              const SizedBox(
+                width: 8.0,
+              ),
+              Expanded(child: _SubmitButton())
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -354,7 +353,8 @@ class _CancelButton extends StatelessWidget {
 Future<void> _showSuccessDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // Der Benutzer muss den Button drücken, um den Dialog zu schließen
+    barrierDismissible: false,
+    // Der Benutzer muss den Button drücken, um den Dialog zu schließen
     builder: (BuildContext dialogContext) {
       return AlertDialog(
         title: const Text('Anmeldung Erfolgreich'),

@@ -4,6 +4,8 @@ abstract class SwimPoolEvent {}
 
 class LoadSwimPools extends SwimPoolEvent {}
 
+class LoadFixDates extends SwimPoolEvent {}
+
 class SwimPoolOptionToggled extends SwimPoolEvent {
   final int index;
   final bool isSelected;
@@ -16,5 +18,9 @@ class SwimPoolModelsChanged extends SwimPoolEvent {
 
   SwimPoolModelsChanged(this.swimPools);
 }
+
+class SelectFlexDate extends SwimPoolEvent {}
+
+class SelectFixDate extends SwimPoolEvent {}
 
 class FormSubmitted extends SwimPoolEvent {}

@@ -1,9 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../../../../graphql/graphql_queries.dart';
 import '../models/checkbox_model.dart';
@@ -17,9 +16,8 @@ part 'result_state.dart';
 
 class ResultBloc extends Bloc<ResultEvent, ResultState> {
   final ResultRepository service;
-  final UserRepository userRepository;
 
-  ResultBloc(this.service, this.userRepository) : super(const ResultState()) {
+  ResultBloc(this.service) : super(const ResultState()) {
     on<ConfirmedChanged>(_onConfirmedChanged);
     on<CancellationChanged>(_onCancellationChanged);
     on<ConsentGDPRChanged>(_onConsentGDPRChanged);
@@ -76,32 +74,25 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
     );
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      final user = await userRepository.getUser();
-      var bookingInput = CompleteSwimCourseBookingInput(
-        loginEmail: user!.personalInfo.email,
-        guardianFirstName: user.personalInfo.firstName,
-        guardianLastName: user.personalInfo.lastName,
-        guardianAddress:
-            '${user.personalInfo.streetNumber}'
-                '${user.personalInfo.streetNumber}, '
-                '${user.personalInfo.zipCode} '
-                '${user.personalInfo.city}',
-        guardianPhoneNumber: user.personalInfo.phoneNumber,
-        studentFirstName: user.kidsPersonalInfo.firstName,
-        studentLastName: user.kidsPersonalInfo.lastName,
-        studentBirthDate: user.birthDay.birthDay!,
-        swimCourseId: user.swimCourseInfo.swimCourseID,
-        swimPoolIDs: user.swimPools.map((pool) => pool.swimPoolID).toList(),
-      );
-      await service.executeCreateCompleteSwimCourseBooking(bookingInput);
+      // final user = await userRepository.getUser();
+      // var bookingInput = CompleteSwimCourseBookingInput(
+      //   loginEmail: user!.personalInfo.email,
+      //   guardianFirstName: user.personalInfo.firstName,
+      //   guardianLastName: user.personalInfo.lastName,
+      //   guardianAddress: '${user.personalInfo.streetNumber}'
+      //       '${user.personalInfo.streetNumber}, '
+      //       '${user.personalInfo.zipCode} '
+      //       '${user.personalInfo.city}',
+      //   guardianPhoneNumber: user.personalInfo.phoneNumber,
+      //   studentFirstName: user.kidsPersonalInfo.firstName,
+      //   studentLastName: user.kidsPersonalInfo.lastName,
+      //   studentBirthDate: user.birthDay.birthDay!,
+      //   swimCourseId: user.swimCourseInfo.swimCourseID,
+      //   swimPoolIDs: user.swimPools.map((pool) => pool.swimPoolID).toList(),
+      //   referenceBooking: '',
+      // );
+      // await service.executeCreateCompleteSwimCourseBooking(bookingInput);
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     }
-  }
-
-
-// Funktion zur Umleitung auf eine andere Webseite
-  void _redirectToAnotherPage() {
-    // Hier implementieren Sie die Logik zur Umleitung
-    // Zum Beispiel mit Navigator.push() oder Navigator.replace() in Flutter
   }
 }

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../models/models.dart';
 
@@ -10,9 +9,8 @@ part 'kind_personal_info_state.dart';
 
 class KindPersonalInfoBloc
     extends Bloc<KindPersonalInfoEvent, KindPersonalInfoState> {
-  final UserRepository userRepository;
 
-  KindPersonalInfoBloc({required this.userRepository})
+  KindPersonalInfoBloc()
       : super(const KindPersonalInfoState()) {
     on<FirstNameChanged>(_onFirstNameChanged);
     on<FirstNameUnfocused>(_onFirstNameUnfocused);
@@ -74,10 +72,10 @@ class KindPersonalInfoBloc
     );
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      await userRepository.updateKidsPersonalInfo(
-        firstName: state.firstName.value,
-        lastName: state.lastName.value,
-      );
+      // await userRepository.updateKidsPersonalInfo(
+      //   firstName: state.firstName.value,
+      //   lastName: state.lastName.value,
+      // );
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     }
   }

@@ -9,6 +9,7 @@ class CompleteSwimCourseBookingInput {
   final DateTime studentBirthDate; // Format: "YYYY-MM-DD"
   final int swimCourseId;
   final List<int> swimPoolIDs;
+  final String referenceBooking;
 
   CompleteSwimCourseBookingInput({
     required this.loginEmail,
@@ -21,6 +22,7 @@ class CompleteSwimCourseBookingInput {
     required this.studentBirthDate,
     required this.swimCourseId,
     required this.swimPoolIDs,
+    required this.referenceBooking,
   });
 
   Map<String, dynamic> toGraphqlJson() {
@@ -35,6 +37,7 @@ class CompleteSwimCourseBookingInput {
       'studentBirthDate': studentBirthDate.toIso8601String(),
       'swimCourseID': swimCourseId,
       'swimPoolIDs': swimPoolIDs,
+      'ReferenceBooking': referenceBooking,
     };
   }
 }

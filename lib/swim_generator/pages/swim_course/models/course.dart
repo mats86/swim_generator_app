@@ -2,50 +2,50 @@
 class Course {
   final int id;
   final int swimLevelId;
-  final String name;
-  final double minAge;
-  final double maxAge;
-  final String price;
-  final String description;
-  final int hasFixedDates;
-  final String duration;
-  final int isCourseVisible;
+  final String swimCourseName;
+  final double swimCourseMinAge;
+  final double swimCourseMaxAge;
+  final String swimCoursePrice;
+  final String swimCourseDescription;
+  final bool swimCourseHasFixedDates;
+  final String swimCourseDuration;
+  final bool isCourseVisible;
 
   const Course({
     required this.id,
     required this.swimLevelId,
-    required this.name,
-    required this.minAge,
-    required this.maxAge,
-    required this.price,
-    required this.description,
-    required this.hasFixedDates,
-    required this.duration,
+    required this.swimCourseName,
+    required this.swimCourseMinAge,
+    required this.swimCourseMaxAge,
+    required this.swimCoursePrice,
+    required this.swimCourseDescription,
+    required this.swimCourseHasFixedDates,
+    required this.swimCourseDuration,
     required this.isCourseVisible});
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
         id: json['courseID'],
         swimLevelId: json['swim_level_id'],
-        name: json['courseName'],
-        minAge: json['courseMinimumAge'].toDouble(),
-        maxAge: json['courseMaximumAge'].toDouble(),
-        price: json['coursePrice'],
-        description: json['courseDescription'],
-        hasFixedDates: json['courseHasFixedDates'],
-        duration: json['courseDuration'],
+        swimCourseName: json['courseName'],
+        swimCourseMinAge: json['courseMinimumAge'].toDouble(),
+        swimCourseMaxAge: json['courseMaximumAge'].toDouble(),
+        swimCoursePrice: json['coursePrice'],
+        swimCourseDescription: json['courseDescription'],
+        swimCourseHasFixedDates: json['courseHasFixedDates'],
+        swimCourseDuration: json['courseDuration'],
         isCourseVisible: json['isCourseVisible']);
   }
 
   const Course.empty()
       : id = 0,
         swimLevelId = 0,
-        name = '',
-        minAge = 0,
-        maxAge = 0,
-        price = '',
-        description = '',
-        hasFixedDates = 0,
-        duration = '',
-        isCourseVisible = 0;
+        swimCourseName = '',
+        swimCourseMinAge = 0,
+        swimCourseMaxAge = 0,
+        swimCoursePrice = '',
+        swimCourseDescription = '',
+        swimCourseHasFixedDates = false,
+        swimCourseDuration = '',
+        isCourseVisible = false;
 }

@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../../../../graphql/graphql_queries.dart';
+import '../models/fix_date.dart';
 import '../models/models.dart';
 import '../models/swim_pool.dart';
 
@@ -17,13 +17,13 @@ part 'swim_pool_state.dart';
 
 class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
   final SwimPoolRepository service;
-  final UserRepository userRepository;
 
-  SwimPoolBloc(this.service, this.userRepository)
-      : super(const SwimPoolState()) {
+  SwimPoolBloc(this.service) : super(const SwimPoolState()) {
     on<LoadSwimPools>(_onLoadSwimPools);
+    on<LoadFixDates>(_onLoadFixDates);
     on<SwimPoolOptionToggled>(_onSwimPoolOptionToggled);
-    on<SwimPoolModelsChanged>(_onSwimPoolModelsChanged);
+    on<SelectFlexDate>(_onSelectFlexDate);
+    on<SelectFixDate>(_onSelectFixDate);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -44,32 +44,61 @@ class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
     }
   }
 
+  void _onLoadFixDates(
+    LoadFixDates event,
+    Emitter<SwimPoolState> emit,
+  ) async {
+    emit(state.copyWith(loadingFixDates: FormzSubmissionStatus.inProgress));
+    try {
+      var fixDates = await service.loadFixDates();
+      emit(state.copyWith(
+          fixDates: fixDates, loadingFixDates: FormzSubmissionStatus.success));
+    } catch (e) {
+      emit(state.copyWith(loadingFixDates: FormzSubmissionStatus.failure));
+    }
+  }
+
   void _onSwimPoolOptionToggled(
     SwimPoolOptionToggled event,
     Emitter<SwimPoolState> emit,
   ) {
     var newPools = List<SwimPool>.from(state.swimPools);
     var pool = newPools[event.index];
+
+    // Update the selected pool with the new isSelected value
     newPools[event.index] = SwimPool(
+        index: event.index,
         swimPoolID: pool.swimPoolID,
         swimPoolName: pool.swimPoolName,
         swimPoolAddress: pool.swimPoolAddress,
         swimPoolPhoneNumber: pool.swimPoolPhoneNumber,
         swimPoolOpeningTimes: pool.swimPoolOpeningTimes,
+        swimPoolHasFixedDate: pool.swimPoolHasFixedDate,
+        isSwimPoolVisible: pool.isSwimPoolVisible,
         isSelected: event.isSelected);
+
+    // Check if any of the pools have swimPoolHasFixedDate set to true
+    bool anyPoolHasFixedDate =
+        newPools.any((p) => p.swimPoolHasFixedDate && p.isSelected);
+
+    // Validate the form
     final isValid = Formz.validate([SwimPoolModel.dirty(newPools)]);
-    emit(state.copyWith(swimPools: newPools, isValid: isValid));
+
+    // Emit the new state with updated values
+    emit(state.copyWith(
+        swimPools: newPools,
+        hasFixedDate: anyPoolHasFixedDate,
+        isValid: isValid));
   }
 
-  void _onSwimPoolModelsChanged(
-    SwimPoolModelsChanged event,
-    Emitter<SwimPoolState> emit,
-  ) {
-    final swimPoolModels = SwimPoolModel.dirty(event.swimPools);
-    emit(state.copyWith(
-      swimPoolModel: swimPoolModels,
-      isValid: Formz.validate([swimPoolModels])
-    ));
+  void _onSelectFlexDate(
+      SelectFlexDate event, Emitter<SwimPoolState> emit) async {
+    emit(state.copyWith(flexFixDate: false));
+  }
+
+  void _onSelectFixDate(
+      SelectFixDate event, Emitter<SwimPoolState> emit) async {
+    emit(state.copyWith(flexFixDate: true));
   }
 
   void _onFormSubmitted(
@@ -80,9 +109,9 @@ class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
       try {
         for (var swimPool in state.swimPools) {
           if (swimPool.isSelected) {
-            await userRepository.updateSwimPoolInfo(
-                swimPoolID: swimPool.swimPoolID,
-                swimPoolName: swimPool.swimPoolName);
+            // await userRepository.updateSwimPoolInfo(
+            //     swimPoolID: swimPool.swimPoolID,
+            //     swimPoolName: swimPool.swimPoolName);
           }
         }
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));

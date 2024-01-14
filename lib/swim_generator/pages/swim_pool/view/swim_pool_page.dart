@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../bloc/swim_pool_bloc.dart';
 import 'swim_pool_form.dart';
@@ -26,7 +25,6 @@ class SwimPoolPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => SwimPoolBloc(
           SwimPoolRepository(graphQLClient: graphQLClient),
-          context.read<UserRepository>(),
         ),
         child: const SwimPoolForm(),
       ),

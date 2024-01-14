@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
 import '../../../cubit/swim_generator_cubit.dart';
 
 import '../bloc/kind_personal_info_bloc.dart';
@@ -19,12 +18,24 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
   final TextEditingController _lastNameController = TextEditingController();
   final FocusNode _firstNameFocusNod = FocusNode();
   final FocusNode _lastNameFocusNod = FocusNode();
-  late Future<User?> _userFuture;
 
   @override
   void initState() {
     super.initState();
-    _userFuture = context.read<KindPersonalInfoBloc>().userRepository.getUser();
+    _firstNameController.text =
+        context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName;
+    _lastNameController.text =
+        context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName;
+    if (context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName !=
+        '') {
+      context.read<KindPersonalInfoBloc>().add(FirstNameChanged(
+          context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName));
+    }
+    if (context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName != '') {
+      context.read<KindPersonalInfoBloc>().add(LastNameChanged(
+          context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName));
+    }
+
     _firstNameFocusNod.addListener(() {
       if (!_firstNameFocusNod.hasFocus) {
         context.read<KindPersonalInfoBloc>().add(FirstNameUnfocused());
@@ -49,66 +60,43 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-        future: _userFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitWaveSpinner(
-              color: Colors.lightBlueAccent,
-              size: 50.0,
+    return BlocListener<KindPersonalInfoBloc, KindPersonalInfoState>(
+      listener: (context, state) {
+        if (state.submissionStatus.isFailure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Something went wrong!')),
             );
-          }
-          if (snapshot.data!.kidsPersonalInfo.firstName != '') {
-            _firstNameController.text =
-                snapshot.data!.kidsPersonalInfo.firstName;
-            context.read<KindPersonalInfoBloc>().add(
-                FirstNameChanged(snapshot.data!.kidsPersonalInfo.firstName));
-          }
-          if (snapshot.data!.kidsPersonalInfo.lastName != '') {
-            _lastNameController.text = snapshot.data!.kidsPersonalInfo.lastName;
-            context
-                .read<KindPersonalInfoBloc>()
-                .add(LastNameChanged(snapshot.data!.kidsPersonalInfo.lastName));
-          }
-
-          return BlocListener<KindPersonalInfoBloc, KindPersonalInfoState>(
-            listener: (context, state) {
-              if (state.submissionStatus.isFailure) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    const SnackBar(content: Text('Something went wrong!')),
-                  );
-              }
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _FirstNameInput(
-                  controller: _firstNameController,
-                  focusNode: _firstNameFocusNod,
-                ),
-                _LastNameInput(
-                  controller: _lastNameController,
-                  focusNode: _lastNameFocusNod,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(child: _BackButton()),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Expanded(child: _SubmitButton())
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+        }
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _FirstNameInput(
+            controller: _firstNameController,
+            focusNode: _firstNameFocusNod,
+          ),
+          _LastNameInput(
+            controller: _lastNameController,
+            focusNode: _lastNameFocusNod,
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(child: _BackButton()),
+              const SizedBox(
+                width: 8.0,
+              ),
+              Expanded(child: _SubmitButton())
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -145,9 +133,7 @@ class _FirstNameInput extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(3.0),
                   ),
-                  Text('*',
-                      style: TextStyle(
-                          color: Colors.red, fontSize: 14)),
+                  Text('*', style: TextStyle(color: Colors.red, fontSize: 14)),
                 ],
               ),
             ),
@@ -195,8 +181,7 @@ class _LastNameInput extends StatelessWidget {
                       padding: EdgeInsets.all(3.0),
                     ),
                     Text('*',
-                        style: TextStyle(
-                            color: Colors.red, fontSize: 14)),
+                        style: TextStyle(color: Colors.red, fontSize: 14)),
                   ],
                 ),
               ),
@@ -219,6 +204,8 @@ class _SubmitButton extends StatelessWidget {
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
+          context.read<SwimGeneratorCubit>().updateKindPersonalInfo(
+              state.firstName.value, state.lastName.value);
         }
       },
       buildWhen: (previous, current) =>
@@ -228,9 +215,9 @@ class _SubmitButton extends StatelessWidget {
             context.select((KindPersonalInfoBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
-          color: Colors.lightBlueAccent,
-          size: 50.0,
-        )
+                color: Colors.lightBlueAccent,
+                size: 50.0,
+              )
             : ElevatedButton(
                 key: const Key(
                     'kindPersonalInfoForm_submitButton_elevatedButton'),

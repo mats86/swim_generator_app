@@ -18,10 +18,14 @@ class ResultRepository {
     final QueryResult result = await graphQLClient.mutate(options);
 
     if (result.hasException) {
-      print(result.exception.toString());
+      if (kDebugMode) {
+        print(result.exception.toString());
+      }
       // Fehlerbehandlung
     } else {
-      print('Mutation erfolgreich');
+      if (kDebugMode) {
+        print('Mutation erfolgreich');
+      }
       // Verarbeiten der Antwort
     }
   }

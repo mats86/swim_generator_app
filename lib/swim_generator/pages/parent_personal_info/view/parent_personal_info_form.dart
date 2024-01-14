@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/parent_personal_info_bloc.dart';
@@ -16,7 +15,7 @@ class ParentPersonalInfoForm extends StatefulWidget {
 }
 
 class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
-  late Future<User?> _userFuture;
+  final GlobalKey<FormState> textFieldKey = GlobalKey<FormState>();
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
@@ -64,8 +63,6 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
   void initState() {
     super.initState();
     context.read<ParentPersonalInfoBloc>().add(LoadParentTitleOptions());
-    _userFuture =
-        context.read<ParentPersonalInfoBloc>().userRepository.getUser();
 
     _addFocusNodeListener(_titleFocusNode, _firstNameFocusNode, null);
     _addFocusNodeListener(_firstNameFocusNode, _lastNameFocusNode, null);
@@ -99,115 +96,45 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-        future: _userFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitWaveSpinner(
-              color: Colors.lightBlueAccent,
-              size: 50.0,
+    return BlocListener<ParentPersonalInfoBloc, ParentPersonalInfoState>(
+      listener: (context, state) {
+        if (state.submissionStatus.isFailure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Something went wrong!')),
             );
-          }
-          if (snapshot.data!.personalInfo.title != '') {
-            _firstNameController.text = snapshot.data!.personalInfo.title;
-            context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentFirstNameChanged(snapshot.data!.personalInfo.title));
-          }
-          if (snapshot.data!.personalInfo.firstName != '') {
-            _firstNameController.text = snapshot.data!.personalInfo.firstName;
-            context.read<ParentPersonalInfoBloc>().add(
-                ParentFirstNameChanged(snapshot.data!.personalInfo.firstName));
-          }
-          if (snapshot.data!.personalInfo.lastName != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.lastName;
-            context.read<ParentPersonalInfoBloc>().add(
-                ParentLastNameChanged(snapshot.data!.personalInfo.lastName));
-          }
-          if (snapshot.data!.personalInfo.street != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.street;
-            context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentLastNameChanged(snapshot.data!.personalInfo.street));
-          }
-          if (snapshot.data!.personalInfo.streetNumber != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.streetNumber;
-            context.read<ParentPersonalInfoBloc>().add(ParentLastNameChanged(
-                snapshot.data!.personalInfo.streetNumber));
-          }
-          if (snapshot.data!.personalInfo.zipCode != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.zipCode;
-            context.read<ParentPersonalInfoBloc>().add(
-                ParentLastNameChanged(snapshot.data!.personalInfo.zipCode));
-          }
-          if (snapshot.data!.personalInfo.city != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.city;
-            context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentLastNameChanged(snapshot.data!.personalInfo.city));
-          }
-          if (snapshot.data!.personalInfo.email != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.email;
-            context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentLastNameChanged(snapshot.data!.personalInfo.email));
-          }
-          if (snapshot.data!.personalInfo.emailConfirm != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.emailConfirm;
-            context.read<ParentPersonalInfoBloc>().add(ParentLastNameChanged(
-                snapshot.data!.personalInfo.emailConfirm));
-          }
-          if (snapshot.data!.personalInfo.phoneNumber != '') {
-            _lastNameController.text = snapshot.data!.personalInfo.phoneNumber;
-            context.read<ParentPersonalInfoBloc>().add(
-                ParentLastNameChanged(snapshot.data!.personalInfo.phoneNumber));
-          }
-          if (snapshot.data!.personalInfo.phoneNumberConfirm != '') {
-            _lastNameController.text =
-                snapshot.data!.personalInfo.phoneNumberConfirm;
-            context.read<ParentPersonalInfoBloc>().add(ParentLastNameChanged(
-                snapshot.data!.personalInfo.phoneNumberConfirm));
-          }
-          return BlocListener<ParentPersonalInfoBloc, ParentPersonalInfoState>(
-            listener: (context, state) {
-              if (state.submissionStatus.isFailure) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    const SnackBar(content: Text('Something went wrong!')),
-                  );
-              }
-            },
-            child: Column(
-              children: [
-                _ParentTitle(),
-                _FirstNameInput(),
-                _LastNameInput(),
-                _StreetInput(),
-                _StreetNumberInput(),
-                _ZipCodeInput(),
-                _CityInput(),
-                _EmailInput(),
-                _EmailConfirmInput(),
-                _PhoneNumberInput(),
-                _PhoneNumberConfirmInput(),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(child: _BackButton()),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    Expanded(child: _SubmitButton())
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+        }
+      },
+      child: Column(
+        children: [
+          _ParentTitle(),
+          _FirstNameInput(),
+          _LastNameInput(),
+          _StreetInput(),
+          _StreetNumberInput(),
+          _ZipCodeInput(),
+          _CityInput(),
+          _EmailInput(emailFieldKey: textFieldKey,),
+          _EmailConfirmInput(),
+          _PhoneNumberInput(),
+          _PhoneNumberConfirmInput(),
+          const SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(child: _BackButton()),
+              const SizedBox(
+                width: 8.0,
+              ),
+              Expanded(child: _SubmitButton())
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -485,13 +412,22 @@ class _CityInput extends StatelessWidget {
 }
 
 class _EmailInput extends StatelessWidget {
+  final GlobalKey<FormState> emailFieldKey;
+  const _EmailInput({super.key, required this.emailFieldKey});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) => previous.email != current.email,
         builder: (context, state) {
-          return TextField(
-            key: const Key('ParentPersonalInfoForm_EmailInput_textField'),
+          return TextFormField(
+            enableInteractiveSelection: false,
+            keyboardType: TextInputType.text,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'^[ctrl]+\s*v$')), // Disable all input
+            ],
+            contextMenuBuilder: null,
+            key: emailFieldKey,
             onChanged: (email) => context
                 .read<ParentPersonalInfoBloc>()
                 .add(ParentEmailChanged(email)),
@@ -520,6 +456,7 @@ class _EmailInput extends StatelessWidget {
         });
   }
 }
+
 
 class _EmailConfirmInput extends StatelessWidget {
   @override

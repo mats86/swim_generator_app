@@ -1,30 +1,28 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:swim_generator_app/swim_generator/models/swim_level.dart';
 import 'package:swim_generator_app/swim_generator/pages/swim_course/models/swim_course.dart';
-import 'package:user_repository/user_repository.dart';
 
 import '../../../../graphql/graphql_queries.dart';
 import '../models/models.dart';
 
 part 'swim_course_event.dart';
+
 part 'swim_course_repository.dart';
 
 part 'swim_course_state.dart';
 
 class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
   final SwimCourseRepository service;
-  final UserRepository userRepository;
 
-  SwimCourseBloc(this.service, this.userRepository)
-      : super(const SwimCourseState()) {
+  SwimCourseBloc(this.service) : super(const SwimCourseState()) {
     on<SwimSeasonChanged>(_onSwimSeasonChanged);
     on<SwimCourseChanged>(_onSwimCourseChanged);
     on<LoadSwimSeasonOptions>(_onLoadSwimSeasonOptions);
     on<LoadSwimCourseOptions>(_onLoadSwimCourseOptions);
-    on<SelectFlexDate>(_onSelectFlexDate);
-    on<SelectFixDate>(_onSelectFixDate);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -44,12 +42,10 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
   void _onSwimCourseChanged(
       SwimCourseChanged event, Emitter<SwimCourseState> emit) {
     final swimCourse = SwimCourseModel.dirty(event.swimCourse);
-    final hasFixedDate = event.course.hasFixedDates;
     emit(
       state.copyWith(
         swimCourse: swimCourse,
         selectedCourse: event.course,
-        hasFixedDate: hasFixedDate,
         isValid: Formz.validate(
           [state.swimSeason, swimCourse],
         ),
@@ -75,34 +71,20 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
       LoadSwimCourseOptions event, Emitter<SwimCourseState> emit) async {
     emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.inProgress));
     try {
-      final user = await userRepository.getUser();
-      if (user?.birthDay != null) {
-        final swimCourses = await service.getSwimCoursesByLevelNameAndFutureAge(
-            user!.swimLevel.swimLevelString,
-            user.birthDay.birthDay!,
-            DateTime(2024, 6, 1));
-        emit(state.copyWith(
-            swimCourseOptions: swimCourses,
-            loadingCourseStatus: FormzSubmissionStatus.success));
-      } else {
-        emit(
-            state.copyWith(loadingCourseStatus: FormzSubmissionStatus.failure));
-      }
+      final swimCourses = await service.getSwimCoursesByLevelNameAndFutureAge(
+          SwimLevelEnum.EINSTIEGERKURS.toString().split('.')[1],
+          event.birthDay,
+          DateTime(2024, 6, 1));
+      emit(state.copyWith(
+          swimCourseOptions: swimCourses,
+          loadingCourseStatus: FormzSubmissionStatus.success));
     } catch (e) {
       // Hier können Sie spezifische Fehler loggen
-      print('Fehler beim Laden der Schwimmkurse: $e');
+      if (kDebugMode) {
+        print('Fehler beim Laden der Schwimmkurse: $e');
+      }
       emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.failure));
     }
-  }
-
-  void _onSelectFlexDate(
-      SelectFlexDate event, Emitter<SwimCourseState> emit) async {
-    emit(state.copyWith(flexFixDate: false));
-  }
-
-  void _onSelectFixDate(
-      SelectFixDate event, Emitter<SwimCourseState> emit) async {
-    emit(state.copyWith(flexFixDate: true));
   }
 
   void _onFormSubmitted(
@@ -111,12 +93,12 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
     if (inValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
       try {
-        await userRepository.updateSwimCourseInfo(
-          season: state.swimSeason.value,
-          swimCourseID: state.selectedCourse.id,
-          swimCourseName: state.selectedCourse.name,
-          swimCoursePrice: state.selectedCourse.price.toString(),
-        );
+        // await userRepository.updateSwimCourseInfo(
+        //   season: state.swimSeason.value,
+        //   swimCourseID: state.selectedCourse.swimCourseID,
+        //   swimCourseName: state.selectedCourse.swimCourseName,
+        //   swimCoursePrice: state.selectedCourse.swimCoursePrice.toString(),
+        // );
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
       } catch (_) {
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.failure));

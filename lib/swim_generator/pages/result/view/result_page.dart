@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/bloc/result_bloc.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/view/result_form.dart';
-import 'package:user_repository/user_repository.dart';
-
-import '../../swim_course/bloc/swim_course_bloc.dart';
 
 class ResultPage extends StatelessWidget {
   final GraphQLClient graphQLClient;
@@ -25,8 +22,7 @@ class ResultPage extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: BlocProvider(
           create: (context) => ResultBloc(
-            ResultRepository(graphQLClient: graphQLClient),
-            context.read<UserRepository>(),
+            ResultRepository(graphQLClient: graphQLClient)
           ),
           child: const ResultForm(),
         ));

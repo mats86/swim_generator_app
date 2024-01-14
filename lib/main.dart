@@ -11,9 +11,10 @@ enum SpecialFeatureMode {
 }
 
 void main() {
-  //final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
-  final HttpLink httpLink = HttpLink(
-      'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
+  final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
+  // final HttpLink httpLink = HttpLink('https://10.0.2.2:7188/graphql');
+  // final HttpLink httpLink = HttpLink(
+  //     'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
 
   final ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
