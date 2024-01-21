@@ -6,6 +6,7 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
+import '../../../models/swim_course_info.dart';
 import '../bloc/birth_day_bloc.dart';
 
 class BirthDayForm extends StatefulWidget {
@@ -40,11 +41,54 @@ class _BirthDayForm extends State<BirthDayForm> {
               DateFormat('dd.MM.yyyy').format(state.birthDay.value!);
         }
         if (state.submissionStatus.isFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Something went wrong!')),
-            );
+          showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: const Row(
+                  children: <Widget>[
+                    Icon(Icons.error, color: Colors.red),
+                    SizedBox(width: 10),
+                    Expanded(child: Text('Problem mit der Kursbuchung')),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text(
+                          'Sie möchten den Kurs "${state.autoSelectedCourse.swimCourseName}" buchen.'),
+                      Text(
+                          'Ihr eingegebenes Schwimmniveau: ${context.read<SwimGeneratorCubit>().state.swimLevel}'),
+                      Text(
+                          'Ihr eingegebenes Geburtsdatum: ${DateFormat('dd.MM.yyyy').format(state.birthDay.value!)}'),
+                      const SizedBox(height: 10),
+                      const Text(
+                          'Die von Ihnen eingegebenen Informationen passen nicht zu dem von Ihnen ausgewählten Kurs.'),
+                      const Text(
+                          'Möchten Sie alternative Kurse, die besser zu Ihrem Profil passen, anzeigen lassen?'),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Alternativen ansehen'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).pushNamed('/');
+                      // context.read<BirthDayBloc>().add(LoadSwimCourseOptions(
+                      //     context.read<SwimGeneratorCubit>().state.birthDay.birthDay!));
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Zurück zur Hauptseite'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
         }
       },
       child: Column(
@@ -55,6 +99,10 @@ class _BirthDayForm extends State<BirthDayForm> {
               shouldUseFutureBuilder: widget.shouldUseFutureBuilder),
           const SizedBox(
             height: 16.0,
+          ),
+          // _SwimCourseRadioButton(),
+          const SizedBox(
+            height: 32.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -96,22 +144,25 @@ class _BirthDataInput extends StatelessWidget {
           controller: controller,
           readOnly: true,
           onTap: () async {
-            var datePicked = await DatePicker.showSimpleDatePicker(
-              context,
-              lastDate: DateTime.now(),
-              initialDate: DateTime(2022),
-              dateFormat: "dd.MMMM.yyyy",
-              locale: DateTimePickerLocale.de,
-              looping: false,
-              pickerMode: DateTimePickerMode.date,
-              //backgroundColor: Colors.lightBlueAccent,
-              titleText: "Datum auswählen",
-              itemTextStyle: const TextStyle(
-                fontSize: 18, // Setzt die Schriftgröße
-                color: Colors.black, // Setzt die Textfarbe
-                // Weitere Stiloptionen wie fontFamily, fontStyle usw.
-              ),
-            );
+            var datePicked = await DatePicker.showSimpleDatePicker(context,
+                lastDate: DateTime.now(),
+                initialDate: context
+                        .read<SwimGeneratorCubit>()
+                        .state
+                        .birthDay
+                        .birthDay ??
+                    DateTime(2020),
+                dateFormat: "dd.MMMM.yyyy",
+                locale: DateTimePickerLocale.de,
+                looping: false,
+                pickerMode: DateTimePickerMode.date,
+                //backgroundColor: Colors.lightBlueAccent,
+                titleText: "Datum auswählen",
+                itemTextStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+                backgroundColor: Theme.of(context).colorScheme.background);
             controller.text = DateFormat('dd.MM.yyyy').format(datePicked!);
             if (context.mounted) {
               context.read<BirthDayBloc>().add(BirthDayChanged(datePicked));
@@ -148,53 +199,6 @@ class _BirthDataInput extends StatelessWidget {
   }
 }
 
-// void _showDatePickerDialog(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Dialog(
-//         insetPadding:
-//         EdgeInsets.all(0.0), // Entfernen Sie Padding um den Dialog
-//         child: Container(
-//           width: MediaQuery.of(context)
-//               .size
-//               .width, // Setzt die Breite auf die volle Bildschirmbreite
-//           height: 200, // Legen Sie eine angemessene Höhe für den Picker fest
-//           child: DropdownDatePicker(
-//             locale: "de_DE",
-//             inputDecoration: InputDecoration(
-//                 enabledBorder: const OutlineInputBorder(
-//                   borderSide: BorderSide(color: Colors.grey, width: 1.0),
-//                 ),
-//                 border: OutlineInputBorder(
-//                     borderRadius: BorderRadius.circular(10))), // optional
-//             isDropdownHideUnderline: true, // optional
-//             isFormValidator: true, // optional
-//             startYear: 1900, // optional
-//             endYear: 2020, // optional
-//             width: 10, // optional
-//             // selectedDay: 14, // optional
-//             selectedMonth: 10, // optional
-//             selectedYear: 1993, // optional
-//             onChangedDay: (value) => print('onChangedDay: $value'),
-//             onChangedMonth: (value) => print('onChangedMonth: $value'),
-//             onChangedYear: (value) => print('onChangedYear: $value'),
-//             //boxDecoration: BoxDecoration(
-//             // border: Border.all(color: Colors.grey, width: 1.0)), // optional
-//             // showDay: false,// optional
-//             // dayFlex: 2,// optional
-//             // locale: "zh_CN",// optional
-//             hintDay: 'Day', // optional
-//             // hintMonth: 'Month', // optional
-//             // hintYear: 'Year', // optional
-//             // hintTextStyle: TextStyle(color: Colors.grey), // optional
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
-
 class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -207,6 +211,16 @@ class _SubmitButton extends StatelessWidget {
           context
               .read<SwimGeneratorCubit>()
               .updateBirthDay(state.birthDay.value);
+          //---------------//
+
+          SwimCourseInfo swimCourseInfo = SwimCourseInfo(
+              season: '',
+              swimCourse: BlocProvider.of<BirthDayBloc>(context)
+                  .state
+                  .autoSelectedCourse);
+          context
+              .read<SwimGeneratorCubit>()
+              .updateSwimCourseInfo(swimCourseInfo);
         }
       },
       buildWhen: (previous, current) =>

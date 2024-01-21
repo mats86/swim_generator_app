@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:swim_generator_app/swim_generator/models/models.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/swim_course_bloc.dart';
@@ -15,12 +17,28 @@ class SwimCourseForm extends StatefulWidget {
 }
 
 class _SwimCourseForm extends State<SwimCourseForm> {
+  InAppWebViewController? webViewController;
+  final PlatformWebViewController _controller = PlatformWebViewController(
+    const PlatformWebViewControllerCreationParams(),
+  )..loadRequest(
+      LoadRequestParams(
+        uri: Uri.parse(
+            'https://wassermenschen-schwimmschulen.vercel.app/single-course?id=6594175775506258baab1304'),
+      ),
+    );
+
   @override
   void initState() {
     super.initState();
     context.read<SwimCourseBloc>().add(LoadSwimSeasonOptions());
     context.read<SwimCourseBloc>().add(LoadSwimCourseOptions(
-        context.read<SwimGeneratorCubit>().state.birthDay.birthDay!));
+        context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
+        context
+            .read<SwimGeneratorCubit>()
+            .state
+            .swimLevel
+            .swimSeason!
+            .refDate!));
     if (context
             .read<SwimGeneratorCubit>()
             .state
@@ -59,7 +77,9 @@ class _SwimCourseForm extends State<SwimCourseForm> {
               "Dem Alter entsprechende Kurse",
             ),
           ),
-          _SwimCourseRadioButton(),
+          _SwimCourseRadioButton(
+            controller: _controller,
+          ),
           const Divider(),
           const Align(
             alignment: Alignment.centerLeft,
@@ -86,49 +106,13 @@ class _SwimCourseForm extends State<SwimCourseForm> {
   }
 }
 
-// class _SwimCourseSeason extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<SwimCourseBloc, SwimCourseState>(
-//       builder: (context, state) {
-//         return InputDecorator(
-//           decoration: InputDecoration(
-//             contentPadding:
-//                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-//             labelText: 'Für welche Sommer-Saison möchtest du den Kurs buchen?',
-//             border:
-//                 OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-//           ),
-//           child: DropdownButtonHideUnderline(
-//             child: !state.loadingSeasonStatus.isSuccess
-//                 ? const SpinKitWaveSpinner(
-//                     color: Colors.lightBlueAccent,
-//                     size: 50.0,
-//                   )
-//                 : DropdownButton<String>(
-//                     isExpanded: true,
-//                     value: state.swimSeason
-//                         .value, // Hier sollte der ausgewählte Wert sein
-//                     items: state.swimSeasons.map((String season) {
-//                       return DropdownMenuItem<String>(
-//                         value: season,
-//                         child: Text(season),
-//                       );
-//                     }).toList(),
-//                     onChanged: (value) {
-//                       // Dies wird aufgerufen, wenn der Benutzer ein Element auswählt.
-//                       BlocProvider.of<SwimCourseBloc>(context)
-//                           .add(SwimSeasonChanged(value!));
-//                     },
-//                   ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-
 class _SwimCourseRadioButton extends StatelessWidget {
+  final PlatformWebViewController controller;
+
+  const _SwimCourseRadioButton({
+    required this.controller,
+  });
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SwimCourseBloc, SwimCourseState>(
@@ -147,8 +131,7 @@ class _SwimCourseRadioButton extends StatelessWidget {
                 return SizedBox(
                   // height: 50,
                   child: Visibility(
-                    visible:
-                        state.swimCourseOptions[index].isSwimCourseVisible,
+                    visible: state.swimCourseOptions[index].isSwimCourseVisible,
                     child: Row(
                       children: [
                         Radio(
@@ -166,23 +149,53 @@ class _SwimCourseRadioButton extends StatelessWidget {
                             children: [
                               Text(
                                 '${state.swimCourseOptions[index].swimCourseName} '
-                                '${state.swimCourseOptions[index].swimCoursePrice} €',
-                                overflow: TextOverflow
-                                    .visible,
+                                'AB ${state.swimCourseOptions[index].swimCoursePrice} €',
+                                overflow: TextOverflow.visible,
                               ),
                             ],
                           ),
                         ),
-                        IconButton(
-                          // onPressed: () => showCourseDescription(context,
-                          // //     index),
-                          icon: const Icon(
-                            Icons.info_rounded,
-                            color: Colors.blue,
-                            size: 20,
+                        Tooltip(
+                          preferBelow: false,
+                          message: state
+                              .swimCourseOptions[index].swimCourseDescription,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.info_rounded,
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(state.swimCourseOptions[index]
+                                        .swimCourseName),
+                                    content: SizedBox(
+                                      height: 400,
+                                      // Stellen Sie eine geeignete Höhe ein
+                                      width: 425,
+                                      // Stellen Sie eine geeignete Breite ein
+                                      child: PlatformWebViewWidget(
+                                        PlatformWebViewWidgetCreationParams(
+                                            controller: controller),
+                                      ).build(context),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Schließen'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          onPressed: () {},
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -203,8 +216,7 @@ class _SubmitButton extends StatelessWidget {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
           SwimCourseInfo swimCourseInfo = SwimCourseInfo(
-              season: state.swimSeason.value,
-              swimCourse: state.selectedCourse);
+              season: state.swimSeason.value, swimCourse: state.selectedCourse);
           context
               .read<SwimGeneratorCubit>()
               .updateSwimCourseInfo(swimCourseInfo);

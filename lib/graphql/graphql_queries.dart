@@ -1,14 +1,14 @@
 class GraphQLQueries {
   static const String getSwimCourseById = '''
-  query getSwimCourseBySwimLevelId(\$id: Int!) {
-    swimCourseById(id: \$id) {
+  query getSwimCourseById(\$swimCourseID: Int!) {
+    swimCourseById(swimCourseID: \$swimCourseID) {
       swimCourseID
       swimCourseName
       swimCourseMinAge
       swimCourseMaxAge
       swimCoursePrice
       swimCourseDescription
-      swimCourseHasFixedDate
+      swimCourseDateTypID
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
@@ -25,7 +25,7 @@ class GraphQLQueries {
       swimCourseMaxAge
       swimCoursePrice
       swimCourseDescription
-      swimCourseHasFixedDate
+      swimCourseDateTypID
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
@@ -42,7 +42,7 @@ class GraphQLQueries {
       swimCourseMaxAge
       swimCoursePrice
       swimCourseDescription
-      swimCourseHasFixedDate
+      swimCourseDateTypID
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID

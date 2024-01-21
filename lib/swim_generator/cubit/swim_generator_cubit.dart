@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/models.dart';
+import '../pages/swim_level/models/models.dart';
 
 part 'swim_generator_state.dart';
 
@@ -34,8 +35,7 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
   void stepCancelled() {
     if (state.activeStepperIndex > 0) {
       var newList = List<bool>.from(state.shouldUseFutureBuilderList);
-      newList[state.activeStepperIndex - 1] =
-          true;
+      newList[state.activeStepperIndex - 1] = true;
 
       emit(state.copyWith(
         activeStepperIndex: state.activeStepperIndex - 1,
@@ -44,17 +44,12 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
     }
   }
 
-  void updateKindPersonalInfo(String? firstName, String? lastName) {
+  void updateSwimLevel(SwimLevelEnum? swimLevel, SwimSeason? swimSeason) {
     emit(state.copyWith(
-        kindPersonalInfo: state.kindPersonalInfo.copyWith(
-      firstName: firstName,
-      lastName: lastName,
+        swimLevel: state.swimLevel.copyWith(
+      swimLevel: swimLevel,
+      swimSeason: swimSeason,
     )));
-  }
-
-  void updateSwimLevel(SwimLevelEnum? swimLevel) {
-    emit(state.copyWith(
-        swimLevel: state.swimLevel.copyWith(swimLevel: swimLevel)));
   }
 
   void updateBirthDay(DateTime? birthDay) {
@@ -67,5 +62,13 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
 
   void updateSwimPoolInfo(List<SwimPoolInfo>? swimPoolInfo) {
     emit(state.copyWith(swimPools: swimPoolInfo));
+  }
+
+  void updateKindPersonalInfo(KindPersonalInfo? kindPersonalInfo) {
+    emit(state.copyWith(kindPersonalInfo: kindPersonalInfo));
+  }
+
+  void updatePersonalInfo(PersonalInfo? personalInfo) {
+    emit(state.copyWith(personalInfo: personalInfo));
   }
 }

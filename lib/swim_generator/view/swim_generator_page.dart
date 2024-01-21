@@ -8,15 +8,21 @@ import '../cubit/swim_generator_cubit.dart';
 class SwimGeneratorPage extends StatelessWidget {
   final GraphQLClient graphQLClient;
   final String title;
+  final List<int> order;
 
-  const SwimGeneratorPage(
-      {super.key, required this.graphQLClient, required this.title});
+  const SwimGeneratorPage({
+    super.key,
+    required this.graphQLClient,
+    required this.title,
+    this.order = const [0, 1, 2, 3, 4, 5, 6],
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SwimGeneratorCubit>(
-      create: (_) => SwimGeneratorCubit(7),
-      child: SwimGeneratorStepper(graphQLClient: graphQLClient),
+      create: (_) => SwimGeneratorCubit(order.length),
+      child:
+      SwimGeneratorStepper(graphQLClient: graphQLClient, order: order),
     );
   }
 }

@@ -1,16 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:swim_generator_app/swim_generator/pages/swim_course/models/swim_course.dart';
 
+import '../../../../graphql/graphql_queries.dart';
 import '../models/birth_day_model.dart';
 
 part 'birth_day_event.dart';
 
 part 'birth_day_state.dart';
+part 'birth_day_repository.dart';
 
 class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
+  final BirthDayRepository service;
 
-  BirthDayBloc() : super(const BirthDayState()) {
+  BirthDayBloc(this.service) : super(const BirthDayState()) {
     on<BirthDayChanged>(_onBirthDayChanged);
     on<FormSubmitted>(_onFormSubmitted);
   }
@@ -18,9 +23,8 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
   void _onBirthDayChanged(
     BirthDayChanged event,
     Emitter<BirthDayState> emit,
-  ) {
+  ) async {
     final birthDay = BirthDayModel.dirty(event.birthDay);
-    // Aktualisieren Sie den Status basierend auf der Gültigkeit des Formulars
     emit(
       state.copyWith(
         birthDay: birthDay,
@@ -28,6 +32,31 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
       ),
     );
   }
+
+  DateTime getSpecificDate() {
+    DateTime now = DateTime.now();
+    int currentYear = now.year;
+    return DateTime(currentYear, 6, 1);
+  }
+
+  double calculateAge(DateTime birthDate, DateTime specificDate) {
+    int yearDifference = specificDate.year - birthDate.year;
+    int monthDifference = specificDate.month - birthDate.month;
+    int dayDifference = specificDate.day - birthDate.day;
+
+    if (monthDifference < 0 || (monthDifference == 0 && dayDifference < 0)) {
+      yearDifference--;
+      monthDifference += 12;
+    }
+
+    if (dayDifference < 0) {
+      monthDifference--;
+    }
+
+    double age = yearDifference + (monthDifference / 12.0);
+    return age;
+  }
+
 
   void _onFormSubmitted(
     FormSubmitted event,
@@ -40,12 +69,22 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
         isValid: Formz.validate([birthDay])
       ),
     );
+    double age = calculateAge(birthDay.value!, getSpecificDate());
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      // await userRepository.updateBirthDay(
-      //   birthDay: birthDay.value!,
-      // );
-      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      //emit(state.copyWith(autoSelectedCourse: await service.getSwimCourseById(4),));
+      if (false) {
+        if ( (age >= state.autoSelectedCourse.swimCourseMinAge) &&
+            (age <= state.autoSelectedCourse.swimCourseMaxAge) ) {
+          emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+        }
+        else {
+          emit(state.copyWith(submissionStatus: FormzSubmissionStatus.failure));
+        }
+      }
+      else {
+        emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      }
     }
   }
 }

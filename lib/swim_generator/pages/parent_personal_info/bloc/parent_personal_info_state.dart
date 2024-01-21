@@ -7,7 +7,7 @@ class ParentPersonalInfoState extends Equatable {
     this.title = const TitleModel.pure(),
     this.firstName = const FirstNameModel.pure(),
     this.lastName = const LastNameModel.pure(),
-    this.street = const StreetModel.pure(),
+    this.parentStreet = const StreetModel.pure(),
     this.streetNumber = const StreetNumberModel.pure(),
     this.zipCode = const ZipCodeModel.pure(),
     this.city = const CityModel.pure(),
@@ -24,7 +24,7 @@ class ParentPersonalInfoState extends Equatable {
   final TitleModel title;
   final FirstNameModel firstName;
   final LastNameModel lastName;
-  final StreetModel street;
+  final StreetModel parentStreet;
   final StreetNumberModel streetNumber;
   final ZipCodeModel zipCode;
   final CityModel city;
@@ -41,7 +41,7 @@ class ParentPersonalInfoState extends Equatable {
     TitleModel? title,
     FirstNameModel? firstName,
     LastNameModel? lastName,
-    StreetModel? street,
+    StreetModel? parentStreet,
     StreetNumberModel? streetNumber,
     ZipCodeModel? zipCode,
     CityModel? city,
@@ -57,7 +57,7 @@ class ParentPersonalInfoState extends Equatable {
         title: title ?? this.title,
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
-        street: street ?? this.street,
+        parentStreet: parentStreet ?? this.parentStreet,
         streetNumber: streetNumber ?? this.streetNumber,
         zipCode: zipCode ?? this.zipCode,
         city: city ?? this.city,
@@ -77,7 +77,7 @@ class ParentPersonalInfoState extends Equatable {
         title,
         firstName,
         lastName,
-        street,
+        parentStreet,
         streetNumber,
         zipCode,
         city,

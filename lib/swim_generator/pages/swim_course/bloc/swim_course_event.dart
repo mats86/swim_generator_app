@@ -28,10 +28,11 @@ class LoadSwimSeasonOptions extends SwimCourseEvent {}
 
 class LoadSwimCourseOptions extends SwimCourseEvent {
   final DateTime birthDay;
-  const LoadSwimCourseOptions(this.birthDay);
+  final DateTime refDate;
+  const LoadSwimCourseOptions(this.birthDay, this.refDate);
 
   @override
-  List<Object> get props => [birthDay];
+  List<Object> get props => [birthDay, refDate];
 }
 
 class FormSubmitted extends SwimCourseEvent {}

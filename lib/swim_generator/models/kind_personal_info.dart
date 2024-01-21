@@ -4,7 +4,16 @@ class KindPersonalInfo extends Equatable {
   final String firstName;
   final String lastName;
 
-  const KindPersonalInfo({this.firstName = '', this.lastName = ''});
+  const KindPersonalInfo({
+    required this.firstName,
+    required this.lastName,
+  });
+
+  const KindPersonalInfo.empty()
+      : this(
+          firstName: '',
+          lastName: '',
+        );
 
   KindPersonalInfo copyWith({
     String? firstName,

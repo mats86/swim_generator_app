@@ -1,8 +1,12 @@
 part of 'swim_pool_bloc.dart';
 
 class SwimPoolState extends Equatable {
+  final bool isBooking;
   final List<SwimPool> swimPools;
   final List<FixDate> fixDates;
+  final List<FixDate> fixDatesVisible;
+  final FixDateModel fixDateModel;
+  final FixDate selectedFixDate;
   final FormzSubmissionStatus loadingStatus;
   final FormzSubmissionStatus toggleStatus;
   final FormzSubmissionStatus loadingFixDates;
@@ -13,8 +17,12 @@ class SwimPoolState extends Equatable {
   final FormzSubmissionStatus submissionStatus;
 
   const SwimPoolState({
+    this.isBooking = false,
     this.swimPools = const [],
     this.fixDates = const [],
+    this.fixDatesVisible = const [],
+    this.fixDateModel = const FixDateModel.pure(),
+    this.selectedFixDate = const FixDate.empty(),
     this.loadingStatus = FormzSubmissionStatus.initial,
     this.toggleStatus = FormzSubmissionStatus.initial,
     this.loadingFixDates = FormzSubmissionStatus.initial,
@@ -26,8 +34,12 @@ class SwimPoolState extends Equatable {
   });
 
   SwimPoolState copyWith({
+    bool? isBooking,
     List<SwimPool>? swimPools,
     List<FixDate>? fixDates,
+    List<FixDate>? fixDatesVisible,
+    FixDateModel? fixDateModel,
+    FixDate? selectedFixDate,
     FormzSubmissionStatus? loadingStatus,
     FormzSubmissionStatus? toggleStatus,
     FormzSubmissionStatus? loadingFixDates,
@@ -38,8 +50,12 @@ class SwimPoolState extends Equatable {
     FormzSubmissionStatus? submissionStatus,
   }) {
     return SwimPoolState(
+      isBooking: isBooking ?? this.isBooking,
       swimPools: swimPools ?? this.swimPools,
       fixDates: fixDates ?? this.fixDates,
+      fixDatesVisible: fixDatesVisible ?? this.fixDatesVisible,
+      fixDateModel: fixDateModel ?? this.fixDateModel,
+      selectedFixDate: selectedFixDate ?? this.selectedFixDate,
       loadingStatus: loadingStatus ?? this.loadingStatus,
       toggleStatus: toggleStatus ?? this.toggleStatus,
       loadingFixDates: loadingFixDates ?? this.loadingFixDates,
@@ -53,14 +69,17 @@ class SwimPoolState extends Equatable {
 
   @override
   List<Object?> get props => [
-    swimPools,
-    fixDates,
-    loadingStatus,
-    toggleStatus,
-    loadingFixDates,
-    swimPoolModel,
-    hasFixedDate,
-    flexFixDate,
-    submissionStatus
-  ];
+        isBooking,
+        swimPools,
+        fixDates,
+        fixDatesVisible,
+        fixDateModel,
+        loadingStatus,
+        toggleStatus,
+        loadingFixDates,
+        swimPoolModel,
+        hasFixedDate,
+        flexFixDate,
+        submissionStatus
+      ];
 }

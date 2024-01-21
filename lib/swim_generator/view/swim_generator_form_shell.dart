@@ -15,12 +15,13 @@ class SwimGeneratorFormShell extends StatelessWidget {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           // Hintergrundbild
           Container(
             decoration: const BoxDecoration(
+              color: Colors.white,
               image: DecorationImage(
                 image: AssetImage("images/Rectangle3704.png",), // Pfad zu Ihrem Hintergrundbild
                 fit: BoxFit.cover, // Sorgt dafür, dass das Bild den ganzen Container ausfüllt

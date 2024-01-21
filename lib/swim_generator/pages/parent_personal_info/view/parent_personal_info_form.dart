@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
+import 'package:swim_generator_app/swim_generator/models/models.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/parent_personal_info_bloc.dart';
@@ -15,8 +18,6 @@ class ParentPersonalInfoForm extends StatefulWidget {
 }
 
 class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
-  final GlobalKey<FormState> textFieldKey = GlobalKey<FormState>();
-
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -76,6 +77,137 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
     _addFocusNodeListener(
         _phoneNumberFocusNode, _phoneNumberConfirmFocusNode, null);
     _addFocusNodeListener(_phoneNumberConfirmFocusNode, null, null);
+
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .parentTitle
+        .isNotEmpty) {
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(TitleChanged(
+          context.read<SwimGeneratorCubit>().state.personalInfo.parentTitle));
+    }
+    if (context.read<SwimGeneratorCubit>().state.personalInfo.firstName != '') {
+      _firstNameController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.firstName;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentFirstNameChanged(
+              context.read<SwimGeneratorCubit>().state.personalInfo.firstName));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .lastName
+        .isNotEmpty) {
+      _lastNameController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.lastName;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentLastNameChanged(
+              context.read<SwimGeneratorCubit>().state.personalInfo.lastName));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .parentStreet
+        .isNotEmpty) {
+      _streetController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(ParentStreetChanged(
+          context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .streetNumber
+        .isNotEmpty) {
+      _streetNumberController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentStreetNumberChanged(context
+              .read<SwimGeneratorCubit>()
+              .state
+              .personalInfo
+              .streetNumber));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .zipCode
+        .isNotEmpty) {
+      _zipCodeController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.zipCode;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(ParentZipCodeChanged(
+          context.read<SwimGeneratorCubit>().state.personalInfo.zipCode));
+    }
+    if (context.read<SwimGeneratorCubit>().state.personalInfo.city.isNotEmpty) {
+      _cityController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.city;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(ParentCityChanged(
+          context.read<SwimGeneratorCubit>().state.personalInfo.city));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .email
+        .isNotEmpty) {
+      _emailController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.email;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(ParentEmailChanged(
+          context.read<SwimGeneratorCubit>().state.personalInfo.email));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .emailConfirm
+        .isNotEmpty) {
+      _emailConfirmController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.emailConfirm;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentEmailConfirmChanged(context
+              .read<SwimGeneratorCubit>()
+              .state
+              .personalInfo
+              .emailConfirm));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .phoneNumber
+        .isNotEmpty) {
+      _phoneNumberController.text =
+          context.read<SwimGeneratorCubit>().state.personalInfo.phoneNumber;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentPhoneNumberChanged(context
+              .read<SwimGeneratorCubit>()
+              .state
+              .personalInfo
+              .phoneNumber));
+    }
+    if (context
+        .read<SwimGeneratorCubit>()
+        .state
+        .personalInfo
+        .phoneNumberConfirm
+        .isNotEmpty) {
+      _phoneNumberConfirmController.text = context
+          .read<SwimGeneratorCubit>()
+          .state
+          .personalInfo
+          .phoneNumberConfirm;
+      BlocProvider.of<ParentPersonalInfoBloc>(context).add(
+          ParentPhoneNumberConfirmChanged(context
+              .read<SwimGeneratorCubit>()
+              .state
+              .personalInfo
+              .phoneNumberConfirm));
+    }
   }
 
   @override
@@ -108,17 +240,41 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
       },
       child: Column(
         children: [
-          _ParentTitle(),
-          _FirstNameInput(),
-          _LastNameInput(),
-          _StreetInput(),
-          _StreetNumberInput(),
-          _ZipCodeInput(),
-          _CityInput(),
-          _EmailInput(emailFieldKey: textFieldKey,),
-          _EmailConfirmInput(),
-          _PhoneNumberInput(),
-          _PhoneNumberConfirmInput(),
+          const _ParentTitle(
+          ),
+          _FirstNameInput(
+            controller: _firstNameController,
+          ),
+          _LastNameInput(
+            controller: _lastNameController,
+          ),
+          _StreetInput(
+            controller: _streetController,
+          ),
+          _StreetNumberInput(
+            controller: _streetNumberController,
+          ),
+          _ZipCodeInput(
+            controller: _zipCodeController,
+          ),
+          _CityInput(
+            controller: _cityController,
+          ),
+          _EmailInput(
+            controller: _emailController,
+          ),
+          _EmailConfirmInput(
+            controller: _emailConfirmController,
+          ),
+          // _PhoneNumberInput(
+          //   controller: _phoneNumberController,
+          // ),
+          // _PhoneNumberConfirmInput(
+          //   controller: _phoneNumberConfirmController,
+          // ),
+          //_PhoneNumberInput_(),
+          _PhoneNumberInputFlag(),
+          _PhoneNumberConfirmInputFlag(),
           const SizedBox(
             height: 16.0,
           ),
@@ -139,6 +295,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
 }
 
 class _ParentTitle extends StatelessWidget {
+  const _ParentTitle();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
@@ -181,6 +338,10 @@ class _ParentTitle extends StatelessWidget {
 }
 
 class _FirstNameInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _FirstNameInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
@@ -188,6 +349,7 @@ class _FirstNameInput extends StatelessWidget {
             previous.firstName != current.firstName,
         builder: (context, state) {
           return TextField(
+            controller: controller,
             key: const Key('ParentPersonalInfoForm_firstNameInput_textField'),
             onChanged: (firstName) => context
                 .read<ParentPersonalInfoBloc>()
@@ -219,12 +381,17 @@ class _FirstNameInput extends StatelessWidget {
 }
 
 class _LastNameInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _LastNameInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) => previous.lastName != current.lastName,
         builder: (context, state) {
           return TextField(
+            controller: controller,
             key: const Key('ParentPersonalInfoForm_lastNameInput_textField'),
             onChanged: (lastName) => context
                 .read<ParentPersonalInfoBloc>()
@@ -256,12 +423,17 @@ class _LastNameInput extends StatelessWidget {
 }
 
 class _StreetInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _StreetInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
-        buildWhen: (previous, current) => previous.street != current.street,
+        buildWhen: (previous, current) => previous.parentStreet != current.parentStreet,
         builder: (context, state) {
           return TextField(
+            controller: controller,
             key: const Key('ParentPersonalInfoForm_StreetInput_textField'),
             onChanged: (street) => context
                 .read<ParentPersonalInfoBloc>()
@@ -283,8 +455,8 @@ class _StreetInput extends StatelessWidget {
                   ],
                 ),
               ),
-              errorText: state.street.displayError != null
-                  ? state.street.error?.message
+              errorText: state.parentStreet.displayError != null
+                  ? state.parentStreet.error?.message
                   : null,
             ),
           );
@@ -293,6 +465,10 @@ class _StreetInput extends StatelessWidget {
 }
 
 class _StreetNumberInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _StreetNumberInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
@@ -300,6 +476,7 @@ class _StreetNumberInput extends StatelessWidget {
             previous.streetNumber != current.streetNumber,
         builder: (context, state) {
           return TextField(
+            controller: controller,
             key:
                 const Key('ParentPersonalInfoForm_StreetNumberInput_textField'),
             onChanged: (streetNumber) => context
@@ -332,21 +509,24 @@ class _StreetNumberInput extends StatelessWidget {
 }
 
 class _ZipCodeInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _ZipCodeInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
       buildWhen: (previous, current) => previous.zipCode != current.zipCode,
       builder: (context, state) {
         return TextField(
+          controller: controller,
           key: const Key('ParentPersonalInfoForm_ZipCodeInput_textField'),
           onChanged: (zipCode) => context
               .read<ParentPersonalInfoBloc>()
               .add(ParentZipCodeChanged(zipCode)),
           keyboardType: TextInputType.number,
           maxLength: 5,
-          // Begrenzt die Eingabe auf 5 Zeichen
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          // Erlaubt nur Zahlen
           decoration: InputDecoration(
             counterText: "",
             label: const FittedBox(
@@ -375,12 +555,17 @@ class _ZipCodeInput extends StatelessWidget {
 }
 
 class _CityInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _CityInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) => previous.city != current.city,
         builder: (context, state) {
           return TextField(
+            controller: controller,
             key: const Key('ParentPersonalInfoForm_CityInput_textField'),
             onChanged: (city) => context
                 .read<ParentPersonalInfoBloc>()
@@ -412,8 +597,9 @@ class _CityInput extends StatelessWidget {
 }
 
 class _EmailInput extends StatelessWidget {
-  final GlobalKey<FormState> emailFieldKey;
-  const _EmailInput({super.key, required this.emailFieldKey});
+  final TextEditingController controller;
+
+  const _EmailInput({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -421,13 +607,14 @@ class _EmailInput extends StatelessWidget {
         buildWhen: (previous, current) => previous.email != current.email,
         builder: (context, state) {
           return TextFormField(
+            controller: controller,
             enableInteractiveSelection: false,
             keyboardType: TextInputType.text,
             inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'^[ctrl]+\s*v$')), // Disable all input
+              FilteringTextInputFormatter.deny(RegExp(r'^[ctrl]+\s*v$')),
+              // Disable all input
             ],
             contextMenuBuilder: null,
-            key: emailFieldKey,
             onChanged: (email) => context
                 .read<ParentPersonalInfoBloc>()
                 .add(ParentEmailChanged(email)),
@@ -457,8 +644,11 @@ class _EmailInput extends StatelessWidget {
   }
 }
 
-
 class _EmailConfirmInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _EmailConfirmInput({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
@@ -466,6 +656,8 @@ class _EmailConfirmInput extends StatelessWidget {
             previous.emailConfirm != current.emailConfirm,
         builder: (context, state) {
           return TextField(
+            enableInteractiveSelection: false,
+            controller: controller,
             key:
                 const Key('ParentPersonalInfoForm_EmailConfirmInput_textField'),
             onChanged: (emailConfirm) => context
@@ -497,19 +689,105 @@ class _EmailConfirmInput extends StatelessWidget {
   }
 }
 
-class _PhoneNumberInput extends StatelessWidget {
+// class _PhoneNumberInput extends StatelessWidget {
+//   final TextEditingController controller;
+//
+//   const _PhoneNumberInput({required this.controller});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
+//         buildWhen: (previous, current) =>
+//             previous.phoneNumber != current.phoneNumber,
+//         builder: (context, state) {
+//           return TextField(
+//             enableInteractiveSelection: false,
+//             controller: controller,
+//             key: const Key('ParentPersonalInfoForm_PhoneNumberInput_textField'),
+//             onChanged: (phoneNumber) => context
+//                 .read<ParentPersonalInfoBloc>()
+//                 .add(ParentPhoneNumberChanged(phoneNumber)),
+//             decoration: InputDecoration(
+//               label: const FittedBox(
+//                 fit: BoxFit.fitWidth,
+//                 child: Row(
+//                   children: [
+//                     Text(
+//                       'Handynummer',
+//                       style: TextStyle(fontSize: 14),
+//                     ),
+//                     Padding(
+//                       padding: EdgeInsets.all(3.0),
+//                     ),
+//                     Text('*',
+//                         style: TextStyle(color: Colors.red, fontSize: 14)),
+//                   ],
+//                 ),
+//               ),
+//               errorText: state.phoneNumber.displayError != null
+//                   ? state.phoneNumber.error?.message
+//                   : null,
+//             ),
+//           );
+//         });
+//   }
+// }
+//
+// class _PhoneNumberConfirmInput extends StatelessWidget {
+//   final TextEditingController controller;
+//
+//   const _PhoneNumberConfirmInput({required this.controller});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
+//         buildWhen: (previous, current) =>
+//             previous.phoneNumberConfirm != current.phoneNumberConfirm,
+//         builder: (context, state) {
+//           return TextField(
+//             enableInteractiveSelection: false,
+//             controller: controller,
+//             key: const Key(
+//                 'ParentPersonalInfoForm_PhoneNumberConfirmInput_textField'),
+//             onChanged: (phoneNumberConfirm) => context
+//                 .read<ParentPersonalInfoBloc>()
+//                 .add(ParentPhoneNumberConfirmChanged(phoneNumberConfirm)),
+//             decoration: InputDecoration(
+//               label: const FittedBox(
+//                 fit: BoxFit.fitWidth,
+//                 child: Row(
+//                   children: [
+//                     Text(
+//                       'Wiederhole bitte deine Handynummer',
+//                       style: TextStyle(fontSize: 14),
+//                     ),
+//                     Padding(
+//                       padding: EdgeInsets.all(3.0),
+//                     ),
+//                     Text('*',
+//                         style: TextStyle(color: Colors.red, fontSize: 14)),
+//                   ],
+//                 ),
+//               ),
+//               errorText: state.phoneNumberConfirm.displayError != null
+//                   ? state.phoneNumberConfirm.error?.message
+//                   : null,
+//             ),
+//           );
+//         });
+//   }
+// }
+
+class _PhoneNumberInputFlag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) =>
-            previous.phoneNumber != current.phoneNumber,
+        previous.phoneNumber != current.phoneNumber,
         builder: (context, state) {
-          return TextField(
-            key: const Key('ParentPersonalInfoForm_PhoneNumberInput_textField'),
-            onChanged: (phoneNumber) => context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentPhoneNumberChanged(phoneNumber)),
-            decoration: InputDecoration(
+          return InternationalPhoneNumberInput(
+            inputDecoration: InputDecoration(
+              counterText: '',
               label: const FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Row(
@@ -530,25 +808,62 @@ class _PhoneNumberInput extends StatelessWidget {
                   ? state.phoneNumber.error?.message
                   : null,
             ),
+            selectorConfig: const SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              setSelectorButtonAsPrefixIcon: true,
+              leadingPadding: 20,
+            ),
+            hintText: 'Phone number',
+            validator: (userInput) {
+              if (userInput!.isEmpty) {
+                return 'Please enter your phone number';
+              }
+
+              // Ensure it is only digits and optional '+' or '00' for the country code.
+              if (!RegExp(r'^(\+|)?[0-9]+$').hasMatch(userInput)) {
+                return 'Please enter a valid phone number';
+              }
+
+              return null; // Return null when the input is valid
+            },
+            onInputChanged: (PhoneNumber phoneNumber) {
+              context
+                  .read<ParentPersonalInfoBloc>()
+                  .add(ParentPhoneNumberChanged(phoneNumber.phoneNumber!));
+            },
+            onInputValidated: (bool value) {
+            },
+            maxLength: 15,
+            ignoreBlank: false,
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            selectorTextStyle: const TextStyle(color: Colors.black),
+            // initialValue: number,
+            // textFieldController: controller,
+            formatInput: true,
+            keyboardType: const TextInputType.numberWithOptions(
+                signed: true, decimal: true),
+            onSaved: (PhoneNumber number) {
+            },
+            locale: 'de',
+            countries: const ['DE', 'AT', 'CH'],
+            errorMessage: state.phoneNumber.displayError != null
+                ? state.phoneNumber.error?.message
+                : null,
           );
         });
   }
 }
 
-class _PhoneNumberConfirmInput extends StatelessWidget {
+class _PhoneNumberConfirmInputFlag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) =>
-            previous.phoneNumberConfirm != current.phoneNumberConfirm,
+        previous.phoneNumberConfirm != current.phoneNumberConfirm,
         builder: (context, state) {
-          return TextField(
-            key: const Key(
-                'ParentPersonalInfoForm_PhoneNumberConfirmInput_textField'),
-            onChanged: (phoneNumberConfirm) => context
-                .read<ParentPersonalInfoBloc>()
-                .add(ParentPhoneNumberConfirmChanged(phoneNumberConfirm)),
-            decoration: InputDecoration(
+          return InternationalPhoneNumberInput(
+            inputDecoration: InputDecoration(
+              counterText: '',
               label: const FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Row(
@@ -569,10 +884,52 @@ class _PhoneNumberConfirmInput extends StatelessWidget {
                   ? state.phoneNumberConfirm.error?.message
                   : null,
             ),
+            selectorConfig: const SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              setSelectorButtonAsPrefixIcon: true,
+              leadingPadding: 20,
+            ),
+            hintText: 'Phone number',
+            validator: (userInput) {
+              if (userInput!.isEmpty) {
+                return 'Please enter your phone number';
+              }
+
+              // Ensure it is only digits and optional '+' or '00' for the country code.
+              if (!RegExp(r'^(\+|)?[0-9]+$').hasMatch(userInput)) {
+                return 'Please enter a valid phone number';
+              }
+
+              return null; // Return null when the input is valid
+            },
+            onInputChanged: (PhoneNumber phoneNumber) {
+              context
+                  .read<ParentPersonalInfoBloc>()
+                  .add(ParentPhoneNumberConfirmChanged(phoneNumber.phoneNumber!));
+            },
+            onInputValidated: (bool value) {
+            },
+            maxLength: 15,
+            ignoreBlank: false,
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            selectorTextStyle: const TextStyle(color: Colors.black),
+            // initialValue: number,
+            // textFieldController: controller,
+            formatInput: true,
+            keyboardType: const TextInputType.numberWithOptions(
+                signed: true, decimal: true),
+            onSaved: (PhoneNumber number) {
+            },
+            locale: 'de',
+            countries: const ['DE', 'AT', 'CH'],
+            errorMessage: state.phoneNumberConfirm.displayError != null
+                ? state.phoneNumberConfirm.error?.message
+                : null,
           );
         });
   }
 }
+
 
 class _SubmitButton extends StatelessWidget {
   @override
@@ -583,6 +940,20 @@ class _SubmitButton extends StatelessWidget {
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
+          PersonalInfo personalInfo = PersonalInfo(
+            parentTitle: state.title.value,
+            firstName: state.firstName.value,
+            lastName: state.lastName.value,
+            parentStreet: state.parentStreet.value,
+            streetNumber: state.streetNumber.value,
+            zipCode: state.zipCode.value,
+            city: state.city.value,
+            email: state.email.value,
+            emailConfirm: state.emailConfirm.value,
+            phoneNumber: state.phoneNumber.value,
+            phoneNumberConfirm: state.phoneNumberConfirm.value,
+          );
+          context.read<SwimGeneratorCubit>().updatePersonalInfo(personalInfo);
         }
       },
       buildWhen: (previous, current) =>
@@ -602,8 +973,8 @@ class _SubmitButton extends StatelessWidget {
                     elevation: 0, backgroundColor: Colors.lightBlueAccent),
                 onPressed: isValid
                     ? () => context
-                        .read<ParentPersonalInfoBloc>()
-                        .add(FormSubmitted())
+                    .read<ParentPersonalInfoBloc>()
+                    .add(FormSubmitted())
                     : null,
                 child: const Text(
                   'Weiter',

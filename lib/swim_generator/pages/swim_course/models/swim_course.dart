@@ -5,7 +5,7 @@ class SwimCourse {
   final double swimCourseMaxAge;
   final double swimCoursePrice;
   final String swimCourseDescription;
-  final bool swimCourseHasFixedDate;
+  final int swimCourseDateTypID;
   final String swimCourseDuration;
   final bool isSwimCourseVisible;
   final int swimLevelID;
@@ -17,7 +17,7 @@ class SwimCourse {
     required this.swimCourseMaxAge,
     required this.swimCoursePrice,
     required this.swimCourseDescription,
-    required this.swimCourseHasFixedDate,
+    required this.swimCourseDateTypID,
     required this.swimCourseDuration,
     required this.isSwimCourseVisible,
     required this.swimLevelID,
@@ -31,7 +31,7 @@ class SwimCourse {
       swimCourseMaxAge: json['swimCourseMaxAge'],
       swimCoursePrice: json['swimCoursePrice'].toDouble(),
       swimCourseDescription: json['swimCourseDescription'],
-      swimCourseHasFixedDate: json['swimCourseHasFixedDate'],
+      swimCourseDateTypID: json['swimCourseDateTypID'],
       swimCourseDuration: json['swimCourseDuration'],
       isSwimCourseVisible: json['isSwimCourseVisible'],
       swimLevelID: json['swimLevelID'],
@@ -45,7 +45,7 @@ class SwimCourse {
         swimCourseMaxAge = 0,
         swimCoursePrice = 0,
         swimCourseDescription = '',
-        swimCourseHasFixedDate = false,
+        swimCourseDateTypID = 0,
         swimCourseDuration = '',
         isSwimCourseVisible = false,
         swimLevelID = 0;

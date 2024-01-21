@@ -3,13 +3,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
+import 'package:swim_generator_app/swim_generator/pages/pages.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/bloc/result_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
+import '../models/complete_swim_course_booking_input.dart';
 
-class ResultForm extends StatelessWidget {
+class ResultForm extends StatefulWidget {
   const ResultForm({super.key});
+
+  @override
+  State<ResultForm> createState() => _ResultForm();
+}
+
+class _ResultForm extends State<ResultForm> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ResultBloc>().add(ResultLoading(context
+            .read<SwimGeneratorCubit>()
+            .state
+            .swimLevel
+            .swimSeason
+            ?.swimSeasonEnum ==
+        SwimSeasonEnum.BUCHEN));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,50 +47,56 @@ class ResultForm extends StatelessWidget {
         children: [
           const _CustomHeader('Kind Information'),
           _CustomText(
-              'Name', ''
-              // '${user.kidsPersonalInfo.firstName} '
-              //     '${user.kidsPersonalInfo.lastName}',
+            'Name',
+            '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName} '
+                '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName}',
           ),
-          _CustomText('Geburtstag', ''
-              // DateFormat('dd.MM.yyy').format(user.birthDay.birthDay!),
+          _CustomText(
+            'Geburtstag',
+            DateFormat('dd.MM.yyy').format(
+                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!),
           ),
           const SizedBox(
             height: 12.0,
           ),
           const _CustomHeader('Erziehungsberechtigten Information'),
           _CustomText(
-              'Name', ''
-              // '${user.personalInfo.firstName} '
-              //     '${user.personalInfo.lastName}',
+            'Name',
+            '${context.read<SwimGeneratorCubit>().state.personalInfo.firstName} '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.lastName}',
           ),
           _CustomText(
-              'Adress', ''
-              // '${user.personalInfo.street} '
-              //     '${user.personalInfo.streetNumber}, '
-              //     '${user.personalInfo.zipCode}, '
-              //     '${user.personalInfo.city}',
+            'Adress',
+            '${context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet} '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode}, '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
           ),
-          _CustomText('E-Mail', ''
-            // '${user.personalInfo.email} ',
+          _CustomText(
+            'E-Mail',
+            '${context.read<SwimGeneratorCubit>().state.personalInfo.email} ',
           ),
-          _CustomText('Handynummer', ''
-              // '${user.personalInfo.phoneNumber} ',
+          _CustomText(
+            'Handynummer',
+            '${context.read<SwimGeneratorCubit>().state.personalInfo.phoneNumber} ',
           ),
           const SizedBox(
             height: 12.0,
           ),
           const _CustomHeader('Kurs Information'),
           _CustomText(
-              'Kurs:', ''
-              // '${user.swimCourseInfo.swimCourseName} '
-              //     '${user.swimCourseInfo.swimCoursePrice} €',
+            'Kurs:',
+            '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCourseName} '
+                '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCoursePrice} €',
           ),
           _CustomText(
-              'Schwimmbäder', ''
-              // user.swimPools
-              //     .map((swimPool) => swimPool.swimPoolName)
-              //     .join(', '),
-    ),
+              'Schwimmbäder',
+              context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .swimPools
+                  .map((e) => e.swimPoolName)
+                  .join(', ')),
           const Divider(),
           const Align(
             alignment: Alignment.centerLeft,
@@ -127,47 +152,59 @@ class ResultForm extends StatelessWidget {
           const SizedBox(
             height: 24.0,
           ),
-          const Row(
-            children: [
-              Text(
-                'Stornierung ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '*',
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          Center(
-            child: Row(
-              children: <Widget>[
-                BlocBuilder<ResultBloc, ResultState>(
-                  builder: (context, state) {
-                    return Checkbox(
-                      activeColor: Colors.lightBlueAccent,
-                      value: state.isCancellation.value,
-                      onChanged: (val) {
-                        context
-                            .read<ResultBloc>()
-                            .add(CancellationChanged(val!));
-                      },
-                    );
-                  },
+          BlocBuilder<ResultBloc, ResultState>(
+            builder: (context, state) {
+              return Visibility(
+                visible: state.isBooking,
+                child: Column(
+                  children: [
+                    const Row(
+                      children: [
+                        Text(
+                          'Stornierung ',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '*',
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Center(
+                      child: Row(
+                        children: <Widget>[
+                          BlocBuilder<ResultBloc, ResultState>(
+                            builder: (context, state) {
+                              return Checkbox(
+                                activeColor: Colors.lightBlueAccent,
+                                value: state.isCancellation.value,
+                                onChanged: (val) {
+                                  context
+                                      .read<ResultBloc>()
+                                      .add(CancellationChanged(val!));
+                                },
+                              );
+                            },
+                          ),
+                          const Expanded(
+                            child: Text(
+                              'Bei Stornierung nach dem 28.02. verfällt die Anzahlung.',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24.0,
+                    ),
+                  ],
                 ),
-                const Expanded(
-                  child: Text(
-                    'Bei Stornierung nach dem 28.02. verfällt die Anzahlung.',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 24.0,
+              );
+            },
           ),
           const Row(
             children: [
@@ -301,6 +338,49 @@ class _SubmitButton extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
+        var bookingInput = CompleteSwimCourseBookingInput(
+            loginEmail:
+                context.read<SwimGeneratorCubit>().state.personalInfo.email,
+            guardianFirstName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.firstName,
+            guardianLastName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.lastName,
+            guardianAddress:
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}'
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode} '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
+            guardianPhoneNumber: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .personalInfo
+                .phoneNumber,
+            studentFirstName: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .kindPersonalInfo
+                .firstName,
+            studentLastName: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .kindPersonalInfo
+                .lastName,
+            studentBirthDate:
+                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
+            swimCourseID: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimCourseInfo
+                .swimCourse
+                .swimCourseID,
+            swimPoolIDs: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimPools
+                .map((pool) => pool.swimPoolID)
+                .toList(),
+            referenceBooking: '',
+            fixDateID: 1);
         final isValid = context.select((ResultBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
@@ -313,16 +393,26 @@ class _SubmitButton extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     elevation: 0, backgroundColor: Colors.lightBlueAccent),
                 onPressed: isValid
-                    ? () => context.read<ResultBloc>().add(FormSubmitted())
+                    ? () => context
+                        .read<ResultBloc>()
+                        .add(FormSubmitted(bookingInput))
                     : null,
-                child: const Text(
-                  'Kostenpflichtig buchen',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: state.isBooking
+                    ? const Text(
+                        'Kostenpflichtig buchen',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : const Text('Reservieren',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               );
       },
     );
@@ -349,12 +439,10 @@ class _CancelButton extends StatelessWidget {
   }
 }
 
-// Funktion zum Anzeigen des Erfolgsdialogs
 Future<void> _showSuccessDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
-    // Der Benutzer muss den Button drücken, um den Dialog zu schließen
     builder: (BuildContext dialogContext) {
       return AlertDialog(
         title: const Text('Anmeldung Erfolgreich'),
@@ -370,7 +458,7 @@ Future<void> _showSuccessDialog(BuildContext context) async {
           TextButton(
             child: const Text('OK'),
             onPressed: () {
-              Navigator.of(dialogContext).pop(); // Schließt den Dialog
+              Navigator.of(dialogContext).pop();
               Navigator.of(context).pop(true);
               _launchUrl();
             },

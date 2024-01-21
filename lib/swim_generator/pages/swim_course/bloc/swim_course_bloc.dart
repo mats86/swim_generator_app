@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:swim_generator_app/swim_generator/models/swim_level.dart';
-import 'package:swim_generator_app/swim_generator/pages/swim_course/models/swim_course.dart';
+// import 'package:swim_generator_app/swim_generator/pages/swim_course/models/swim_course.dart';
 
 import '../../../../graphql/graphql_queries.dart';
 import '../models/models.dart';
+import '../models/swim_course.dart';
 
 part 'swim_course_event.dart';
 
@@ -74,7 +75,7 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
       final swimCourses = await service.getSwimCoursesByLevelNameAndFutureAge(
           SwimLevelEnum.EINSTIEGERKURS.toString().split('.')[1],
           event.birthDay,
-          DateTime(2024, 6, 1));
+          event.refDate);
       emit(state.copyWith(
           swimCourseOptions: swimCourses,
           loadingCourseStatus: FormzSubmissionStatus.success));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
+import 'package:swim_generator_app/swim_generator/models/kind_personal_info.dart';
 import '../../../cubit/swim_generator_cubit.dart';
 
 import '../bloc/kind_personal_info_bloc.dart';
@@ -31,7 +32,8 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
       context.read<KindPersonalInfoBloc>().add(FirstNameChanged(
           context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName));
     }
-    if (context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName != '') {
+    if (context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName !=
+        '') {
       context.read<KindPersonalInfoBloc>().add(LastNameChanged(
           context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName));
     }
@@ -58,6 +60,7 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<KindPersonalInfoBloc, KindPersonalInfoState>(
@@ -82,7 +85,40 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
             focusNode: _lastNameFocusNod,
           ),
           const SizedBox(
-            height: 16.0,
+            height: 32.0,
+          ),
+          Card(
+            elevation: 4.0,
+            margin: const EdgeInsets.all(10.0),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  _buildCheckboxRow(
+                    context,
+                    'Körperliche Entwicklungsverzögerungen',
+                        (state) => state.isPhysicalDelay.value,
+                        (val) => context.read<KindPersonalInfoBloc>().add(PhysicalDelayChanged(val!)),
+                  ),
+                  const Divider(),
+                  _buildCheckboxRow(
+                    context,
+                    'GEISTIGE Entwicklungsverzögerungen',
+                        (state) => state.isMentalDelay.value,
+                        (val) => context.read<KindPersonalInfoBloc>().add(MentalDelayChanged(val!)),
+                  ),
+                  const Divider(),
+                  _buildCheckboxRow(
+                    context,
+                    'Keine Einschränkungen',
+                        (state) => state.isNoLimit.value,
+                        (val) => context.read<KindPersonalInfoBloc>().add(NoLimitsChanged(val!)),
+                  ),
+                ],
+              ),
+            ),
+          ),          const SizedBox(
+            height: 32.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -96,6 +132,33 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildCheckboxRow(
+      BuildContext context,
+      String label,
+      bool Function(KindPersonalInfoState) valueGetter,
+      Function(bool?) onChanged,
+      ) {
+    return Row(
+      children: <Widget>[
+        BlocBuilder<KindPersonalInfoBloc, KindPersonalInfoState>(
+          builder: (context, state) {
+            return Checkbox(
+              activeColor: Colors.lightBlueAccent,
+              value: valueGetter(state),
+              onChanged: onChanged,
+            );
+          },
+        ),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -137,7 +200,6 @@ class _FirstNameInput extends StatelessWidget {
                 ],
               ),
             ),
-            // Verwenden Sie displayError für die Fehleranzeige
             errorText: state.firstName.displayError != null
                 ? state.firstName.error?.message
                 : null,
@@ -195,6 +257,42 @@ class _LastNameInput extends StatelessWidget {
   }
 }
 
+// class _BuildCheckboxWithText extends StatelessWidget {
+//   final String text;
+//   final bool isChecked;
+//   final Function(bool?) onCheckboxChanged;
+//
+//   const _BuildCheckboxWithText({
+//     required this.text,
+//     required this.isChecked,
+//     required this.onCheckboxChanged,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Row(
+//         children: <Widget>[
+//           BlocBuilder<KindPersonalInfoBloc, KindPersonalInfoState>(
+//             builder: (context, state) {
+//               print('fun');
+//               print(isChecked);
+//               return Checkbox(
+//                 activeColor: Colors.lightBlueAccent,
+//                 value: isChecked,
+//                 onChanged: onCheckboxChanged,
+//               );
+//             },
+//           ),
+//           Expanded(
+//             child: Text(text),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -205,7 +303,9 @@ class _SubmitButton extends StatelessWidget {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
           context.read<SwimGeneratorCubit>().updateKindPersonalInfo(
-              state.firstName.value, state.lastName.value);
+              KindPersonalInfo(
+                  firstName: state.firstName.value,
+                  lastName: state.lastName.value));
         }
       },
       buildWhen: (previous, current) =>

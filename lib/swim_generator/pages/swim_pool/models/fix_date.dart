@@ -2,8 +2,8 @@ class FixDate {
   final int fixDateID;
   final int swimPoolID;
   final int swimCourseID;
-  final DateTime fixDateFrom;
-  final DateTime fixDateTo;
+  final DateTime? fixDateFrom;
+  final DateTime? fixDateTo;
   final bool isFixDateActive;
 
   FixDate({
@@ -26,11 +26,11 @@ class FixDate {
     );
   }
 
-  FixDate.empty()
+  const FixDate.empty()
       : fixDateID = 0,
         swimPoolID = 0,
         swimCourseID = 0,
-        fixDateFrom = DateTime(1970),
-        fixDateTo = DateTime(1970),
+        fixDateFrom = null,
+        fixDateTo = null,
         isFixDateActive = false;
 }

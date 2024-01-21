@@ -9,7 +9,10 @@ import '../pages/pages.dart';
 
 class SwimGeneratorStepper extends StatelessWidget {
   final GraphQLClient graphQLClient;
-  const SwimGeneratorStepper({super.key, required this.graphQLClient});
+  final List<int> order;
+
+  const SwimGeneratorStepper(
+      {super.key, required this.graphQLClient, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +25,7 @@ class SwimGeneratorStepper extends StatelessWidget {
                 enableNextPreviousButtons: false,
                 enableStepTapping: true,
                 activeStepColor: Colors.lightBlueAccent,
-                numbers: const [
-                  1,
-                  2,
-                  3,
-                  4,
-                  5,
-                  6,
-                  7,
-                ],
+                numbers: List.generate(order.length, (index) => index + 1),
                 activeStep: state.activeStepperIndex,
                 onStepReached: (index) {
                   context.read<SwimGeneratorCubit>().stepTapped(index);
@@ -68,7 +63,9 @@ class SwimGeneratorStepper extends StatelessWidget {
 
   // Returns the header text based on the activeStep.
   String headerText(int activeStepperIndex) {
-    switch (activeStepperIndex) {
+    int pageIndex = order[activeStepperIndex];
+
+    switch (pageIndex) {
       case 0:
         return 'Schwimmniveau';
 
@@ -97,12 +94,17 @@ class SwimGeneratorStepper extends StatelessWidget {
 
   /// Returns the body.
   Widget body(int activeStepperIndex, bool shouldUseFutureBuilder) {
-    switch (activeStepperIndex) {
+    int pageIndex = order[activeStepperIndex];
+
+    switch (pageIndex) {
       case 0:
         return SwimLevelPage(shouldUseFutureBuilder: shouldUseFutureBuilder);
 
       case 1:
-        return BirthDayPage(shouldUseFutureBuilder: shouldUseFutureBuilder);
+        return BirthDayPage(
+          shouldUseFutureBuilder: shouldUseFutureBuilder,
+          graphQLClient: graphQLClient,
+        );
 
       case 2:
         return SwimCoursePage(graphQLClient: graphQLClient);

@@ -8,7 +8,8 @@ class SwimGeneratorState extends Equatable {
     this.birthDay = const BirthDay.empty(),
     this.swimCourseInfo = const SwimCourseInfo.empty(),
     this.swimPools = const [],
-    this.kindPersonalInfo = const KindPersonalInfo(),
+    this.kindPersonalInfo = const KindPersonalInfo.empty(),
+    this.personalInfo = const PersonalInfo.empty(),
   });
 
   final int activeStepperIndex;
@@ -18,6 +19,7 @@ class SwimGeneratorState extends Equatable {
   final SwimCourseInfo swimCourseInfo;
   final List<SwimPoolInfo> swimPools;
   final KindPersonalInfo kindPersonalInfo;
+  final PersonalInfo personalInfo;
 
   SwimGeneratorState copyWith({
     int? activeStepperIndex,
@@ -27,6 +29,7 @@ class SwimGeneratorState extends Equatable {
     SwimCourseInfo? swimCourseInfo,
     List<SwimPoolInfo>? swimPools,
     KindPersonalInfo? kindPersonalInfo,
+    PersonalInfo? personalInfo,
   }) {
     return SwimGeneratorState(
       activeStepperIndex: activeStepperIndex ?? this.activeStepperIndex,
@@ -37,6 +40,7 @@ class SwimGeneratorState extends Equatable {
       swimCourseInfo: swimCourseInfo ?? this.swimCourseInfo,
       swimPools: swimPools ?? this.swimPools,
       kindPersonalInfo: kindPersonalInfo ?? this.kindPersonalInfo,
+      personalInfo: personalInfo ?? this.personalInfo,
     );
   }
 
@@ -49,5 +53,6 @@ class SwimGeneratorState extends Equatable {
         swimCourseInfo,
         swimPools,
         kindPersonalInfo,
+        personalInfo,
       ];
 }

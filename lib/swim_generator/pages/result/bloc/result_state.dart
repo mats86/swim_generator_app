@@ -2,6 +2,7 @@ part of 'result_bloc.dart';
 
 class ResultState extends Equatable {
   const ResultState({
+    this.isBooking = false,
     this.isConfirmed = const CheckboxModel.pure(),
     this.isCancellation = const CheckboxModel.pure(),
     this.isConsentGDPR = const CheckboxModel.pure(),
@@ -9,6 +10,7 @@ class ResultState extends Equatable {
     this.submissionStatus = FormzSubmissionStatus.initial,
   });
 
+  final bool isBooking;
   final CheckboxModel isConfirmed;
   final CheckboxModel isCancellation;
   final CheckboxModel isConsentGDPR;
@@ -16,6 +18,7 @@ class ResultState extends Equatable {
   final FormzSubmissionStatus submissionStatus;
 
   ResultState copyWith({
+    bool? isBooking,
     CheckboxModel? isConfirmed,
     CheckboxModel? isCancellation,
     CheckboxModel? isConsentGDPR,
@@ -23,6 +26,7 @@ class ResultState extends Equatable {
     FormzSubmissionStatus? submissionStatus,
   }) {
     return ResultState(
+        isBooking: isBooking ?? this.isBooking,
         isConfirmed: isConfirmed ?? this.isConfirmed,
         isCancellation: isCancellation ?? this.isCancellation,
         isConsentGDPR: isConsentGDPR ?? this.isConsentGDPR,
@@ -32,5 +36,5 @@ class ResultState extends Equatable {
 
   @override
   List<Object> get props =>
-      [isConfirmed, isCancellation, isConsentGDPR, submissionStatus];
+      [isBooking, isConfirmed, isCancellation, isConsentGDPR, submissionStatus];
 }

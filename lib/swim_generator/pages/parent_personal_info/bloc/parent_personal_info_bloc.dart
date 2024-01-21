@@ -57,7 +57,7 @@ class ParentPersonalInfoBloc
             title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -82,7 +82,7 @@ class ParentPersonalInfoBloc
               state.title,
               firstName,
               state.lastName,
-              state.street,
+              state.parentStreet,
               state.streetNumber,
               state.zipCode,
               state.city,
@@ -107,7 +107,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -123,15 +123,15 @@ class ParentPersonalInfoBloc
     ParentStreetChanged event,
     Emitter<ParentPersonalInfoState> emit,
   ) {
-    final street = StreetModel.dirty(event.street);
+    final parentStreet = StreetModel.dirty(event.street);
     emit(
       state.copyWith(
-          street: street,
+          parentStreet: parentStreet,
           isValid: Formz.validate([
             state.title,
             state.firstName,
             state.lastName,
-            street,
+            parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -155,7 +155,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             streetNumber,
             state.zipCode,
             state.city,
@@ -179,7 +179,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             zipCode,
             state.city,
@@ -203,7 +203,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             city,
@@ -227,7 +227,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -252,7 +252,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -276,7 +276,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -302,7 +302,7 @@ class ParentPersonalInfoBloc
             state.title,
             state.firstName,
             state.lastName,
-            state.street,
+            state.parentStreet,
             state.streetNumber,
             state.zipCode,
             state.city,
@@ -321,7 +321,7 @@ class ParentPersonalInfoBloc
     final title = TitleModel.dirty(state.title.value);
     final firstName = FirstNameModel.dirty(state.firstName.value);
     final lastName = LastNameModel.dirty(state.lastName.value);
-    final street = StreetModel.dirty(state.title.value);
+    final parentStreet = StreetModel.dirty(state.parentStreet.value);
     final streetNumber = StreetNumberModel.dirty(state.streetNumber.value);
     final zipCode = ZipCodeModel.dirty(state.zipCode.value);
     final city = CityModel.dirty(state.city.value);
@@ -337,7 +337,7 @@ class ParentPersonalInfoBloc
         title: title,
         firstName: firstName,
         lastName: lastName,
-        street: street,
+        parentStreet: parentStreet,
         streetNumber: streetNumber,
         zipCode: zipCode,
         city: city,
@@ -349,7 +349,7 @@ class ParentPersonalInfoBloc
           title,
           firstName,
           lastName,
-          street,
+          parentStreet,
           streetNumber,
           zipCode,
           city,
