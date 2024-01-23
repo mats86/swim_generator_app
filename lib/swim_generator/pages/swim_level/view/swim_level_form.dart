@@ -62,11 +62,26 @@ class _SwimLevelForm extends State<SwimLevelForm> {
           const SizedBox(
             height: 16.0,
           ),
-          const Text("Wähle bitte Dein Schwimmniveau aus?",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              )),
+          RichText(
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                  text: "Wähle bitte Dein Schwimmniveau aus?",
+                  style: TextStyle(
+                    fontSize: 16, // Ihre Textgröße// Farbe des Textes
+                  ),
+                ),
+                TextSpan(
+                  text: ' *', // Sternchen direkt nach dem Text
+                  style: TextStyle(
+                    color: Colors.red, // Farbe des Sternchens
+                    fontSize: 16, // Größe des Sternchens
+                  ),
+                ),
+              ],
+            ),
+            overflow: TextOverflow.visible, // Einstellung für den Textüberlauf
+          ),
           const SizedBox(
             height: 24.0,
           ),
@@ -113,10 +128,10 @@ class _SwimLevelSelected extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               _buildToggleButton(
-                  Icons.waves, "EINSTIEGERKURS", isSelected[0], 0, context),
+                  Icons.waves, " EINSTIEGER", isSelected[0], 0, context),
               const SizedBox(width: 8.0),
               _buildToggleButton(
-                  Icons.pool, "AUFSTIEGERKURS", isSelected[1], 1, context),
+                  Icons.pool, "AUFSTIEGER", isSelected[1], 1, context),
             ],
           ),
         );
@@ -126,31 +141,41 @@ class _SwimLevelSelected extends StatelessWidget {
 
   Widget _buildToggleButton(IconData icon, String text, bool isSelected,
       int index, BuildContext context) {
-    return TextButton(
-      onPressed: () => context.read<SwimLevelBloc>().add(
-          SwimLevelChanged(SwimLevelModel.dirty(SwimLevelEnum.values[index]))),
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.lightBlue,
-        foregroundColor: isSelected ? Colors.blue : Colors.grey,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          side: BorderSide(
-            color: isSelected ? Colors.black : Colors.transparent,
-            width: isSelected ? 2.0 : 1.0,
+    // Ermittle die Breite des Bildschirms
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Wähle das passende Textlabel basierend auf der Bildschirmbreite
+    String buttonText = screenWidth > 500 ? "${text}KURS" : text;
+
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: TextButton(
+        onPressed: () => context.read<SwimLevelBloc>().add(SwimLevelChanged(
+            SwimLevelModel.dirty(SwimLevelEnum.values[index]))),
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.lightBlue,
+          foregroundColor: isSelected ? Colors.blue : Colors.grey,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            side: BorderSide(
+              color: isSelected ? Colors.black : Colors.transparent,
+              width: isSelected ? 2.0 : 1.0,
+            ),
           ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(icon,
-              size: 60.0, color: isSelected ? Colors.black : Colors.white),
-          const SizedBox(height: 8.0),
-          Text(text,
-              style:
-                  TextStyle(color: isSelected ? Colors.black : Colors.white)),
-        ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(icon,
+                size: 60.0, color: isSelected ? Colors.black : Colors.white),
+            const SizedBox(height: 8.0),
+            Text(buttonText,
+                style:
+                    TextStyle(color: isSelected ? Colors.black : Colors.white)),
+          ],
+        ),
       ),
     );
   }
@@ -236,79 +261,80 @@ class _SwimSeasonRadioButton extends StatelessWidget {
 
     return BlocBuilder<SwimLevelBloc, SwimLevelState>(
         builder: (context, state) {
-      return Card(
-        elevation: 4.0,
-        margin: const EdgeInsets.all(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: getSeasonText(),
-                      style: const TextStyle(
-                        fontSize: 16, // Ihre Textgröße
-                        color: Colors.black, // Farbe des Textes
-                      ),
-                    ),
-                    const TextSpan(
-                      text: ' *', // Sternchen direkt nach dem Text
-                      style: TextStyle(
-                        color: Colors.red, // Farbe des Sternchens
-                        fontSize: 16, // Größe des Sternchens
-                      ),
-                    ),
-                  ],
+      return Column(
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: getSeasonText(),
+                  style: const TextStyle(
+                    fontSize: 16, // Ihre Textgröße// Farbe des Textes
+                  ),
                 ),
-                overflow: TextOverflow.visible, // Einstellung für den Textüberlauf
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              ListView.separated(
-                separatorBuilder: (_, __) => Divider(color: Colors.grey[300]),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: state.swimSeasonOptions.length,
-                itemBuilder: (context, index) {
-                  return SizedBox(
-                    // height: 50,
-                    child: Visibility(
-                      visible: true,
-                      child: Row(
-                        children: [
-                          Radio(
-                            activeColor: Colors.lightBlueAccent,
-                            groupValue: state.swimSeason.value,
-                            value: state.swimSeasonOptions[index].name,
-                            onChanged: (val) {
-                              BlocProvider.of<SwimLevelBloc>(context).add(
-                                  SwimSeasonChanged(val.toString(),
-                                      state.swimSeasonOptions[index]));
-                            },
-                          ),
-                          Flexible(
-                            child: Wrap(
-                              children: [
-                                Text(
-                                  '${state.swimSeasonOptions[index].name} ',
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                const TextSpan(
+                  text: ' *', // Sternchen direkt nach dem Text
+                  style: TextStyle(
+                    color: Colors.red, // Farbe des Sternchens
+                    fontSize: 16, // Größe des Sternchens
+                  ),
+                ),
+              ],
+            ),
+            overflow: TextOverflow.visible, // Einstellung für den Textüberlauf
           ),
-        ),
+          Card(
+            elevation: 4.0,
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  ListView.separated(
+                    separatorBuilder: (_, __) =>
+                        Divider(color: Colors.grey[300]),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: state.swimSeasonOptions.length,
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        // height: 50,
+                        child: Visibility(
+                          visible: true,
+                          child: Row(
+                            children: [
+                              Radio(
+                                activeColor: Colors.lightBlueAccent,
+                                groupValue: state.swimSeason.value,
+                                value: state.swimSeasonOptions[index].name,
+                                onChanged: (val) {
+                                  BlocProvider.of<SwimLevelBloc>(context).add(
+                                      SwimSeasonChanged(val.toString(),
+                                          state.swimSeasonOptions[index]));
+                                },
+                              ),
+                              Flexible(
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      '${state.swimSeasonOptions[index].name} ',
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       );
     });
   }

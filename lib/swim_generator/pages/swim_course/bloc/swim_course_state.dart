@@ -10,6 +10,7 @@ class SwimCourseState extends Equatable {
     this.isValid = false,
     this.loadingSeasonStatus = FormzSubmissionStatus.initial,
     this.loadingCourseStatus = FormzSubmissionStatus.initial,
+    this.loadingWebPageStatus = FormzSubmissionStatus.initial,
     this.submissionStatus = FormzSubmissionStatus.initial,
   });
 
@@ -21,6 +22,7 @@ class SwimCourseState extends Equatable {
   final bool isValid;
   final FormzSubmissionStatus loadingSeasonStatus;
   final FormzSubmissionStatus loadingCourseStatus;
+  final FormzSubmissionStatus loadingWebPageStatus;
   final FormzSubmissionStatus submissionStatus;
 
   SwimCourseState copyWith({
@@ -32,6 +34,7 @@ class SwimCourseState extends Equatable {
     bool? isValid,
     FormzSubmissionStatus? loadingSeasonStatus,
     FormzSubmissionStatus? loadingCourseStatus,
+    FormzSubmissionStatus? loadingWebPageStatus,
     FormzSubmissionStatus? submissionStatus,
   }) {
     return SwimCourseState(
@@ -43,18 +46,20 @@ class SwimCourseState extends Equatable {
       isValid: isValid ?? this.isValid,
       loadingSeasonStatus: loadingSeasonStatus ?? this.loadingSeasonStatus,
       loadingCourseStatus: loadingCourseStatus ?? this.loadingCourseStatus,
+      loadingWebPageStatus: loadingWebPageStatus ?? this.loadingWebPageStatus,
       submissionStatus: submissionStatus ?? this.submissionStatus,
     );
   }
 
   @override
   List<Object?> get props => [
-    swimSeasons,
-    swimSeason,
-    swimCourseOptions,
-    swimCourse,
-    loadingSeasonStatus,
-    loadingCourseStatus,
-    submissionStatus,
-  ];
+        swimSeasons,
+        swimSeason,
+        swimCourseOptions,
+        swimCourse,
+        loadingSeasonStatus,
+        loadingCourseStatus,
+        loadingWebPageStatus,
+        submissionStatus,
+      ];
 }

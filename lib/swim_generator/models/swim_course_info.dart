@@ -12,9 +12,7 @@ class SwimCourseInfo extends Equatable {
   final SwimCourse swimCourse;
 
   const SwimCourseInfo.empty()
-      : this(
-            season: '',
-            swimCourse: const SwimCourse.empty());
+      : this(season: '', swimCourse: const SwimCourse.empty());
 
   SwimCourseInfo copyWith({
     String? season,
@@ -26,7 +24,14 @@ class SwimCourseInfo extends Equatable {
     );
   }
 
+  bool get isEmpty {
+    return swimCourse.isEmpty;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   @override
-  List<Object?> get props =>
-      [season, swimCourse];
+  List<Object?> get props => [season, swimCourse];
 }

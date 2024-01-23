@@ -60,7 +60,6 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<KindPersonalInfoBloc, KindPersonalInfoState>(
@@ -87,9 +86,33 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
           const SizedBox(
             height: 32.0,
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Entwicklungsstatus des Schwimmschülers',
+                    style: TextStyle(
+                      fontSize: 16, // Ihre Textgröße// Farbe des Textes
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' *', // Sternchen direkt nach dem Text
+                    style: TextStyle(
+                      color: Colors.red, // Farbe des Sternchens
+                      fontSize: 16, // Größe des Sternchens
+                    ),
+                  ),
+                ],
+              ),
+              overflow:
+                  TextOverflow.visible, // Einstellung für den Textüberlauf
+            ),
+          ),
           Card(
             elevation: 4.0,
-            margin: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -97,27 +120,34 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
                   _buildCheckboxRow(
                     context,
                     'Körperliche Entwicklungsverzögerungen',
-                        (state) => state.isPhysicalDelay.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(PhysicalDelayChanged(val!)),
+                    (state) => state.isPhysicalDelay.value,
+                    (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(PhysicalDelayChanged(val!)),
                   ),
                   const Divider(),
                   _buildCheckboxRow(
                     context,
                     'GEISTIGE Entwicklungsverzögerungen',
-                        (state) => state.isMentalDelay.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(MentalDelayChanged(val!)),
+                    (state) => state.isMentalDelay.value,
+                    (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(MentalDelayChanged(val!)),
                   ),
                   const Divider(),
                   _buildCheckboxRow(
                     context,
                     'Keine Einschränkungen',
-                        (state) => state.isNoLimit.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(NoLimitsChanged(val!)),
+                    (state) => state.isNoLimit.value,
+                    (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(NoLimitsChanged(val!)),
                   ),
                 ],
               ),
             ),
-          ),          const SizedBox(
+          ),
+          const SizedBox(
             height: 32.0,
           ),
           Row(
@@ -136,11 +166,11 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
   }
 
   Widget _buildCheckboxRow(
-      BuildContext context,
-      String label,
-      bool Function(KindPersonalInfoState) valueGetter,
-      Function(bool?) onChanged,
-      ) {
+    BuildContext context,
+    String label,
+    bool Function(KindPersonalInfoState) valueGetter,
+    Function(bool?) onChanged,
+  ) {
     return Row(
       children: <Widget>[
         BlocBuilder<KindPersonalInfoBloc, KindPersonalInfoState>(

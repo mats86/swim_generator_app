@@ -25,6 +25,14 @@ class KindPersonalInfo extends Equatable {
     );
   }
 
+  bool get isEmpty {
+    return firstName.isEmpty && lastName.isEmpty;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   @override
   List<Object> get props => [
         firstName,

@@ -24,6 +24,8 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
     on<SwimCourseChanged>(_onSwimCourseChanged);
     on<LoadSwimSeasonOptions>(_onLoadSwimSeasonOptions);
     on<LoadSwimCourseOptions>(_onLoadSwimCourseOptions);
+    on<WebPageLoading>(_onWebPageLoading);
+    on<WebPageLoaded>(_onWebPageLoaded);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -73,7 +75,7 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
     emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.inProgress));
     try {
       final swimCourses = await service.getSwimCoursesByLevelNameAndFutureAge(
-          SwimLevelEnum.EINSTIEGERKURS.toString().split('.')[1],
+          event.swimLevel.toString().split('.')[1],
           event.birthDay,
           event.refDate);
       emit(state.copyWith(
@@ -86,6 +88,18 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
       }
       emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.failure));
     }
+  }
+
+  // Event-Handler für LoadingWebPage
+  void _onWebPageLoading(WebPageLoading event, Emitter<SwimCourseState> emit) {
+    emit(
+        state.copyWith(loadingWebPageStatus: FormzSubmissionStatus.inProgress));
+  }
+
+  // Event-Handler für WebPageLoaded
+  Future<void> _onWebPageLoaded(
+      WebPageLoaded event, Emitter<SwimCourseState> emit) async {
+    emit(state.copyWith(loadingWebPageStatus: FormzSubmissionStatus.success));
   }
 
   void _onFormSubmitted(

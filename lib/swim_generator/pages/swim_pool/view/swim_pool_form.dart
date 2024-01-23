@@ -23,11 +23,11 @@ class _SwimPoolForm extends State<SwimPoolForm> {
   void initState() {
     super.initState();
     context.read<SwimPoolBloc>().add(SwimPoolLoading(context
-        .read<SwimGeneratorCubit>()
-        .state
-        .swimLevel
-        .swimSeason
-        ?.swimSeasonEnum ==
+            .read<SwimGeneratorCubit>()
+            .state
+            .swimLevel
+            .swimSeason
+            ?.swimSeasonEnum ==
         SwimSeasonEnum.BUCHEN));
     context.read<SwimPoolBloc>().add(LoadSwimPools());
     context.read<SwimPoolBloc>().add(LoadFixDates());
@@ -68,12 +68,29 @@ class _SwimPoolForm extends State<SwimPoolForm> {
       },
       child: Column(
         children: [
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text("Welche Bäder kommen für dich in Frage? *"),
-          ),
-          const Divider(
-            thickness: 2,
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Welche Bäder kommen für dich in Frage?",
+                    style: TextStyle(
+                      fontSize: 16, // Ihre Textgröße
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' *', // Sternchen direkt nach dem Text
+                    style: TextStyle(
+                      color: Colors.red, // Farbe des Sternchens
+                      fontSize: 16, // Größe des Sternchens
+                    ),
+                  ),
+                ],
+              ),
+              overflow:
+                  TextOverflow.visible, // Einstellung für den Textüberlauf
+            ),
           ),
           _SwimPoolCheckBox(),
           const SizedBox(
@@ -87,7 +104,7 @@ class _SwimPoolForm extends State<SwimPoolForm> {
           const Divider(
             thickness: 2,
           ),
-          if (BlocProvider.of<SwimPoolBloc>(context).state.isBooking ) ...[
+          if (BlocProvider.of<SwimPoolBloc>(context).state.isBooking) ...[
             const Align(
               alignment: Alignment.centerLeft,
               child: Text('Für die Terminierung kommen wir bis zum 31. '
@@ -154,36 +171,50 @@ class _SwimPoolCheckBox extends StatelessWidget {
                   color: Colors.lightBlueAccent,
                   size: 50.0,
                 )
-              : ListView.builder(
-                  key: const Key('SwimPoolForm_swimPoolList_listView'),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: state.swimPools.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          flex: 9,
-                          child: CheckboxListTile(
-                              activeColor: Colors.lightBlueAccent,
-                              key: Key(state.swimPools[index].swimPoolName),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              title: Text(state.swimPools[index].swimPoolName),
-                              onChanged: (val) {
-                                BlocProvider.of<SwimPoolBloc>(context).add(
-                                    const FixDateChanged(0, FixDate.empty()));
-                                BlocProvider.of<SwimPoolBloc>(context)
-                                    .add(SwimPoolOptionToggled(index, val!));
-                              },
-                              value: state.swimPools[index].isSelected),
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        )
-                      ],
-                    );
-                  });
+              : Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ListView.separated(
+                        separatorBuilder: (_, __) =>
+                            Divider(color: Colors.grey[300]),
+                        key: const Key('SwimPoolForm_swimPoolList_listView'),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: state.swimPools.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            children: [
+                              Expanded(
+                                flex: 9,
+                                child: CheckboxListTile(
+                                    activeColor: Colors.lightBlueAccent,
+                                    key: Key(
+                                        state.swimPools[index].swimPoolName),
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    title: Text(
+                                        state.swimPools[index].swimPoolName),
+                                    onChanged: (val) {
+                                      BlocProvider.of<SwimPoolBloc>(context)
+                                          .add(const FixDateChanged(
+                                              0, FixDate.empty()));
+                                      BlocProvider.of<SwimPoolBloc>(context)
+                                          .add(SwimPoolOptionToggled(
+                                              index, val!));
+                                    },
+                                    value: state.swimPools[index].isSelected),
+                              ),
+                              const SizedBox(
+                                width: 8.0,
+                              )
+                            ],
+                          );
+                        }),
+                  ),
+                );
         });
   }
 }
@@ -267,8 +298,8 @@ class _FlexFixDateSelected extends StatelessWidget {
                   onTap: () {
                     BlocProvider.of<SwimPoolBloc>(context)
                         .add(SelectFlexDate());
-                    BlocProvider.of<SwimPoolBloc>(context).add(
-                        const FixDateChanged(0, FixDate.empty()));
+                    BlocProvider.of<SwimPoolBloc>(context)
+                        .add(const FixDateChanged(0, FixDate.empty()));
                   },
                   child: Align(
                     alignment: const Alignment(-1, 0),
@@ -473,8 +504,10 @@ class _FixDatesRadioButton extends StatelessWidget {
         DateFormat('dd.MM').format(state.fixDatesVisible[index].fixDateFrom!);
     final fixDateTo =
         DateFormat('dd.MM').format(state.fixDatesVisible[index].fixDateTo!);
-    final fixDateTimeFrom = DateFormat('HH:mm').format(DateTime(2024,1,1, 12,30));
-    final fixDateTimeTo = DateFormat('HH:mm').format(DateTime(2024,1,1, 13,30));
+    final fixDateTimeFrom =
+        DateFormat('HH:mm').format(DateTime(2024, 1, 1, 12, 30));
+    final fixDateTimeTo =
+        DateFormat('HH:mm').format(DateTime(2024, 1, 1, 13, 30));
     final swimPoolIndex = state.swimPools.indexWhere((element) =>
         element.swimPoolID == state.fixDatesVisible[index].swimPoolID);
 
@@ -500,21 +533,22 @@ class _FixDatesRadioButton extends StatelessWidget {
               size: 50.0,
             )
           : Visibility(
-              visible: state.hasFixedDate && ((state.flexFixDate &&
+              visible: state.hasFixedDate &&
+                  ((state.flexFixDate &&
+                          context
+                                  .read<SwimGeneratorCubit>()
+                                  .state
+                                  .swimCourseInfo
+                                  .swimCourse
+                                  .swimCourseDateTypID ==
+                              1) ||
                       context
                               .read<SwimGeneratorCubit>()
                               .state
                               .swimCourseInfo
                               .swimCourse
                               .swimCourseDateTypID ==
-                          1) ||
-                  context
-                          .read<SwimGeneratorCubit>()
-                          .state
-                          .swimCourseInfo
-                          .swimCourse
-                          .swimCourseDateTypID ==
-                      3),
+                          3),
               child: Card(
                 elevation: 4.0,
                 margin: const EdgeInsets.all(10.0),
@@ -533,14 +567,16 @@ class _FixDatesRadioButton extends StatelessWidget {
                             padding: EdgeInsets.all(3.0),
                           ),
                           Text('*',
-                              style: TextStyle(color: Colors.red, fontSize: 16)),
+                              style:
+                                  TextStyle(color: Colors.red, fontSize: 16)),
                         ],
                       ),
                       const SizedBox(
                         height: 24.0,
                       ),
                       ListView.separated(
-                        separatorBuilder: (_, __) => Divider(color: Colors.grey[300]),
+                        separatorBuilder: (_, __) =>
+                            Divider(color: Colors.grey[300]),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
@@ -556,8 +592,8 @@ class _FixDatesRadioButton extends StatelessWidget {
                                   value: state.fixDatesVisible[index].fixDateID,
                                   onChanged: (val) {
                                     BlocProvider.of<SwimPoolBloc>(context).add(
-                                        FixDateChanged(
-                                            val!, state.fixDatesVisible[index]));
+                                        FixDateChanged(val!,
+                                            state.fixDatesVisible[index]));
                                   },
                                 ),
                                 Flexible(

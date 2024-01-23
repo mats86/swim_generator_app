@@ -7,7 +7,7 @@ class SwimSeason {
 
   final String name;
   final DateTime? refDate;
-  final SwimSeasonEnum? swimSeasonEnum;
+  final SwimSeasonEnum swimSeasonEnum;
 
   factory SwimSeason.fromJson(Map<String, dynamic> json) {
     return SwimSeason(
@@ -21,6 +21,12 @@ class SwimSeason {
       : name = '',
         refDate = null,
         swimSeasonEnum = SwimSeasonEnum.UNDEFINED;
+
+  bool get isEmpty {
+    return name.isEmpty &&
+        //refDate == null &&
+        swimSeasonEnum == SwimSeasonEnum.UNDEFINED;
+  }
 }
 
 enum SwimSeasonEnum { RESERVIEREN, BUCHEN, UNDEFINED }

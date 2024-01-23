@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
-import 'package:intl/intl.dart';
 import 'package:swim_generator_app/swim_generator/pages/pages.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/bloc/result_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../models/complete_swim_course_booking_input.dart';
@@ -45,68 +46,122 @@ class _ResultForm extends State<ResultForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _CustomHeader('Kind Information'),
-          _CustomText(
-            'Name',
-            '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName} '
-                '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName}',
-          ),
-          _CustomText(
-            'Geburtstag',
-            DateFormat('dd.MM.yyy').format(
-                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!),
-          ),
-          const SizedBox(
-            height: 12.0,
-          ),
-          const _CustomHeader('Erziehungsberechtigten Information'),
-          _CustomText(
-            'Name',
-            '${context.read<SwimGeneratorCubit>().state.personalInfo.firstName} '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.lastName}',
-          ),
-          _CustomText(
-            'Adress',
-            '${context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet} '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode}, '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
-          ),
-          _CustomText(
-            'E-Mail',
-            '${context.read<SwimGeneratorCubit>().state.personalInfo.email} ',
-          ),
-          _CustomText(
-            'Handynummer',
-            '${context.read<SwimGeneratorCubit>().state.personalInfo.phoneNumber} ',
-          ),
-          const SizedBox(
-            height: 12.0,
-          ),
-          const _CustomHeader('Kurs Information'),
-          _CustomText(
-            'Kurs:',
-            '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCourseName} '
-                '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCoursePrice} €',
-          ),
-          _CustomText(
-              'Schwimmbäder',
-              context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .swimPools
-                  .map((e) => e.swimPoolName)
-                  .join(', ')),
+          //   const _CustomHeader('Kind Information'),
+          //   _CustomText(
+          //     'Name',
+          //     '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName} '
+          //         '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName}',
+          //   ),
+          //   _CustomText(
+          //     'Geburtstag',
+          //     DateFormat('dd.MM.yyy').format(
+          //         context.read<SwimGeneratorCubit>().state.birthDay.birthDay!),
+          //   ),
+          //   const SizedBox(
+          //     height: 12.0,
+          //   ),
+          //   const _CustomHeader('Erziehungsberechtigten Information'),
+          //   _CustomText(
+          //     'Name',
+          //     '${context.read<SwimGeneratorCubit>().state.personalInfo.firstName} '
+          //         '${context.read<SwimGeneratorCubit>().state.personalInfo.lastName}',
+          //   ),
+          //   _CustomText(
+          //     'Adress',
+          //     '${context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet} '
+          //         '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
+          //         '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode}, '
+          //         '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
+          //   ),
+          //   _CustomText(
+          //     'E-Mail',
+          //     '${context.read<SwimGeneratorCubit>().state.personalInfo.email} ',
+          //   ),
+          //   _CustomText(
+          //     'Handynummer',
+          //     '${context.read<SwimGeneratorCubit>().state.personalInfo.phoneNumber} ',
+          //   ),
+          //   const SizedBox(
+          //     height: 12.0,
+          //   ),
+          //   const _CustomHeader('Kurs Information'),
+          //   _CustomText(
+          //     'Kurs:',
+          //     '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCourseName} '
+          //         '${context.read<SwimGeneratorCubit>().state.swimCourseInfo.swimCourse.swimCoursePrice} €',
+          //   ),
+          //   _CustomText(
+          //       'Schwimmbäder',
+          //       context
+          //           .read<SwimGeneratorCubit>()
+          //           .state
+          //           .swimPools
+          //           .map((e) => e.swimPoolName)
+          //           .join(', ')),
           const Divider(),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              "Mit Deiner Anmeldebestätigung (Email) erhältst Du eine "
-              "Aufforderung zur Überweisung der Anzahlung von 100€. "
-              "Dieser Betrag muss innerhalb 7 Werktagen bei uns verbucht "
-              "sein. Andernfalls würden wir den Kursplatz wieder "
-              "freigeben - Deine Buchung stornieren.",
-            ),
+            child: BlocProvider.of<ResultBloc>(context).state.isBooking
+                ? const Text(
+                    "Mit Deiner Anmeldebestätigung (Email) erhältst Du eine "
+                    "Aufforderung zur Überweisung der Anzahlung von 100€. "
+                    "Dieser Betrag muss innerhalb 7 Werktagen bei uns verbucht "
+                    "sein. Andernfalls würden wir den Kursplatz wieder "
+                    "freigeben - Deine Buchung stornieren.",
+                  )
+                : Column(
+                    children: [
+                      RichText(
+                        text: const TextSpan(
+                          style:
+                              TextStyle(fontSize: 16), // Grundlegender Textstil
+                          children: <TextSpan>[
+                            TextSpan(
+                                text:
+                                    'Wir nehmen Monaten vor den eigentlichen Kurstermin keine Buchungen entgegen.\n\n'),
+                            TextSpan(
+                                text: '1. ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text:
+                                    'es ist nicht absehbar wie sich ein Kind in den nächsten Monaten entwickelt. 6 '
+                                    'Monate sehen wir als max. überschaubaren Zeitraum.\n'),
+                            TextSpan(
+                                text: '2. ',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(
+                                text:
+                                    'Buchungen die nicht mit Anzahlungen (bis zu €100) verbunden sind führen dazu, '
+                                    'dass sich Schwimmkurssuchende in vielen Schwimmschulen anmelden - was allerdings viel Chaos stiftet. '
+                                    'Zum Zeitpunkt des Kurses kommt nicht mehr mal die Hälfte der angemeldeten.\n\n'),
+                            TextSpan(
+                                text:
+                                    'Um dir ein wenig Flexibilität zu geben, aber dennoch bereits ein RESERVIERUNG '
+                                    'platzieren zu können - auch Jahre im Voraus, kannst du Mitglied im Wassermenschen-Verein ab '
+                                    '€10 werden. Dort reservieren wir Dir jährlich bis 1.3. einen Platz den du dann in eine verbindliche '
+                                    'Buchung umwandeln kannst. FIX BUCHEN kannst Du bei deiner Schwimmschule ab dem 1.2. jeden Jahres für '
+                                    'den kommenden Sommer. Reservierung haben natürlich Vorrang - reduzieren somit die Anzahl der dann buchbaren Plätze.\n'),
+                            // Weitere TextSpan für den Rest des Textes...
+                          ],
+                        ),
+                      ),
+                      const _LinkTextWidget(),
+                      RichText(
+                        text: const TextSpan(
+                          style:
+                              TextStyle(fontSize: 16), // Grundlegender Textstil
+                          children: <TextSpan>[
+                            TextSpan(
+                                text:
+                                    'Zweck des Vereins gemäß seiner Satzung ist es zum einen eben dieses Reservierungsportal zu unterhalten. '
+                                    'Und 2. die Schwimmmethode #angstfreiSchwimmenLernen in der Presse und den Socialen Medien zu verbreiten. '
+                                    'Wir freuen uns auf Deine Unterstützung und deine Reservierung.\n')
+                            // Weitere TextSpan für den Rest des Textes...
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
           ),
           const SizedBox(
             height: 24.0,
@@ -338,49 +393,69 @@ class _SubmitButton extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
-        var bookingInput = CompleteSwimCourseBookingInput(
-            loginEmail:
-                context.read<SwimGeneratorCubit>().state.personalInfo.email,
-            guardianFirstName:
-                context.read<SwimGeneratorCubit>().state.personalInfo.firstName,
-            guardianLastName:
-                context.read<SwimGeneratorCubit>().state.personalInfo.lastName,
-            guardianAddress:
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}'
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode} '
-                '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
-            guardianPhoneNumber: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .personalInfo
-                .phoneNumber,
-            studentFirstName: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .kindPersonalInfo
-                .firstName,
-            studentLastName: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .kindPersonalInfo
-                .lastName,
-            studentBirthDate:
-                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
-            swimCourseID: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .swimCourseInfo
-                .swimCourse
-                .swimCourseID,
-            swimPoolIDs: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .swimPools
-                .map((pool) => pool.swimPoolID)
-                .toList(),
-            referenceBooking: '',
-            fixDateID: 1);
+        bool isDataValid() {
+          var cubit = context.read<SwimGeneratorCubit>().state;
+          return cubit.swimLevel.isNotEmpty &&
+              cubit.birthDay.isNotEmpty &&
+              cubit.swimCourseInfo.isNotEmpty &&
+              cubit.swimPools.isNotEmpty &&
+              cubit.personalInfo.isNotEmpty &&
+              cubit.kindPersonalInfo.isNotEmpty; // Weitere Überprüfungen...
+        }
+
+        CompleteSwimCourseBookingInput? bookingInput;
+        if (isDataValid()) {
+          bookingInput = CompleteSwimCourseBookingInput(
+              loginEmail:
+                  context.read<SwimGeneratorCubit>().state.personalInfo.email,
+              guardianFirstName: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .personalInfo
+                  .firstName,
+              guardianLastName: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .personalInfo
+                  .lastName,
+              guardianAddress:
+                  '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}'
+                  '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
+                  '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode} '
+                  '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
+              guardianPhoneNumber: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .personalInfo
+                  .phoneNumber,
+              studentFirstName: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .kindPersonalInfo
+                  .firstName,
+              studentLastName: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .kindPersonalInfo
+                  .lastName,
+              studentBirthDate:
+                  context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
+              swimCourseID: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .swimCourseInfo
+                  .swimCourse
+                  .swimCourseID,
+              swimPoolIDs: context
+                  .read<SwimGeneratorCubit>()
+                  .state
+                  .swimPools
+                  .map((pool) => pool.swimPoolID)
+                  .toList(),
+              referenceBooking: '',
+              fixDateID: 1);
+        }
+
         final isValid = context.select((ResultBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
@@ -395,7 +470,7 @@ class _SubmitButton extends StatelessWidget {
                 onPressed: isValid
                     ? () => context
                         .read<ResultBloc>()
-                        .add(FormSubmitted(bookingInput))
+                        .add(FormSubmitted(bookingInput!))
                     : null,
                 child: state.isBooking
                     ? const Text(
@@ -406,7 +481,8 @@ class _SubmitButton extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       )
-                    : const Text('Reservieren',
+                    : const Text(
+                        'Reservieren',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -473,5 +549,42 @@ Future<void> _launchUrl() async {
   final Uri url = Uri.parse('https://wassermenschen.org/');
   if (!await launchUrl(url)) {
     throw Exception('Could not launch $url');
+  }
+}
+
+class _LinkTextWidget extends StatelessWidget {
+  const _LinkTextWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Linkify(
+      onOpen: (link) async {
+        if (!await launchUrl(Uri.parse(link.url))) {
+          throw Exception('Could not launch ${link.url}');
+        }
+      },
+      text:
+          "Wenn Du jetzt RESERVIEREN drückst, leiten wir Dich mit samt deiner Eingaben zum https://WASERMENSCHEN-Verein.de weiter.\n",
+      style: const TextStyle(fontSize: 16),
+      linkStyle: const TextStyle(color: Colors.blue, fontSize: 16),
+    );
+  }
+}
+
+class MeinLinkTextWidget {
+  static TextSpan buildTextSpan(BuildContext context) {
+    return TextSpan(
+      text:
+          "Wenn Du jetzt RESERVIEREN drückst, leiten wir Dich mit samt deiner Eingaben zum https://WASERMENSCHEN-Verein.de weiter.\n",
+      style: const TextStyle(
+          color: Colors.blue, decoration: TextDecoration.underline),
+      recognizer: TapGestureRecognizer()
+        ..onTap = () async {
+          const url = "https://WASERMENSCHEN-Verein.de";
+          if (!await launchUrl(Uri.parse(url))) {
+            throw 'Could not launch $url';
+          }
+        },
+    );
   }
 }
