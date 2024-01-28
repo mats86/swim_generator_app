@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swim_generator_app/swim_generator/models/config_app.dart';
+import 'package:swim_generator_app/swim_generator/models/date_selection.dart';
 
 import '../models/models.dart';
 import '../pages/swim_level/models/models.dart';
@@ -51,6 +52,10 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
 
   void updateSwimPoolInfo(List<SwimPoolInfo>? swimPoolInfo) {
     emit(state.copyWith(swimPools: swimPoolInfo));
+  }
+
+  void updateDateSelection(DateSelection? dateSelection) {
+    emit(state.copyWith(dateSelection: dateSelection));
   }
 
   void updateKindPersonalInfo(KindPersonalInfo? kindPersonalInfo) {

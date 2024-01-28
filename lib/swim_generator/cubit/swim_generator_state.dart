@@ -7,6 +7,7 @@ class SwimGeneratorState extends Equatable {
     this.birthDay = const BirthDay.empty(),
     this.swimCourseInfo = const SwimCourseInfo.empty(),
     this.swimPools = const [],
+    this.dateSelection = const DateSelection.empty(),
     this.kindPersonalInfo = const KindPersonalInfo.empty(),
     this.personalInfo = const PersonalInfo.empty(),
     this.configApp = const ConfigApp.empty(),
@@ -17,6 +18,7 @@ class SwimGeneratorState extends Equatable {
   final BirthDay birthDay;
   final SwimCourseInfo swimCourseInfo;
   final List<SwimPoolInfo> swimPools;
+  final DateSelection dateSelection;
   final KindPersonalInfo kindPersonalInfo;
   final PersonalInfo personalInfo;
   final ConfigApp configApp;
@@ -28,6 +30,7 @@ class SwimGeneratorState extends Equatable {
     BirthDay? birthDay,
     SwimCourseInfo? swimCourseInfo,
     List<SwimPoolInfo>? swimPools,
+    DateSelection? dateSelection,
     KindPersonalInfo? kindPersonalInfo,
     PersonalInfo? personalInfo,
     bool? isEmailExists,
@@ -39,6 +42,7 @@ class SwimGeneratorState extends Equatable {
       birthDay: birthDay ?? this.birthDay,
       swimCourseInfo: swimCourseInfo ?? this.swimCourseInfo,
       swimPools: swimPools ?? this.swimPools,
+      dateSelection: dateSelection ?? this.dateSelection,
       kindPersonalInfo: kindPersonalInfo ?? this.kindPersonalInfo,
       personalInfo: personalInfo ?? this.personalInfo,
       configApp: configApp ?? this.configApp,
@@ -52,6 +56,7 @@ class SwimGeneratorState extends Equatable {
         birthDay,
         swimCourseInfo,
         swimPools,
+        dateSelection,
         kindPersonalInfo,
         personalInfo,
         configApp,

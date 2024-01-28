@@ -195,41 +195,41 @@ class MyHomePage extends StatelessWidget {
   static List<int> _generateOrder(SpecialFeatureMode mode) {
     switch (mode) {
       case SpecialFeatureMode.minis:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.modul0:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.schnupperModul:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.basic_3x3:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.seepferdchenFerienPfingsten:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.seepferdchenFerienSommer:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.betterSwim:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.betterSwim2:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.summerClass:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.privatkursKind:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.privatkursErwachsen:
-        return [0, 1, 3, 5, 6];
+        return [0, 1, 3, 5, 6, 7];
       case SpecialFeatureMode.privatkursKind2:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.privatkursErwachsen2:
-        return [0, 1, 3, 5, 6];
+        return [0, 1, 3, 5, 6, 7];
       case SpecialFeatureMode.freundes3Kurs:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.freundes3Kurs2:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.elternKindKurs:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.elternLehrenSwim:
-        return [0, 1, 3, 4, 5, 6];
+        return [0, 1, 3, 4, 5, 6, 7];
       default:
-        return [0, 1, 2, 3, 4, 5, 6]; // default
+        return [0, 1, 2, 3, 4, 5, 6, 7]; // default
     }
   }
 

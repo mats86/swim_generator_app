@@ -33,4 +33,17 @@ class FixDate {
         fixDateFrom = null,
         fixDateTo = null,
         isFixDateActive = false;
+
+  bool get isEmpty {
+    return fixDateID == 0 &&
+        swimPoolID == 0 &&
+        swimCourseID == 0 &&
+        fixDateFrom == null &&
+        fixDateTo == null &&
+        isFixDateActive == false;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
 }

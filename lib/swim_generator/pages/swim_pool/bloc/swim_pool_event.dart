@@ -17,8 +17,6 @@ class SwimPoolLoading extends SwimPoolEvent {
 
 class LoadSwimPools extends SwimPoolEvent {}
 
-class LoadFixDates extends SwimPoolEvent {}
-
 class SwimPoolOptionToggled extends SwimPoolEvent {
   final int index;
   final bool isSelected;
@@ -31,18 +29,5 @@ class SwimPoolModelsChanged extends SwimPoolEvent {
 
   const SwimPoolModelsChanged(this.swimPools);
 }
-
-class FixDateChanged extends SwimPoolEvent {
-  final int fixDateName;
-  final FixDate fixDate;
-  const FixDateChanged(this.fixDateName, this.fixDate);
-
-  @override
-  List<Object> get props => [fixDateName, fixDate];
-}
-
-class SelectFlexDate extends SwimPoolEvent {}
-
-class SelectFixDate extends SwimPoolEvent {}
 
 class FormSubmitted extends SwimPoolEvent {}

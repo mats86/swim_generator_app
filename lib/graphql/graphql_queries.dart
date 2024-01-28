@@ -159,6 +159,20 @@ class GraphQLQueries {
     }
   ''';
 
+  static const String getFixDatesBySwimCourseIDAndSwimPoolIDs = '''
+  query getFixDatesBySwimCourseIDAndSwimPoolIDs(\$swimCourseID: Int!, \$swimPoolIDs: [Int!]!) {
+    fixDatesBySwimCourseIDAndSwimPoolIDs(swimCourseID: \$swimCourseID, swimPoolIDs: \$swimPoolIDs) {
+      fixDateID
+      swimCourseID
+      swimPoolID
+      fixDateFrom
+      fixDateTo
+      isFixDateActive
+    }
+  }
+''';
+
+
   static const String checkEmailAndThrowErrorIfExists = '''
     query checkEmailAndThrowErrorIfExists(\$loginEmail: String!) {
       checkEmailAndThrowErrorIfExists(loginEmail: \$loginEmail)

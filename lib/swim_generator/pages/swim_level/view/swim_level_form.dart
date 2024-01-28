@@ -29,7 +29,7 @@ class _SwimLevelForm extends State<SwimLevelForm> {
     super.initState();
     context.read<SwimLevelBloc>().add(IsDirectLinks(widget.isDirectLinks));
 
-    // DateTime now = DateTime.now();
+    // DateTime now = DateTime(2024, 3, 1, 00, 01);
     DateTime now = DateTime.now();
     int year = now.year;
     DateTime startSeason =
@@ -38,7 +38,7 @@ class _SwimLevelForm extends State<SwimLevelForm> {
     DateTime(year, 8, 31, 23, 59); // 31.8 23:59 end August
 
     DateTime startFixDate =
-    DateTime(year, 1, 1, 00, 00);
+    DateTime(year, 2, 1, 00, 00);
 
     context.read<SwimGeneratorCubit>().updateConfigApp(
         isDirectLinks: widget.isDirectLinks,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:im_stepper/stepper.dart';
+import 'package:swim_generator_app/swim_generator/pages/date_selection/view/date_selection_page.dart';
 import 'package:swim_generator_app/swim_generator/view/swim_generator_form_shell.dart';
 
 import '../cubit/swim_generator_cubit.dart';
@@ -93,12 +94,15 @@ class SwimGeneratorStepper extends StatelessWidget {
         return 'Schwimmbad';
 
       case 4:
-        return 'Kind Information';
+        return 'TIME AUSWAHL';
 
       case 5:
-        return 'Erziehungsberechtigten Information';
+        return 'Kind Information';
 
       case 6:
+        return 'Erziehungsberechtigten Information';
+
+      case 7:
         return 'Deine erfassten Daten';
 
       default:
@@ -127,14 +131,17 @@ class SwimGeneratorStepper extends StatelessWidget {
         return SwimPoolPage(graphQLClient: graphQLClient);
 
       case 4:
-        return const KindPersonalInfoPage();
+        return DateSelectionPage(graphQLClient: graphQLClient);
 
       case 5:
+        return const KindPersonalInfoPage();
+
+      case 6:
         return ParentPersonalInfoPage(
           graphQLClient: graphQLClient,
         );
 
-      case 6:
+      case 7:
         return ResultPage(graphQLClient: graphQLClient);
 
       default:
