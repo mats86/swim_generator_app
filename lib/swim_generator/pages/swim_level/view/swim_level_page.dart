@@ -5,14 +5,12 @@ import 'package:swim_generator_app/swim_generator/pages/swim_level/bloc/swim_lev
 import 'swim_level_form.dart';
 
 class SwimLevelPage extends StatelessWidget {
-  const SwimLevelPage({super.key, required this.shouldUseFutureBuilder});
-  final bool shouldUseFutureBuilder;
+  final bool isDirectLinks;
+  const SwimLevelPage({super.key, required this.isDirectLinks,});
 
   route() {
     return MaterialPageRoute<void>(
-      builder: (_) => SwimLevelPage(
-        shouldUseFutureBuilder: shouldUseFutureBuilder,
-      ),
+      builder: (_) => SwimLevelPage(isDirectLinks: isDirectLinks),
     );
   }
 
@@ -23,9 +21,7 @@ class SwimLevelPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => SwimLevelBloc(
         ),
-        child: SwimLevelForm(
-          shouldUseFutureBuilder: shouldUseFutureBuilder,
-        ),
+        child: SwimLevelForm(isDirectLinks: isDirectLinks),
       ),
     );
   }

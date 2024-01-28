@@ -21,10 +21,10 @@ class PhoneNumberModel extends FormzInput<String, PhoneNumberValidationError> {
 
   @override
   PhoneNumberValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return PhoneNumberValidationError.required;
     }
-    if (!_phoneNumberRegex.hasMatch(value)) {
+    if (!_phoneNumberRegex.hasMatch(value.trim())) {
       return PhoneNumberValidationError.invalid;
     }
     return null; // Kein Fehler

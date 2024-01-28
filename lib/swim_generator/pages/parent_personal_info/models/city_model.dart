@@ -22,10 +22,10 @@ class CityModel extends FormzInput<String, CityValidationError> {
 
   @override
   CityValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return CityValidationError.required;
     }
-    if (!_cityNameRegex.hasMatch(value)) {
+    if (!_cityNameRegex.hasMatch(value.trim())) {
       return CityValidationError.invalid;
     }
     return null; // Kein Fehler

@@ -97,4 +97,12 @@ class ParentPhoneNumberConfirmChanged extends ParentPersonalInfoEvent {
   List<Object> get props => [phoneNumberConfirm];
 }
 
+class IsEmailExists extends ParentPersonalInfoEvent {
+  final bool isEmailExists;
+  const IsEmailExists(this.isEmailExists);
+
+  @override
+  List<Object> get props => [isEmailExists];
+}
+
 class FormSubmitted extends ParentPersonalInfoEvent {}

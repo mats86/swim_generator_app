@@ -10,9 +10,16 @@ import '../pages/pages.dart';
 class SwimGeneratorStepper extends StatelessWidget {
   final GraphQLClient graphQLClient;
   final List<int> order;
+  final int swimCourseID;
+  final bool isDirectLinks;
 
-  const SwimGeneratorStepper(
-      {super.key, required this.graphQLClient, required this.order});
+  const SwimGeneratorStepper({
+    super.key,
+    required this.graphQLClient,
+    required this.order,
+    required this.swimCourseID,
+    required this.isDirectLinks,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,7 @@ class SwimGeneratorStepper extends StatelessWidget {
             children: [
               NumberStepper(
                 enableNextPreviousButtons: false,
-                enableStepTapping: true,
+                enableStepTapping: false,
                 activeStepColor: Colors.lightBlueAccent,
                 numbers: List.generate(order.length, (index) => index + 1),
                 activeStep: state.activeStepperIndex,
@@ -32,8 +39,11 @@ class SwimGeneratorStepper extends StatelessWidget {
                 },
               ),
               header(state.activeStepperIndex),
-              body(state.activeStepperIndex,
-                  state.shouldUseFutureBuilderList[state.activeStepperIndex]),
+              body(
+                state.activeStepperIndex,
+                swimCourseID,
+                isDirectLinks,
+              ),
             ],
           ),
         );
@@ -51,7 +61,7 @@ class SwimGeneratorStepper extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          headerText(activeStepperIndex),
+          headerText(activeStepperIndex, isDirectLinks),
           style: const TextStyle(
             // color: Colors.black,
             fontSize: 20,
@@ -62,12 +72,16 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   // Returns the header text based on the activeStep.
-  String headerText(int activeStepperIndex) {
+  String headerText(int activeStepperIndex, bool isDirectLinks) {
     int pageIndex = order[activeStepperIndex];
 
     switch (pageIndex) {
       case 0:
-        return 'Schwimmniveau';
+        if (isDirectLinks) {
+          return 'TERMIN-WAHL';
+        } else {
+          return 'Schwimmniveau';
+        }
 
       case 1:
         return 'GeburstDatum';
@@ -85,7 +99,7 @@ class SwimGeneratorStepper extends StatelessWidget {
         return 'Erziehungsberechtigten Information';
 
       case 6:
-        return 'Zusammenfassen';
+        return 'Deine erfassten Daten';
 
       default:
         return '';
@@ -93,16 +107,16 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   /// Returns the body.
-  Widget body(int activeStepperIndex, bool shouldUseFutureBuilder) {
+  Widget body(int activeStepperIndex, int swimCourseID, bool isDirectLinks) {
     int pageIndex = order[activeStepperIndex];
 
     switch (pageIndex) {
       case 0:
-        return SwimLevelPage(shouldUseFutureBuilder: shouldUseFutureBuilder);
+        return SwimLevelPage(isDirectLinks: isDirectLinks);
 
       case 1:
         return BirthDayPage(
-          shouldUseFutureBuilder: shouldUseFutureBuilder,
+          swimCourseID: swimCourseID,
           graphQLClient: graphQLClient,
         );
 
@@ -116,7 +130,9 @@ class SwimGeneratorStepper extends StatelessWidget {
         return const KindPersonalInfoPage();
 
       case 5:
-        return const ParentPersonalInfoPage();
+        return ParentPersonalInfoPage(
+          graphQLClient: graphQLClient,
+        );
 
       case 6:
         return ResultPage(graphQLClient: graphQLClient);

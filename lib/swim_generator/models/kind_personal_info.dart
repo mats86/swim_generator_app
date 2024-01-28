@@ -11,9 +11,9 @@ class KindPersonalInfo extends Equatable {
 
   const KindPersonalInfo.empty()
       : this(
-          firstName: '',
-          lastName: '',
-        );
+    firstName: '',
+    lastName: '',
+  );
 
   KindPersonalInfo copyWith({
     String? firstName,
@@ -25,9 +25,17 @@ class KindPersonalInfo extends Equatable {
     );
   }
 
+  bool get isEmpty {
+    return firstName.isEmpty && lastName.isEmpty;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   @override
   List<Object> get props => [
-        firstName,
-        lastName,
-      ];
+    firstName,
+    lastName,
+  ];
 }

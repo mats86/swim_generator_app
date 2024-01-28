@@ -19,10 +19,10 @@ class StreetNumberModel extends FormzInput<String, StreetNumberValidationError> 
 
   @override
   StreetNumberValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return StreetNumberValidationError.required;
     }
-    if (!_houseNumberRegex.hasMatch(value)) {
+    if (!_houseNumberRegex.hasMatch(value.trim())) {
       return StreetNumberValidationError.invalid;
     }
     return null; // Kein Fehler

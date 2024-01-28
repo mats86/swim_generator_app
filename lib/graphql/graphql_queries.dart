@@ -1,4 +1,21 @@
 class GraphQLQueries {
+  static const String getSwimCourse = '''
+  query getSwimCourse() {
+    swimCourses() {
+      swimCourseID
+      swimCourseName
+      swimCourseMinAge
+      swimCourseMaxAge
+      swimCoursePrice
+      swimCourseDescription
+      swimCourseDateTypID
+      swimCourseDuration
+      isSwimCourseVisible
+      swimLevelID
+    }
+  }
+''';
+
   static const String getSwimCourseById = '''
   query getSwimCourseById(\$swimCourseID: Int!) {
     swimCourseById(swimCourseID: \$swimCourseID) {
@@ -79,6 +96,17 @@ class GraphQLQueries {
   }
 ''';
 
+  static const String createBookingForExistingGuardian = '''
+  mutation createBookingForExistingGuardian(\$input: NewStudentAndBookingInput!) {
+    createBookingForExistingGuardian(input: \$input) {
+      swimCourseBookingID
+      swimCourseID
+      studentID
+      guardianID
+    }
+  }
+''';
+
   static const String getFixDates = '''
     query getFixDates {
       fixDates {
@@ -128,6 +156,12 @@ class GraphQLQueries {
         fixDateTo
         isFixDateActive
       }
+    }
+  ''';
+
+  static const String checkEmailAndThrowErrorIfExists = '''
+    query checkEmailAndThrowErrorIfExists(\$loginEmail: String!) {
+      checkEmailAndThrowErrorIfExists(loginEmail: \$loginEmail)
     }
   ''';
 

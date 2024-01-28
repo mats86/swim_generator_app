@@ -14,6 +14,6 @@ class TitleModel extends FormzInput<String, TitleValidationError> {
 
   @override
   TitleValidationError? validator(String value) {
-    return value.isEmpty ? TitleValidationError.required : null;
+    return value.trim().isEmpty ? TitleValidationError.required : null;
   }
 }

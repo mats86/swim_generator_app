@@ -27,20 +27,38 @@ class PersonalInfo extends Equatable {
   final String phoneNumber;
   final String phoneNumberConfirm;
 
+  bool get isEmpty {
+    return parentTitle.isEmpty &&
+        firstName.isEmpty &&
+        lastName.isEmpty &&
+        parentStreet.isEmpty &&
+        streetNumber.isEmpty &&
+        zipCode.isEmpty &&
+        city.isEmpty &&
+        email.isEmpty &&
+        emailConfirm.isEmpty &&
+        phoneNumber.isEmpty &&
+        phoneNumber.isEmpty;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   const PersonalInfo.empty()
       : this(
-          parentTitle: '',
-          firstName: '',
-          lastName: '',
-          parentStreet: '',
-          streetNumber: '',
-          zipCode: '',
-          city: '',
-          email: '',
-          emailConfirm: '',
-          phoneNumber: '',
-          phoneNumberConfirm: '',
-        );
+    parentTitle: '',
+    firstName: '',
+    lastName: '',
+    parentStreet: '',
+    streetNumber: '',
+    zipCode: '',
+    city: '',
+    email: '',
+    emailConfirm: '',
+    phoneNumber: '',
+    phoneNumberConfirm: '',
+  );
 
   PersonalInfo copyWith({
     String? parentTitle,
@@ -72,16 +90,16 @@ class PersonalInfo extends Equatable {
 
   @override
   List<Object?> get props => [
-        parentTitle,
-        firstName,
-        lastName,
-        parentStreet,
-        streetNumber,
-        zipCode,
-        city,
-        email,
-        emailConfirm,
-        phoneNumber,
-        phoneNumberConfirm,
-      ];
+    parentTitle,
+    firstName,
+    lastName,
+    parentStreet,
+    streetNumber,
+    zipCode,
+    city,
+    email,
+    emailConfirm,
+    phoneNumber,
+    phoneNumberConfirm,
+  ];
 }

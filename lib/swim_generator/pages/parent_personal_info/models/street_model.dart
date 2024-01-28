@@ -22,10 +22,10 @@ class StreetModel extends FormzInput<String, StreetValidationError> {
 
   @override
   StreetValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return StreetValidationError.required;
     }
-    if (!_streetNameRegex.hasMatch(value)) {
+    if (!_streetNameRegex.hasMatch(value.trim())) {
       return StreetValidationError.invalid;
     }
     return null; // Kein Fehler

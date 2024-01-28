@@ -9,20 +9,27 @@ class SwimGeneratorPage extends StatelessWidget {
   final GraphQLClient graphQLClient;
   final String title;
   final List<int> order;
+  final int swimCourseID;
+  final bool isDirectLinks;
 
   const SwimGeneratorPage({
     super.key,
     required this.graphQLClient,
     required this.title,
     this.order = const [0, 1, 2, 3, 4, 5, 6],
+    this.swimCourseID = 0,
+    this.isDirectLinks = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SwimGeneratorCubit>(
       create: (_) => SwimGeneratorCubit(order.length),
-      child:
-      SwimGeneratorStepper(graphQLClient: graphQLClient, order: order),
+      child: SwimGeneratorStepper(
+          graphQLClient: graphQLClient,
+          order: order,
+          swimCourseID: swimCourseID,
+          isDirectLinks: isDirectLinks),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:swim_generator_app/db_manager/pages/db_swim_course/view/db_swim_course_page.dart';
+import 'package:swim_generator_app/db_manager/view/db_manager_page.dart';
 import 'package:swim_generator_app/swim_generator/swim_generator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_web/webview_flutter_web.dart';
@@ -72,15 +74,91 @@ class AppView extends StatelessWidget {
     Widget page;
     SpecialFeatureMode mode;
     String title = 'BUCHUNGS-TOOL';
+    int swimCourseID = 0;
+    bool isDirectLinks = true;
 
     switch (settings.name) {
       case '/':
         mode = SpecialFeatureMode.disabled;
         title = 'KURSFINDER';
+        isDirectLinks = false;
+        break;
+      case '/minis':
+        mode = SpecialFeatureMode.minis;
+        swimCourseID = SpecialFeatureMode.minis.index;
+        break;
+      case '/modul0':
+        mode = SpecialFeatureMode.modul0;
+        swimCourseID = SpecialFeatureMode.modul0.index;
+        break;
+      case '/schnupper_modul':
+        mode = SpecialFeatureMode.schnupperModul;
+        swimCourseID = SpecialFeatureMode.schnupperModul.index;
         break;
       case '/basic_3x3':
         mode = SpecialFeatureMode.basic_3x3;
+        swimCourseID = SpecialFeatureMode.basic_3x3.index;
         break;
+      case '/seepferdchen_ferien_pfingsten':
+        mode = SpecialFeatureMode.seepferdchenFerienPfingsten;
+        swimCourseID = SpecialFeatureMode.seepferdchenFerienPfingsten.index;
+        break;
+      case '/seepferdchen_ferien_sommer':
+        mode = SpecialFeatureMode.seepferdchenFerienSommer;
+        swimCourseID = SpecialFeatureMode.seepferdchenFerienSommer.index;
+        break;
+      case '/better_swim':
+        mode = SpecialFeatureMode.betterSwim;
+        swimCourseID = SpecialFeatureMode.betterSwim.index;
+        break;
+      case '/better_swim2':
+        mode = SpecialFeatureMode.betterSwim2;
+        swimCourseID = SpecialFeatureMode.betterSwim2.index;
+        break;
+      case '/summer_class':
+        mode = SpecialFeatureMode.summerClass;
+        swimCourseID = SpecialFeatureMode.summerClass.index;
+        break;
+      case '/privatkurs_kind':
+        mode = SpecialFeatureMode.privatkursKind;
+        swimCourseID = SpecialFeatureMode.privatkursKind.index;
+        break;
+      case '/privatkurs_erwachsen':
+        mode = SpecialFeatureMode.privatkursErwachsen;
+        swimCourseID = SpecialFeatureMode.privatkursErwachsen.index;
+        break;
+      case '/privatkurs_kind2':
+        mode = SpecialFeatureMode.privatkursKind2;
+        swimCourseID = SpecialFeatureMode.privatkursKind2.index;
+        break;
+      case '/privatkurs_erwachsen2':
+        mode = SpecialFeatureMode.privatkursErwachsen2;
+        swimCourseID = SpecialFeatureMode.privatkursErwachsen2.index;
+        break;
+      case '/freundes3_kurs':
+        mode = SpecialFeatureMode.freundes3Kurs;
+        swimCourseID = SpecialFeatureMode.freundes3Kurs.index;
+        break;
+      case '/freundes3_kurs2':
+        mode = SpecialFeatureMode.freundes3Kurs2;
+        swimCourseID = SpecialFeatureMode.freundes3Kurs2.index;
+        break;
+      case '/eltern_kind_kurs':
+        mode = SpecialFeatureMode.elternKindKurs;
+        swimCourseID = SpecialFeatureMode.elternKindKurs.index;
+        break;
+      case '/eltern_lehren_swim':
+        mode = SpecialFeatureMode.elternLehrenSwim;
+        swimCourseID = SpecialFeatureMode.elternLehrenSwim.index;
+        break;
+      case '/db':
+        return MaterialPageRoute(
+            builder: (context) => DbManagerPage(graphQLClient: graphQLClient));
+      case '/db_swim_course':
+        return MaterialPageRoute(
+            builder: (context) => DbSwimCoursePage(
+                  graphQLClient: graphQLClient,
+                ));
       default:
         mode = SpecialFeatureMode.disabled;
     }
@@ -89,6 +167,8 @@ class AppView extends StatelessWidget {
       graphQLClient: graphQLClient,
       title: title,
       specialFeatureMode: mode,
+      swimCourseID: swimCourseID,
+      isDirectLinks: isDirectLinks,
     );
 
     return MaterialPageRoute(builder: (_) => page);
@@ -100,20 +180,54 @@ class MyHomePage extends StatelessWidget {
   final String title;
   final SpecialFeatureMode specialFeatureMode;
   final List<int> order;
+  final int swimCourseID;
+  final bool isDirectLinks;
 
   MyHomePage({
     super.key,
     required this.graphQLClient,
     this.title = 'Schwimmgenerator',
     this.specialFeatureMode = SpecialFeatureMode.disabled,
+    this.swimCourseID = 0,
+    this.isDirectLinks = true,
   }) : order = _generateOrder(specialFeatureMode);
 
   static List<int> _generateOrder(SpecialFeatureMode mode) {
     switch (mode) {
+      case SpecialFeatureMode.minis:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.modul0:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.schnupperModul:
+        return [0, 1, 3, 4, 5, 6];
       case SpecialFeatureMode.basic_3x3:
-        return [0, 1, 2, 3, 4, 5, 6];
-      case SpecialFeatureMode.mode2:
-        return [4, 3, 2, 1];
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.seepferdchenFerienPfingsten:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.seepferdchenFerienSommer:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.betterSwim:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.betterSwim2:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.summerClass:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.privatkursKind:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.privatkursErwachsen:
+        return [0, 1, 3, 5, 6];
+      case SpecialFeatureMode.privatkursKind2:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.privatkursErwachsen2:
+        return [0, 1, 3, 5, 6];
+      case SpecialFeatureMode.freundes3Kurs:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.freundes3Kurs2:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.elternKindKurs:
+        return [0, 1, 3, 4, 5, 6];
+      case SpecialFeatureMode.elternLehrenSwim:
+        return [0, 1, 3, 4, 5, 6];
       default:
         return [0, 1, 2, 3, 4, 5, 6]; // default
     }
@@ -131,21 +245,14 @@ class MyHomePage extends StatelessWidget {
           style: const TextStyle(
               color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(context
-        //         .read<ThemeCubit>()
-        //         .currentIcon),
-        //     tooltip: 'Brightness',
-        //     onPressed: () => context.read<ThemeCubit>().toggleTheme(),
-        //   ),
-        // ],
       ),
       body: SwimGeneratorPage(
         graphQLClient: graphQLClient,
-        title: "title",
+        title: title,
         order: order,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        swimCourseID: swimCourseID,
+        isDirectLinks: isDirectLinks,
+      ),
     );
   }
 }

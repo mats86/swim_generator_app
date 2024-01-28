@@ -1,9 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:swim_generator_app/swim_generator/models/models.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
@@ -17,7 +20,7 @@ class SwimCourseForm extends StatefulWidget {
 }
 
 class _SwimCourseForm extends State<SwimCourseForm> {
-  InAppWebViewController? webViewController;
+  //InAppWebViewController? webViewController;
   final PlatformWebViewController _controller = PlatformWebViewController(
     const PlatformWebViewControllerCreationParams(),
   )..loadRequest(
@@ -32,6 +35,7 @@ class _SwimCourseForm extends State<SwimCourseForm> {
     super.initState();
     context.read<SwimCourseBloc>().add(LoadSwimSeasonOptions());
     context.read<SwimCourseBloc>().add(LoadSwimCourseOptions(
+        context.read<SwimGeneratorCubit>().state.swimLevel.swimLevel!,
         context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
         context
             .read<SwimGeneratorCubit>()
@@ -71,22 +75,34 @@ class _SwimCourseForm extends State<SwimCourseForm> {
       },
       child: Column(
         children: [
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              "Dem Alter entsprechende Kurse",
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Dem Alter entsprechende Kurse:",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              overflow: TextOverflow.visible,
             ),
           ),
           _SwimCourseRadioButton(
             controller: _controller,
           ),
-          const Divider(),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "¹ Übersicht aller von uns angebotenen Schwimmkurse.",
-            ),
-          ),
+          //const Divider(),
+          Align(alignment: Alignment.centerLeft, child: _MeinTextMitLink()),
           const SizedBox(
             height: 32,
           ),
@@ -122,85 +138,108 @@ class _SwimCourseRadioButton extends StatelessWidget {
               color: Colors.lightBlueAccent,
               size: 50.0,
             )
-          : ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              itemCount: state.swimCourseOptions.length,
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  // height: 50,
-                  child: Visibility(
-                    visible: state.swimCourseOptions[index].isSwimCourseVisible,
-                    child: Row(
-                      children: [
-                        Radio(
-                          activeColor: Colors.lightBlueAccent,
-                          groupValue: state.swimCourse.value,
-                          value: state.swimCourseOptions[index].swimCourseName,
-                          onChanged: (val) {
-                            BlocProvider.of<SwimCourseBloc>(context).add(
-                                SwimCourseChanged(val.toString(),
-                                    state.swimCourseOptions[index]));
-                          },
-                        ),
-                        Flexible(
-                          child: Wrap(
+          : Visibility(
+              visible: state.swimCourseOptions.isNotEmpty,
+              child: Card(
+                elevation: 4.0,
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ListView.separated(
+                    separatorBuilder: (_, __) =>
+                        Divider(color: Colors.grey[300]),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: state.swimCourseOptions.length,
+                    itemBuilder: (context, index) {
+                      return SizedBox(
+                        // height: 50,
+                        child: Visibility(
+                          visible: state
+                              .swimCourseOptions[index].isSwimCourseVisible,
+                          child: Row(
                             children: [
-                              Text(
-                                '${state.swimCourseOptions[index].swimCourseName} '
-                                'AB ${state.swimCourseOptions[index].swimCoursePrice} €',
-                                overflow: TextOverflow.visible,
+                              Radio(
+                                activeColor: Colors.lightBlueAccent,
+                                groupValue: state.swimCourse.value,
+                                value: state
+                                    .swimCourseOptions[index].swimCourseName,
+                                onChanged: (val) {
+                                  BlocProvider.of<SwimCourseBloc>(context).add(
+                                      SwimCourseChanged(val.toString(),
+                                          state.swimCourseOptions[index]));
+                                },
+                              ),
+                              Flexible(
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      '${state.swimCourseOptions[index].swimCourseName} '
+                                      'AB ${state.swimCourseOptions[index].swimCoursePrice} €',
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Tooltip(
+                                preferBelow: false,
+                                message: state.swimCourseOptions[index]
+                                    .swimCourseDescription,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.info_rounded,
+                                    color: Colors.blue,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    context
+                                        .read<SwimCourseBloc>()
+                                        .add(WebPageLoading());
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(state
+                                              .swimCourseOptions[index]
+                                              .swimCourseName),
+                                          content: state.loadingWebPageStatus
+                                                  .isInProgress
+                                              ? const Center(
+                                                  child:
+                                                      CircularProgressIndicator())
+                                              : SizedBox(
+                                                  height: 400,
+                                                  width: 425,
+                                                  child: PlatformWebViewWidget(
+                                                    PlatformWebViewWidgetCreationParams(
+                                                      controller: controller,
+                                                    ),
+                                                  ).build(context),
+                                                ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Schließen'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        Tooltip(
-                          preferBelow: false,
-                          message: state
-                              .swimCourseOptions[index].swimCourseDescription,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.info_rounded,
-                              color: Colors.blue,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(state.swimCourseOptions[index]
-                                        .swimCourseName),
-                                    content: SizedBox(
-                                      height: 400,
-                                      // Stellen Sie eine geeignete Höhe ein
-                                      width: 425,
-                                      // Stellen Sie eine geeignete Breite ein
-                                      child: PlatformWebViewWidget(
-                                        PlatformWebViewWidgetCreationParams(
-                                            controller: controller),
-                                      ).build(context),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Schließen'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ),
             );
     });
   }
@@ -269,5 +308,32 @@ class _CancelButton extends StatelessWidget {
                   child: const Text('Zurück'),
                 );
         });
+  }
+}
+
+class _MeinTextMitLink extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(color: Colors.black, fontSize: 16),
+        children: <TextSpan>[
+          TextSpan(
+            text: "¹ Übersicht aller von uns angebotenen Schwimmkurse",
+            style: const TextStyle(
+                color: Colors.blue, decoration: TextDecoration.underline),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                const url =
+                    "https://wassermenschen-schwimmschulen.vercel.app/schwimmkurse";
+                if (!await launchUrl(Uri.parse(url))) {
+                  throw 'Could not launch $url';
+                }
+              },
+          ),
+          const TextSpan(text: "."),
+        ],
+      ),
+    );
   }
 }

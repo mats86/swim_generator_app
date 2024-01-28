@@ -7,6 +7,14 @@ abstract class SwimLevelEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class IsDirectLinks extends SwimLevelEvent {
+  final bool isDirectLinks;
+  const IsDirectLinks(this.isDirectLinks);
+
+  @override
+  List<Object> get props => [isDirectLinks];
+}
+
 class SwimLevelChanged extends SwimLevelEvent {
   final SwimLevelModel swimLevelModel;
 
@@ -28,11 +36,12 @@ class LoadSwimSeasonOptions extends SwimLevelEvent {
 class SwimSeasonChanged extends SwimLevelEvent {
   final String swimSeasonName;
   final SwimSeason season;
+  final bool isDirectLinks;
 
-  const SwimSeasonChanged(this.swimSeasonName, this.season);
+  const SwimSeasonChanged(this.swimSeasonName, this.season, this.isDirectLinks);
 
   @override
-  List<Object> get props => [swimSeasonName, season];
+  List<Object> get props => [swimSeasonName, season, isDirectLinks];
 }
 
 class FormSubmitted extends SwimLevelEvent {}

@@ -2,6 +2,7 @@ part of 'swim_level_bloc.dart';
 
 class SwimLevelState extends Equatable {
   const SwimLevelState({
+    this.isDirectLinks = false,
     this.swimLevelModel = const SwimLevelModel.pure(),
     this.swimSeasonOptions = const [],
     this.swimSeason = const SwimSeasonModel.pure(),
@@ -10,6 +11,7 @@ class SwimLevelState extends Equatable {
     this.submissionStatus = FormzSubmissionStatus.initial,
   });
 
+  final bool isDirectLinks;
   final SwimLevelModel swimLevelModel;
   final List<SwimSeason> swimSeasonOptions;
   final SwimSeasonModel swimSeason;
@@ -18,6 +20,7 @@ class SwimLevelState extends Equatable {
   final FormzSubmissionStatus submissionStatus;
 
   SwimLevelState copyWith({
+    bool? isDirectLinks,
     SwimLevelModel? swimLevelModel,
     List<SwimSeason>? swimSeasonOptions,
     SwimSeasonModel? swimSeason,
@@ -26,6 +29,7 @@ class SwimLevelState extends Equatable {
     FormzSubmissionStatus? submissionStatus,
   }) {
     return SwimLevelState(
+      isDirectLinks: isDirectLinks ?? this.isDirectLinks,
       swimLevelModel: swimLevelModel ?? this.swimLevelModel,
       swimSeasonOptions: swimSeasonOptions ?? this.swimSeasonOptions,
       swimSeason: swimSeason ?? this.swimSeason,
@@ -37,6 +41,7 @@ class SwimLevelState extends Equatable {
 
   @override
   List<Object> get props => [
+        isDirectLinks,
         swimLevelModel,
         swimSeasonOptions,
         swimSeason,

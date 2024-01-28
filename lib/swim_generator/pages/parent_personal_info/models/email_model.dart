@@ -21,10 +21,10 @@ class EmailModel extends FormzInput<String, EmailValidationError> {
 
   @override
   EmailValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return EmailValidationError.required;
     }
-    if (!_emailRegex.hasMatch(value)) {
+    if (!_emailRegex.hasMatch(value.trim())) {
       return EmailValidationError.invalid;
     }
     return null; // Kein Fehler

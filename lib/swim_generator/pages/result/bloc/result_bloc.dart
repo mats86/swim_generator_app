@@ -101,9 +101,27 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
     }
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-
-      await service.executeCreateCompleteSwimCourseBooking(
-          event.completeSwimCourseBookingInput);
+      if (event.isEmailExists) {
+        await service.executeBookingForExistingGuardian(
+          NewStudentAndBookingInput(
+            loginEmail: event.completeSwimCourseBookingInput.loginEmail,
+            studentFirstName:
+                event.completeSwimCourseBookingInput.studentFirstName,
+            studentLastName:
+                event.completeSwimCourseBookingInput.studentLastName,
+            studentBirthDate:
+                event.completeSwimCourseBookingInput.studentBirthDate,
+            swimCourseID: event.completeSwimCourseBookingInput.swimCourseID,
+            swimPoolIDs: event.completeSwimCourseBookingInput.swimPoolIDs,
+            referenceBooking:
+                event.completeSwimCourseBookingInput.referenceBooking,
+            fixDateID: event.completeSwimCourseBookingInput.fixDateID,
+          ),
+        );
+      } else {
+        await service.executeCreateCompleteSwimCourseBooking(
+            event.completeSwimCourseBookingInput);
+      }
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     }
   }

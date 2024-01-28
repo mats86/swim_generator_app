@@ -18,10 +18,10 @@ class EmailConfirmModel extends FormzInput<String, EmailConfirmValidationError> 
 
   @override
   EmailConfirmValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return EmailConfirmValidationError.required;
     }
-    if (value != originalEmail) {
+    if (value.trim() != originalEmail) {
       return EmailConfirmValidationError.mismatch;
     }
     return null; // Kein Fehler

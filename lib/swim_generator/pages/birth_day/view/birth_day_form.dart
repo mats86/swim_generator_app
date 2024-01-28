@@ -10,9 +10,12 @@ import '../../../models/swim_course_info.dart';
 import '../bloc/birth_day_bloc.dart';
 
 class BirthDayForm extends StatefulWidget {
-  const BirthDayForm({super.key, required this.shouldUseFutureBuilder});
+  const BirthDayForm({
+    super.key,
+    required this.swimCourseID,
+  });
 
-  final bool shouldUseFutureBuilder;
+  final int swimCourseID;
 
   @override
   State<BirthDayForm> createState() => _BirthDayForm();
@@ -44,6 +47,7 @@ class _BirthDayForm extends State<BirthDayForm> {
           showDialog(
             context: context,
             builder: (BuildContext dialogContext) {
+              double width = MediaQuery.of(context).size.width;
               return AlertDialog(
                 title: const Row(
                   children: <Widget>[
@@ -52,21 +56,24 @@ class _BirthDayForm extends State<BirthDayForm> {
                     Expanded(child: Text('Problem mit der Kursbuchung')),
                   ],
                 ),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text(
-                          'Sie möchten den Kurs "${state.autoSelectedCourse.swimCourseName}" buchen.'),
-                      Text(
-                          'Ihr eingegebenes Schwimmniveau: ${context.read<SwimGeneratorCubit>().state.swimLevel}'),
-                      Text(
-                          'Ihr eingegebenes Geburtsdatum: ${DateFormat('dd.MM.yyyy').format(state.birthDay.value!)}'),
-                      const SizedBox(height: 10),
-                      const Text(
-                          'Die von Ihnen eingegebenen Informationen passen nicht zu dem von Ihnen ausgewählten Kurs.'),
-                      const Text(
-                          'Möchten Sie alternative Kurse, die besser zu Ihrem Profil passen, anzeigen lassen?'),
-                    ],
+                content: SizedBox(
+                  width: width < 400.0 ? width * 0.9 : 400,
+                  child: const SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        // Text(
+                        //     'Sie möchten den Kurs "${state.autoSelectedCourse.swimCourseName}" buchen.'),
+                        // Text(
+                        //     'Ihr eingegebenes Schwimmniveau: ${context.read<SwimGeneratorCubit>().state.swimLevel}'),
+                        // Text(
+                        //     'Ihr eingegebenes Geburtsdatum: ${DateFormat('dd.MM.yyyy').format(state.birthDay.value!)}'),
+                        // const SizedBox(height: 10),
+                        Text(
+                            'Die von Ihnen eingegebenen Informationen passen nicht zu dem von Ihnen ausgewählten Kurs.'),
+                        Text(
+                            'Möchten Sie alternative Kurse, die besser zu Ihrem Profil passen, anzeigen lassen?'),
+                      ],
+                    ),
                   ),
                 ),
                 actions: <Widget>[
@@ -75,8 +82,6 @@ class _BirthDayForm extends State<BirthDayForm> {
                     onPressed: () {
                       Navigator.of(dialogContext).pop();
                       Navigator.of(context).pushNamed('/');
-                      // context.read<BirthDayBloc>().add(LoadSwimCourseOptions(
-                      //     context.read<SwimGeneratorCubit>().state.birthDay.birthDay!));
                     },
                   ),
                   TextButton(
@@ -95,8 +100,8 @@ class _BirthDayForm extends State<BirthDayForm> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _BirthDataInput(
-              controller: _birthDayController,
-              shouldUseFutureBuilder: widget.shouldUseFutureBuilder),
+            controller: _birthDayController,
+          ),
           const SizedBox(
             height: 16.0,
           ),
@@ -111,7 +116,15 @@ class _BirthDayForm extends State<BirthDayForm> {
               const SizedBox(
                 width: 8.0,
               ),
-              Expanded(child: _SubmitButton())
+              Expanded(
+                  child: _SubmitButton(
+                swimCourseID: widget.swimCourseID,
+                isDirectLinks: context
+                    .read<SwimGeneratorCubit>()
+                    .state
+                    .configApp
+                    .isDirectLinks,
+              ))
             ],
           )
         ],
@@ -122,11 +135,9 @@ class _BirthDayForm extends State<BirthDayForm> {
 
 class _BirthDataInput extends StatelessWidget {
   final TextEditingController controller;
-  final bool shouldUseFutureBuilder;
 
   const _BirthDataInput({
     required this.controller,
-    required this.shouldUseFutureBuilder,
   });
 
   // Define _textField as an instance variable.
@@ -200,6 +211,14 @@ class _BirthDataInput extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
+  final int swimCourseID;
+  final bool isDirectLinks;
+
+  const _SubmitButton({
+    required this.swimCourseID,
+    required this.isDirectLinks,
+  });
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BirthDayBloc, BirthDayState>(
@@ -239,7 +258,10 @@ class _SubmitButton extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     elevation: 0, backgroundColor: Colors.lightBlueAccent),
                 onPressed: isValid
-                    ? () => context.read<BirthDayBloc>().add(FormSubmitted())
+                    ? () => context.read<BirthDayBloc>().add(FormSubmitted(
+                          swimCourseID,
+                          isDirectLinks,
+                        ))
                     : null,
                 child: const Text(
                   'Weiter',

@@ -10,6 +10,7 @@ import '../models/birth_day_model.dart';
 part 'birth_day_event.dart';
 
 part 'birth_day_state.dart';
+
 part 'birth_day_repository.dart';
 
 class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
@@ -57,32 +58,29 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
     return age;
   }
 
-
   void _onFormSubmitted(
     FormSubmitted event,
     Emitter<BirthDayState> emit,
   ) async {
     final birthDay = BirthDayModel.dirty(state.birthDay.value);
     emit(
-      state.copyWith(
-        birthDay: birthDay,
-        isValid: Formz.validate([birthDay])
-      ),
+      state.copyWith(birthDay: birthDay, isValid: Formz.validate([birthDay])),
     );
     double age = calculateAge(birthDay.value!, getSpecificDate());
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      //emit(state.copyWith(autoSelectedCourse: await service.getSwimCourseById(4),));
-      if (false) {
-        if ( (age >= state.autoSelectedCourse.swimCourseMinAge) &&
-            (age <= state.autoSelectedCourse.swimCourseMaxAge) ) {
+      if (event.isDirectLinks) {
+        emit(state.copyWith(
+          autoSelectedCourse:
+              await service.getSwimCourseById(event.swimCourseID),
+        ));
+        if ((age >= state.autoSelectedCourse.swimCourseMinAge) &&
+            (age <= state.autoSelectedCourse.swimCourseMaxAge)) {
           emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
-        }
-        else {
+        } else {
           emit(state.copyWith(submissionStatus: FormzSubmissionStatus.failure));
         }
-      }
-      else {
+      } else {
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
       }
     }

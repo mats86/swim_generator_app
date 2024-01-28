@@ -27,12 +27,17 @@ class SwimSeasonChanged extends SwimCourseEvent {
 class LoadSwimSeasonOptions extends SwimCourseEvent {}
 
 class LoadSwimCourseOptions extends SwimCourseEvent {
+  final SwimLevelEnum swimLevel;
   final DateTime birthDay;
   final DateTime refDate;
-  const LoadSwimCourseOptions(this.birthDay, this.refDate);
+  const LoadSwimCourseOptions(this.swimLevel, this.birthDay, this.refDate);
 
   @override
-  List<Object> get props => [birthDay, refDate];
+  List<Object> get props => [swimLevel, birthDay, refDate];
 }
+
+class WebPageLoading extends SwimCourseEvent {}
+
+class WebPageLoaded extends SwimCourseEvent {}
 
 class FormSubmitted extends SwimCourseEvent {}

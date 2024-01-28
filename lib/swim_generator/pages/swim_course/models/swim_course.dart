@@ -49,4 +49,21 @@ class SwimCourse {
         swimCourseDuration = '',
         isSwimCourseVisible = false,
         swimLevelID = 0;
+
+  bool get isEmpty {
+    return swimCourseID == 0 &&
+        swimCourseName.isEmpty &&
+        swimCourseMinAge == 0 &&
+        swimCourseMaxAge == 0 &&
+        swimCoursePrice == 0 &&
+        swimCourseDescription.isEmpty &&
+        swimCourseDateTypID == 0 &&
+        swimCourseDuration.isEmpty &&
+        isSwimCourseVisible == false &&
+        swimLevelID == 0;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
 }

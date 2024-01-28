@@ -11,7 +11,6 @@ class ResultRepository {
       document: gql(GraphQLQueries.createCompleteSwimCourseBooking),
       variables: {
         'input': input.toGraphqlJson(),
-        // Diese Methode konvertiert das Eingabeobjekt in ein JSON-Format, das für GraphQL geeignet ist.
       },
     );
 
@@ -21,12 +20,32 @@ class ResultRepository {
       if (kDebugMode) {
         print(result.exception.toString());
       }
-      // Fehlerbehandlung
     } else {
       if (kDebugMode) {
         print('Mutation erfolgreich');
       }
-      // Verarbeiten der Antwort
+    }
+  }
+
+  Future<void> executeBookingForExistingGuardian(
+      NewStudentAndBookingInput input) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(GraphQLQueries.createBookingForExistingGuardian),
+      variables: {
+        'input': input.toGraphqlJson(),
+      },
+    );
+
+    final QueryResult result = await graphQLClient.mutate(options);
+
+    if (result.hasException) {
+      if (kDebugMode) {
+        print(result.exception.toString());
+      }
+    } else {
+      if (kDebugMode) {
+        print('Mutation erfolgreich');
+      }
     }
   }
 }

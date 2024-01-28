@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../bloc/parent_personal_info_bloc.dart';
 import 'parent_personal_info_form.dart';
 
 class ParentPersonalInfoPage extends StatelessWidget {
-  const ParentPersonalInfoPage({super.key});
+  final GraphQLClient graphQLClient;
 
-  static Route route() {
+  const ParentPersonalInfoPage({super.key, required this.graphQLClient});
+
+  Route route() {
     return MaterialPageRoute<void>(
-      builder: (_) => const ParentPersonalInfoPage(),
+      builder: (_) => ParentPersonalInfoPage(
+        graphQLClient: graphQLClient,
+      ),
     );
   }
 
@@ -19,7 +24,7 @@ class ParentPersonalInfoPage extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: BlocProvider(
         create: (context) => ParentPersonalInfoBloc(
-          ParentPersonalInfoRepository(),
+          ParentPersonalInfoRepository(graphQLClient: graphQLClient),
         ),
         child: const ParentPersonalInfoForm(),
       ),

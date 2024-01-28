@@ -60,7 +60,6 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<KindPersonalInfoBloc, KindPersonalInfoState>(
@@ -87,9 +86,33 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
           const SizedBox(
             height: 32.0,
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Entwicklungsstatus des Schwimmschülers',
+                    style: TextStyle(
+                      fontSize: 16, // Ihre Textgröße// Farbe des Textes
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' *', // Sternchen direkt nach dem Text
+                    style: TextStyle(
+                      color: Colors.red, // Farbe des Sternchens
+                      fontSize: 16, // Größe des Sternchens
+                    ),
+                  ),
+                ],
+              ),
+              overflow:
+              TextOverflow.visible, // Einstellung für den Textüberlauf
+            ),
+          ),
           Card(
             elevation: 4.0,
-            margin: const EdgeInsets.all(10.0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -98,26 +121,33 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
                     context,
                     'Körperliche Entwicklungsverzögerungen',
                         (state) => state.isPhysicalDelay.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(PhysicalDelayChanged(val!)),
+                        (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(PhysicalDelayChanged(val!)),
                   ),
                   const Divider(),
                   _buildCheckboxRow(
                     context,
                     'GEISTIGE Entwicklungsverzögerungen',
                         (state) => state.isMentalDelay.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(MentalDelayChanged(val!)),
+                        (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(MentalDelayChanged(val!)),
                   ),
                   const Divider(),
                   _buildCheckboxRow(
                     context,
                     'Keine Einschränkungen',
                         (state) => state.isNoLimit.value,
-                        (val) => context.read<KindPersonalInfoBloc>().add(NoLimitsChanged(val!)),
+                        (val) => context
+                        .read<KindPersonalInfoBloc>()
+                        .add(NoLimitsChanged(val!)),
                   ),
                 ],
               ),
             ),
-          ),          const SizedBox(
+          ),
+          const SizedBox(
             height: 32.0,
           ),
           Row(
@@ -298,45 +328,45 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<KindPersonalInfoBloc, KindPersonalInfoState>(
       listenWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+      previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
           context.read<SwimGeneratorCubit>().updateKindPersonalInfo(
               KindPersonalInfo(
-                  firstName: state.firstName.value,
-                  lastName: state.lastName.value));
+                  firstName: state.firstName.value.trim(),
+                  lastName: state.lastName.value.trim()));
         }
       },
       buildWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+      previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
         final isValid =
-            context.select((KindPersonalInfoBloc bloc) => bloc.state.isValid);
+        context.select((KindPersonalInfoBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
-                color: Colors.lightBlueAccent,
-                size: 50.0,
-              )
+          color: Colors.lightBlueAccent,
+          size: 50.0,
+        )
             : ElevatedButton(
-                key: const Key(
-                    'kindPersonalInfoForm_submitButton_elevatedButton'),
-                style: ElevatedButton.styleFrom(
-                    elevation: 0, backgroundColor: Colors.lightBlueAccent),
-                onPressed: isValid
-                    ? () => context
-                        .read<KindPersonalInfoBloc>()
-                        .add(FormSubmitted())
-                    : null,
-                child: const Text(
-                  'Weiter',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
+          key: const Key(
+              'kindPersonalInfoForm_submitButton_elevatedButton'),
+          style: ElevatedButton.styleFrom(
+              elevation: 0, backgroundColor: Colors.lightBlueAccent),
+          onPressed: isValid
+              ? () => context
+              .read<KindPersonalInfoBloc>()
+              .add(FormSubmitted())
+              : null,
+          child: const Text(
+            'Weiter',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
       },
     );
   }
@@ -347,17 +377,17 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<KindPersonalInfoBloc, KindPersonalInfoState>(
         buildWhen: (previous, current) =>
-            previous.submissionStatus != current.submissionStatus,
+        previous.submissionStatus != current.submissionStatus,
         builder: (context, state) {
           return state.submissionStatus.isInProgress
               ? const SizedBox.shrink()
               : TextButton(
-                  key: const Key(
-                      'kindPersonalInfoForm_cancelButton_elevatedButton'),
-                  onPressed: () =>
-                      context.read<SwimGeneratorCubit>().stepCancelled(),
-                  child: const Text('Zurück'),
-                );
+            key: const Key(
+                'kindPersonalInfoForm_cancelButton_elevatedButton'),
+            onPressed: () =>
+                context.read<SwimGeneratorCubit>().stepCancelled(),
+            child: const Text('Zurück'),
+          );
         });
   }
 }

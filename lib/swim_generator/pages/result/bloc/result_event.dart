@@ -41,8 +41,9 @@ class ConsentGDPRChanged extends ResultEvent {
 
 class FormSubmitted extends ResultEvent {
   final CompleteSwimCourseBookingInput completeSwimCourseBookingInput;
-  const FormSubmitted(this.completeSwimCourseBookingInput);
+  final bool isEmailExists;
+  const FormSubmitted(this.completeSwimCourseBookingInput, this.isEmailExists);
 
   @override
-  List<Object> get props => [completeSwimCourseBookingInput];
+  List<Object> get props => [completeSwimCourseBookingInput, isEmailExists];
 }

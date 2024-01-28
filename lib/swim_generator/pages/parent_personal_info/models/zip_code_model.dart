@@ -14,11 +14,11 @@ class ZipCodeModel extends FormzInput<String, ZipCodeValidationError> {
 
   @override
   ZipCodeValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return ZipCodeValidationError.required;
     }
     // Überprüfen, ob die Postleitzahl genau 5 Zahlen enthält
-    if (!RegExp(r'^\d{5}$').hasMatch(value)) {
+    if (!RegExp(r'^\d{5}$').hasMatch(value.trim())) {
       return ZipCodeValidationError.invalid;
     }
     return null; // Kein Fehler

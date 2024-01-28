@@ -13,7 +13,8 @@ class SwimPoolInfo extends Equatable {
   final int swimPoolID;
   final String swimPoolName;
 
-  const SwimPoolInfo.empty() : this(swimPool: const SwimPool.empty(), swimPoolID: 0, swimPoolName: '');
+  const SwimPoolInfo.empty()
+      : this(swimPool: const SwimPool.empty(), swimPoolID: 0, swimPoolName: '');
 
   SwimPoolInfo copyWith({
     SwimPool? swimPool,

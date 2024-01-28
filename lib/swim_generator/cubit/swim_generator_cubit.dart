@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:swim_generator_app/swim_generator/models/config_app.dart';
 
 import '../models/models.dart';
 import '../pages/swim_level/models/models.dart';
@@ -7,39 +8,27 @@ import '../pages/swim_level/models/models.dart';
 part 'swim_generator_state.dart';
 
 class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
-  SwimGeneratorCubit(this.stepperLength)
-      : super(SwimGeneratorState(
-          shouldUseFutureBuilderList:
-              List.generate(stepperLength, (index) => false),
-        ));
+  SwimGeneratorCubit(this.stepperLength) : super(const SwimGeneratorState());
   final int stepperLength;
 
   void stepTapped(int tappedIndex) {
     emit(SwimGeneratorState(
       activeStepperIndex: tappedIndex,
-      shouldUseFutureBuilderList: state.shouldUseFutureBuilderList,
     ));
   }
 
   void stepContinued() {
     if (state.activeStepperIndex < stepperLength - 1) {
-      var newList = List<bool>.from(state.shouldUseFutureBuilderList);
-
       emit(state.copyWith(
         activeStepperIndex: state.activeStepperIndex + 1,
-        shouldUseFutureBuilderList: newList,
       ));
     }
   }
 
   void stepCancelled() {
     if (state.activeStepperIndex > 0) {
-      var newList = List<bool>.from(state.shouldUseFutureBuilderList);
-      newList[state.activeStepperIndex - 1] = true;
-
       emit(state.copyWith(
         activeStepperIndex: state.activeStepperIndex - 1,
-        shouldUseFutureBuilderList: newList,
       ));
     }
   }
@@ -70,5 +59,23 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
 
   void updatePersonalInfo(PersonalInfo? personalInfo) {
     emit(state.copyWith(personalInfo: personalInfo));
+  }
+
+  void updateConfigApp({
+    bool? isStartFixDate,
+    bool? isBooking,
+    bool? isDirectLinks,
+    bool? isEmailExists,
+  }) {
+    emit(
+      state.copyWith(
+        configApp: state.configApp.copyWith(
+          isStartFixDate: isStartFixDate ?? state.configApp.isStartFixDate,
+          isBooking: isBooking ?? state.configApp.isBooking,
+          isDirectLinks: isDirectLinks ?? state.configApp.isDirectLinks,
+          isEmailExists: isEmailExists ?? state.configApp.isEmailExists,
+        ),
+      ),
+    );
   }
 }

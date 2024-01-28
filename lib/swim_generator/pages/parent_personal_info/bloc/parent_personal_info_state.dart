@@ -1,4 +1,3 @@
-
 part of 'parent_personal_info_bloc.dart';
 
 class ParentPersonalInfoState extends Equatable {
@@ -15,6 +14,7 @@ class ParentPersonalInfoState extends Equatable {
     this.emailConfirm = const EmailConfirmModel.pure(),
     this.phoneNumber = const PhoneNumberModel.pure(),
     this.phoneNumberConfirm = const PhoneNumberConfirmModel.pure(),
+    this.isEmailExists = false,
     this.isValid = false,
     this.loadingTitleStatus = FormzSubmissionStatus.initial,
     this.submissionStatus = FormzSubmissionStatus.initial,
@@ -32,26 +32,28 @@ class ParentPersonalInfoState extends Equatable {
   final EmailConfirmModel emailConfirm;
   final PhoneNumberModel phoneNumber;
   final PhoneNumberConfirmModel phoneNumberConfirm;
+  final bool isEmailExists;
   final bool isValid;
   final FormzSubmissionStatus loadingTitleStatus;
   final FormzSubmissionStatus submissionStatus;
 
-  ParentPersonalInfoState copyWith({
-    List<String>? titleList,
-    TitleModel? title,
-    FirstNameModel? firstName,
-    LastNameModel? lastName,
-    StreetModel? parentStreet,
-    StreetNumberModel? streetNumber,
-    ZipCodeModel? zipCode,
-    CityModel? city,
-    EmailModel? email,
-    EmailConfirmModel? emailConfirm,
-    PhoneNumberModel? phoneNumber,
-    PhoneNumberConfirmModel? phoneNumberConfirm,
-    bool? isValid,
-    FormzSubmissionStatus? loadingTitleStatus,
-    FormzSubmissionStatus? submissionStatus}) {
+  ParentPersonalInfoState copyWith(
+      {List<String>? titleList,
+        TitleModel? title,
+        FirstNameModel? firstName,
+        LastNameModel? lastName,
+        StreetModel? parentStreet,
+        StreetNumberModel? streetNumber,
+        ZipCodeModel? zipCode,
+        CityModel? city,
+        EmailModel? email,
+        EmailConfirmModel? emailConfirm,
+        PhoneNumberModel? phoneNumber,
+        PhoneNumberConfirmModel? phoneNumberConfirm,
+        bool? isEmailExists,
+        bool? isValid,
+        FormzSubmissionStatus? loadingTitleStatus,
+        FormzSubmissionStatus? submissionStatus}) {
     return ParentPersonalInfoState(
         titleList: titleList ?? this.titleList,
         title: title ?? this.title,
@@ -65,27 +67,28 @@ class ParentPersonalInfoState extends Equatable {
         emailConfirm: emailConfirm ?? this.emailConfirm,
         phoneNumber: phoneNumber ?? this.phoneNumber,
         phoneNumberConfirm: phoneNumberConfirm ?? this.phoneNumberConfirm,
+        isEmailExists: isEmailExists ?? this.isEmailExists,
         isValid: isValid ?? this.isValid,
         loadingTitleStatus: loadingTitleStatus ?? this.loadingTitleStatus,
         submissionStatus: submissionStatus ?? this.submissionStatus);
   }
 
   @override
-  List<Object?> get props =>
-      [
-        titleList,
-        title,
-        firstName,
-        lastName,
-        parentStreet,
-        streetNumber,
-        zipCode,
-        city,
-        email,
-        emailConfirm,
-        phoneNumber,
-        phoneNumberConfirm,
-        loadingTitleStatus,
-        submissionStatus,
-      ];
+  List<Object?> get props => [
+    titleList,
+    title,
+    firstName,
+    lastName,
+    parentStreet,
+    streetNumber,
+    zipCode,
+    city,
+    email,
+    emailConfirm,
+    phoneNumber,
+    phoneNumberConfirm,
+    isEmailExists,
+    loadingTitleStatus,
+    submissionStatus,
+  ];
 }

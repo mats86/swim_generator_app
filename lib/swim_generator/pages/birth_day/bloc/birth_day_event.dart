@@ -15,4 +15,11 @@ class BirthDayChanged extends BirthDayEvent {
   List<Object> get props => [birthDay];
 }
 
-class FormSubmitted extends BirthDayEvent {}
+class FormSubmitted extends BirthDayEvent {
+  final int swimCourseID;
+  final bool isDirectLinks;
+  const FormSubmitted(this.swimCourseID, this.isDirectLinks);
+
+  @override
+  List<Object> get props => [swimCourseID, isDirectLinks];
+}

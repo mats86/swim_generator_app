@@ -18,10 +18,10 @@ class PhoneNumberConfirmModel extends FormzInput<String, PhoneNumberConfirmValid
 
   @override
   PhoneNumberConfirmValidationError? validator(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return PhoneNumberConfirmValidationError.required;
     }
-    if (value != originalPhoneNumber) {
+    if (value.trim() != originalPhoneNumber) {
       return PhoneNumberConfirmValidationError.mismatch;
     }
     return null; // Kein Fehler

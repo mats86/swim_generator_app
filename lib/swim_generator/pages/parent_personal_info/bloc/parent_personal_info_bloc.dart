@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../../../../graphql/graphql_queries.dart';
 import '../models/models.dart';
 
 part 'parent_personal_info_event.dart';
@@ -28,6 +30,7 @@ class ParentPersonalInfoBloc
     on<ParentEmailConfirmChanged>(_onParentEmailConfirmChanged);
     on<ParentPhoneNumberChanged>(_onParentPhoneNumberChanged);
     on<ParentPhoneNumberConfirmChanged>(_onParentPhoneNumberConfirmChanged);
+    on<IsEmailExists>(_onIsEmailExists);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -314,6 +317,16 @@ class ParentPersonalInfoBloc
     );
   }
 
+  void _onIsEmailExists(
+      IsEmailExists event,
+      Emitter<ParentPersonalInfoState> emit,
+      ) {
+    if (event.isEmailExists) {
+      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+    }
+    emit(state.copyWith(isEmailExists: event.isEmailExists));
+  }
+
   void _onFormSubmitted(
     FormSubmitted event,
     Emitter<ParentPersonalInfoState> emit,
@@ -362,20 +375,11 @@ class ParentPersonalInfoBloc
     );
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
-      // await userRepository.updatePersonalInfo(
-      //   title: state.title.value,
-      //   firstName: state.firstName.value,
-      //   lastName: state.lastName.value,
-      //   street: state.street.value,
-      //   streetNumber: state.streetNumber.value,
-      //   zipCode: state.zipCode.value,
-      //   city: state.city.value,
-      //   email: state.email.value,
-      //   emailConfirm: state.emailConfirm.value,
-      //   phoneNumber: state.phoneNumber.value,
-      //   phoneNumberConfirm: state.phoneNumberConfirm.value,
-      // );
-      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      if (await service.checkEmail(state.email.value)) {
+        emit(state.copyWith(submissionStatus: FormzSubmissionStatus.failure));
+      } else {
+        emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      }
     }
   }
 }

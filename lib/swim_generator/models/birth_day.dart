@@ -17,6 +17,14 @@ class BirthDay extends Equatable {
     );
   }
 
+  bool get isEmpty {
+    return birthDay == null;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   @override
   List<Object?> get props => [birthDay];
 }

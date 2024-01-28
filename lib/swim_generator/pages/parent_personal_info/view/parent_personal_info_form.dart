@@ -6,7 +6,6 @@ import 'package:formz/formz.dart';
 import 'package:swim_generator_app/swim_generator/models/models.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/parent_personal_info_bloc.dart';
 
@@ -228,20 +227,60 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
 
   @override
   Widget build(BuildContext context) {
+    final outerContext = context;
+
     return BlocListener<ParentPersonalInfoBloc, ParentPersonalInfoState>(
       listener: (context, state) {
         if (state.submissionStatus.isFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Something went wrong!')),
-            );
+          showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              double width = MediaQuery.of(context).size.width;
+              return AlertDialog(
+                title: const Text('E-Mail Bereits Verwendet'),
+                content: SizedBox(
+                  width: width < 400.0 ? width * 0.9 : 400,
+                  child: const Text(
+                      'Das E-Mail-Konto existiert bereits. Möchten Sie einen weiteren '
+                      'Schwimmkurs für ein zusätzliches Kind buchen? \n\nFalls nicht, '
+                      'geben Sie bitte eine andere E-Mail-Adresse ein.'),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<SwimGeneratorCubit>()
+                          .updateConfigApp(isEmailExists: true);
+                      outerContext
+                          .read<ParentPersonalInfoBloc>()
+                          .add(const IsEmailExists(true));
+
+                      // Schließen des Dialogs
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text('Ja'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<SwimGeneratorCubit>()
+                          .updateConfigApp(isEmailExists: false);
+                      outerContext
+                          .read<ParentPersonalInfoBloc>()
+                          .add(const IsEmailExists(false));
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: const Text('Nein'),
+                  ),
+                ],
+              );
+            },
+          );
         }
       },
       child: Column(
         children: [
-          const _ParentTitle(
-          ),
+          const _ParentTitle(),
           _FirstNameInput(
             controller: _firstNameController,
           ),
@@ -296,6 +335,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
 
 class _ParentTitle extends StatelessWidget {
   const _ParentTitle();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
@@ -360,7 +400,7 @@ class _FirstNameInput extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      'Vorname des Erziehungsberechtigten',
+                      'Vorname',
                       style: TextStyle(fontSize: 14),
                     ),
                     Padding(
@@ -402,7 +442,7 @@ class _LastNameInput extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      'Nachname des Erziehungsberechtigten',
+                      'Nachname',
                       style: TextStyle(fontSize: 14),
                     ),
                     Padding(
@@ -430,7 +470,8 @@ class _StreetInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
-        buildWhen: (previous, current) => previous.parentStreet != current.parentStreet,
+        buildWhen: (previous, current) =>
+            previous.parentStreet != current.parentStreet,
         builder: (context, state) {
           return TextField(
             controller: controller,
@@ -783,7 +824,7 @@ class _PhoneNumberInputFlag extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) =>
-        previous.phoneNumber != current.phoneNumber,
+            previous.phoneNumber != current.phoneNumber,
         builder: (context, state) {
           return InternationalPhoneNumberInput(
             inputDecoration: InputDecoration(
@@ -831,8 +872,7 @@ class _PhoneNumberInputFlag extends StatelessWidget {
                   .read<ParentPersonalInfoBloc>()
                   .add(ParentPhoneNumberChanged(phoneNumber.phoneNumber!));
             },
-            onInputValidated: (bool value) {
-            },
+            onInputValidated: (bool value) {},
             maxLength: 15,
             ignoreBlank: false,
             autoValidateMode: AutovalidateMode.onUserInteraction,
@@ -842,8 +882,7 @@ class _PhoneNumberInputFlag extends StatelessWidget {
             formatInput: true,
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
-            onSaved: (PhoneNumber number) {
-            },
+            onSaved: (PhoneNumber number) {},
             locale: 'de',
             countries: const ['DE', 'AT', 'CH'],
             errorMessage: state.phoneNumber.displayError != null
@@ -859,7 +898,7 @@ class _PhoneNumberConfirmInputFlag extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ParentPersonalInfoBloc, ParentPersonalInfoState>(
         buildWhen: (previous, current) =>
-        previous.phoneNumberConfirm != current.phoneNumberConfirm,
+            previous.phoneNumberConfirm != current.phoneNumberConfirm,
         builder: (context, state) {
           return InternationalPhoneNumberInput(
             inputDecoration: InputDecoration(
@@ -903,12 +942,10 @@ class _PhoneNumberConfirmInputFlag extends StatelessWidget {
               return null; // Return null when the input is valid
             },
             onInputChanged: (PhoneNumber phoneNumber) {
-              context
-                  .read<ParentPersonalInfoBloc>()
-                  .add(ParentPhoneNumberConfirmChanged(phoneNumber.phoneNumber!));
+              context.read<ParentPersonalInfoBloc>().add(
+                  ParentPhoneNumberConfirmChanged(phoneNumber.phoneNumber!));
             },
-            onInputValidated: (bool value) {
-            },
+            onInputValidated: (bool value) {},
             maxLength: 15,
             ignoreBlank: false,
             autoValidateMode: AutovalidateMode.onUserInteraction,
@@ -918,8 +955,7 @@ class _PhoneNumberConfirmInputFlag extends StatelessWidget {
             formatInput: true,
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
-            onSaved: (PhoneNumber number) {
-            },
+            onSaved: (PhoneNumber number) {},
             locale: 'de',
             countries: const ['DE', 'AT', 'CH'],
             errorMessage: state.phoneNumberConfirm.displayError != null
@@ -929,7 +965,6 @@ class _PhoneNumberConfirmInputFlag extends StatelessWidget {
         });
   }
 }
-
 
 class _SubmitButton extends StatelessWidget {
   @override
@@ -941,17 +976,17 @@ class _SubmitButton extends StatelessWidget {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
           PersonalInfo personalInfo = PersonalInfo(
-            parentTitle: state.title.value,
-            firstName: state.firstName.value,
-            lastName: state.lastName.value,
-            parentStreet: state.parentStreet.value,
-            streetNumber: state.streetNumber.value,
-            zipCode: state.zipCode.value,
-            city: state.city.value,
-            email: state.email.value,
-            emailConfirm: state.emailConfirm.value,
-            phoneNumber: state.phoneNumber.value,
-            phoneNumberConfirm: state.phoneNumberConfirm.value,
+            parentTitle: state.title.value.trim(),
+            firstName: state.firstName.value.trim(),
+            lastName: state.lastName.value.trim(),
+            parentStreet: state.parentStreet.value.trim(),
+            streetNumber: state.streetNumber.value.trim(),
+            zipCode: state.zipCode.value.trim(),
+            city: state.city.value.trim(),
+            email: state.email.value.trim(),
+            emailConfirm: state.emailConfirm.value.trim(),
+            phoneNumber: state.phoneNumber.value.trim(),
+            phoneNumberConfirm: state.phoneNumberConfirm.value.trim(),
           );
           context.read<SwimGeneratorCubit>().updatePersonalInfo(personalInfo);
         }
@@ -973,8 +1008,8 @@ class _SubmitButton extends StatelessWidget {
                     elevation: 0, backgroundColor: Colors.lightBlueAccent),
                 onPressed: isValid
                     ? () => context
-                    .read<ParentPersonalInfoBloc>()
-                    .add(FormSubmitted())
+                        .read<ParentPersonalInfoBloc>()
+                        .add(FormSubmitted())
                     : null,
                 child: const Text(
                   'Weiter',

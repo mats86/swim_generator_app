@@ -22,8 +22,20 @@ class SwimLevel extends Equatable {
     );
   }
 
+  bool get isEmpty {
+    return swimLevel == SwimLevelEnum.UNDEFINED;
+  }
+
+  bool get isNotEmpty {
+    return !isEmpty;
+  }
+
   @override
   List<Object?> get props => [swimLevel, swimSeason];
 }
 
-enum SwimLevelEnum { EINSTIEGERKURS, AUFSTIEGERKURS, UNDEFINED }
+enum SwimLevelEnum {EINSTIEGERKURS, AUFSTIEGERKURS, UNDEFINED, }
+
+SwimLevelEnum valueOf(int index) {
+  return SwimLevelEnum.values[index];
+}
