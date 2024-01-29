@@ -84,6 +84,23 @@ class GraphQLQueries {
     }
   }
 ''';
+  static const String getSwimCourseSwimPools = '''
+  query getSwimCourseSwimPools(\$swimCourseID: Int!) {
+    swimCourseSwimPools(swimCourseID: \$swimCourseID) {
+      swimPoolID
+      swimPoolName
+      swimPoolAddress
+      swimPoolPhoneNumber
+      swimPoolOpeningTimes {
+        day
+        openTime
+        closeTime
+      }
+      swimPoolHasFixedDate
+      isSwimPoolVisible
+    }
+  }
+''';
 
   static const String createCompleteSwimCourseBooking = '''
   mutation createCompleteSwimCourseBooking(\$input: CompleteSwimCourseBookingInput!) {

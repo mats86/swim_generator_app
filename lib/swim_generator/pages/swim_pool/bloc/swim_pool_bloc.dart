@@ -39,6 +39,8 @@ class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
   ) async {
     emit(state.copyWith(loadingStatus: FormzSubmissionStatus.inProgress));
     try {
+      var pools_ = await service.fetchSwimCourseSwimPools(1);
+      print(pools_);
       var pools = await service.fetchSwimPools();
       emit(state.copyWith(
           swimPools: pools, loadingStatus: FormzSubmissionStatus.success));
