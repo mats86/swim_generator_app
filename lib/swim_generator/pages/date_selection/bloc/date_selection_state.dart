@@ -1,13 +1,15 @@
 part of 'date_selection_bloc.dart';
 
 class DateSelectionState extends Equatable {
-
   final List<FixDate> fixDates;
   final FixDateModel fixDateModel;
   final FixDate selectedFixDate;
   final FormzSubmissionStatus loadingFixDates;
   final bool hasFixedDesiredDate;
   final bool flexFixDate;
+  final DateTime? dateTime1;
+  final DateTime? dateTime2;
+  final DateTime? dateTime3;
   final bool isValid;
   final FormzSubmissionStatus submissionStatus;
 
@@ -18,6 +20,9 @@ class DateSelectionState extends Equatable {
     this.loadingFixDates = FormzSubmissionStatus.initial,
     this.hasFixedDesiredDate = false,
     this.flexFixDate = false,
+    this.dateTime1,
+    this.dateTime2,
+    this.dateTime3,
     this.isValid = false,
     this.submissionStatus = FormzSubmissionStatus.initial,
   });
@@ -29,9 +34,12 @@ class DateSelectionState extends Equatable {
     FormzSubmissionStatus? loadingFixDates,
     bool? hasFixedDesiredDate,
     bool? flexFixDate,
+    DateTime? dateTime1,
+    DateTime? dateTime2,
+    DateTime? dateTime3,
     bool? isValid,
     FormzSubmissionStatus? submissionStatus,
-}) {
+  }) {
     return DateSelectionState(
       fixDates: fixDates ?? this.fixDates,
       fixDateModel: fixDateModel ?? this.fixDateModel,
@@ -39,6 +47,9 @@ class DateSelectionState extends Equatable {
       loadingFixDates: loadingFixDates ?? this.loadingFixDates,
       hasFixedDesiredDate: hasFixedDesiredDate ?? this.hasFixedDesiredDate,
       flexFixDate: flexFixDate ?? this.flexFixDate,
+      dateTime1: dateTime1 ?? this.dateTime1,
+      dateTime2: dateTime2 ?? this.dateTime2,
+      dateTime3: dateTime3 ?? this.dateTime3,
       isValid: isValid ?? this.isValid,
       submissionStatus: submissionStatus ?? this.submissionStatus,
     );
@@ -51,6 +62,9 @@ class DateSelectionState extends Equatable {
     loadingFixDates,
     hasFixedDesiredDate,
     flexFixDate,
+    dateTime1,
+    dateTime2,
+    dateTime3,
     submissionStatus
   ];
 }

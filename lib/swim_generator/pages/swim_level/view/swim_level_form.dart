@@ -280,7 +280,7 @@ class _SwimSeasonRadioButton extends StatelessWidget {
           LoadSwimSeasonOptions(
             [
               SwimSeason(
-                name: 'Reservieren für Sommersaison 2024',
+                name: 'Buchen für Sommersaison 2024',
                 refDate: DateTime(DateTime
                     .now()
                     .year, 6, 1),

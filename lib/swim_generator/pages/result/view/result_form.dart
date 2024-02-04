@@ -102,7 +102,7 @@ class _ResultForm extends State<ResultForm> {
           const Divider(),
           Align(
             alignment: Alignment.centerLeft,
-            child: BlocProvider.of<ResultBloc>(context).state.isBooking
+            child: context.read<SwimGeneratorCubit>().state.configApp.isBooking
                 ? const Text(
                     "Mit Deiner Anmeldebestätigung (Email) erhältst Du eine "
                     "Aufforderung zur Überweisung der Anzahlung von 100€. "
@@ -211,7 +211,7 @@ class _ResultForm extends State<ResultForm> {
           BlocBuilder<ResultBloc, ResultState>(
             builder: (context, state) {
               return Visibility(
-                visible: state.isBooking,
+                visible: context.read<SwimGeneratorCubit>().state.configApp.isBooking,
                 child: Column(
                   children: [
                     const Row(
@@ -477,7 +477,7 @@ class _SubmitButton extends StatelessWidget {
                             .configApp
                             .isEmailExists))
                     : null,
-                child: state.isBooking
+                child: context.read<SwimGeneratorCubit>().state.configApp.isBooking
                     ? const Text(
                         'Kostenpflichtig buchen',
                         style: TextStyle(

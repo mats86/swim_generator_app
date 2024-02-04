@@ -9,6 +9,10 @@ class SwimCourse {
   final String swimCourseDuration;
   final bool isSwimCourseVisible;
   final int swimLevelID;
+  final DateTime? swimCourseStartBooking;
+  final DateTime? swimCourseEndBooking;
+  final DateTime? swimCourseStartVisible;
+  final DateTime? swimCourseEndVisible;
 
   SwimCourse({
     required this.swimCourseID,
@@ -21,6 +25,10 @@ class SwimCourse {
     required this.swimCourseDuration,
     required this.isSwimCourseVisible,
     required this.swimLevelID,
+    required this.swimCourseStartBooking,
+    required this.swimCourseEndBooking,
+    required this.swimCourseStartVisible,
+    required this.swimCourseEndVisible,
   });
 
   factory SwimCourse.fromJson(Map<String, dynamic> json) {
@@ -35,6 +43,18 @@ class SwimCourse {
       swimCourseDuration: json['swimCourseDuration'],
       isSwimCourseVisible: json['isSwimCourseVisible'],
       swimLevelID: json['swimLevelID'],
+      swimCourseStartBooking: json['swimCourseStartBooking'] != null
+          ? DateTime.parse(json['swimCourseStartBooking'])
+          : null,
+      swimCourseEndBooking: json['swimCourseEndBooking'] != null
+          ? DateTime.parse(json['swimCourseEndBooking'])
+          : null,
+      swimCourseStartVisible: json['swimCourseStartVisible'] != null
+          ? DateTime.parse(json['swimCourseStartVisible'])
+          : null,
+      swimCourseEndVisible: json['swimCourseEndVisible'] != null
+          ? DateTime.parse(json['swimCourseEndVisible'])
+          : null,
     );
   }
 
@@ -48,7 +68,11 @@ class SwimCourse {
         swimCourseDateTypID = 0,
         swimCourseDuration = '',
         isSwimCourseVisible = false,
-        swimLevelID = 0;
+        swimLevelID = 0,
+        swimCourseStartBooking = null,
+        swimCourseEndBooking = null,
+        swimCourseStartVisible = null,
+        swimCourseEndVisible = null;
 
   bool get isEmpty {
     return swimCourseID == 0 &&
@@ -60,7 +84,11 @@ class SwimCourse {
         swimCourseDateTypID == 0 &&
         swimCourseDuration.isEmpty &&
         isSwimCourseVisible == false &&
-        swimLevelID == 0;
+        swimLevelID == 0 &&
+        swimCourseStartBooking == null &&
+        swimCourseEndBooking == null &&
+        swimCourseStartVisible == null &&
+        swimCourseEndVisible == null;
   }
 
   bool get isNotEmpty {

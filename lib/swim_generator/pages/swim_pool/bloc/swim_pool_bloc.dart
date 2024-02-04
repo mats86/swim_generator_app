@@ -34,14 +34,12 @@ class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
   }
 
   void _onLoadSwimPools(
-    LoadSwimPools event,
-    Emitter<SwimPoolState> emit,
-  ) async {
+      LoadSwimPools event,
+      Emitter<SwimPoolState> emit,
+      ) async {
     emit(state.copyWith(loadingStatus: FormzSubmissionStatus.inProgress));
     try {
-      var pools_ = await service.fetchSwimCourseSwimPools(1);
-      print(pools_);
-      var pools = await service.fetchSwimPools();
+      var pools = await service.fetchSwimCourseSwimPools(event.swimCourseID);
       emit(state.copyWith(
           swimPools: pools, loadingStatus: FormzSubmissionStatus.success));
     } catch (e) {
@@ -53,9 +51,9 @@ class SwimPoolBloc extends Bloc<SwimPoolEvent, SwimPoolState> {
   }
 
   void _onSwimPoolOptionToggled(
-    SwimPoolOptionToggled event,
-    Emitter<SwimPoolState> emit,
-  ) {
+      SwimPoolOptionToggled event,
+      Emitter<SwimPoolState> emit,
+      ) {
     var newPools = List<SwimPool>.from(state.swimPools);
     var pool = newPools[event.index];
 

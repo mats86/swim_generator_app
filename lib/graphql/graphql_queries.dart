@@ -12,6 +12,10 @@ class GraphQLQueries {
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
+      swimCourseStartBooking
+      swimCourseEndBooking
+      swimCourseStartVisible
+      swimCourseEndVisible
     }
   }
 ''';
@@ -29,6 +33,10 @@ class GraphQLQueries {
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
+      swimCourseStartBooking
+      swimCourseEndBooking
+      swimCourseStartVisible
+      swimCourseEndVisible
     }
   }
 ''';
@@ -46,6 +54,10 @@ class GraphQLQueries {
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
+      swimCourseStartBooking
+      swimCourseEndBooking
+      swimCourseStartVisible
+      swimCourseEndVisible
     }
   }
 ''';
@@ -63,6 +75,10 @@ class GraphQLQueries {
       swimCourseDuration
       isSwimCourseVisible
       swimLevelID
+      swimCourseStartBooking
+      swimCourseEndBooking
+      swimCourseStartVisible
+      swimCourseEndVisible
     }
   }
 ''';
@@ -189,11 +205,9 @@ class GraphQLQueries {
   }
 ''';
 
-
   static const String checkEmailAndThrowErrorIfExists = '''
     query checkEmailAndThrowErrorIfExists(\$loginEmail: String!) {
       checkEmailAndThrowErrorIfExists(loginEmail: \$loginEmail)
     }
   ''';
-
 }

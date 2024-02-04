@@ -59,16 +59,14 @@ class SwimCourseRepository {
     );
 
     final result = await graphQLClient.query(options);
-
     if (result.hasException) {
       throw result.exception!;
     }
 
     // Hier nehmen wir an, dass die Antwort eine Liste von Kursen ist
-    List<dynamic> coursesJson = result.data!['swimCoursesByLevelNameAndFutureAge'];
-
+    List<dynamic> coursesJson =
+        result.data!['swimCoursesByLevelNameAndFutureAge'];
     // Konvertieren Sie jeden JSON-Eintrag in ein SwimCourse-Objekt
     return coursesJson.map((json) => SwimCourse.fromJson(json)).toList();
   }
-
 }

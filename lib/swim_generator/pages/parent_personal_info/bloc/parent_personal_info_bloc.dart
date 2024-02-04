@@ -322,9 +322,13 @@ class ParentPersonalInfoBloc
       Emitter<ParentPersonalInfoState> emit,
       ) {
     if (event.isEmailExists) {
-      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      emit(state.copyWith(
+          isEmailExists: event.isEmailExists,
+          submissionStatus: FormzSubmissionStatus.success));
     }
-    emit(state.copyWith(isEmailExists: event.isEmailExists));
+    emit(state.copyWith(
+        isEmailExists: event.isEmailExists,
+        submissionStatus: FormzSubmissionStatus.initial));
   }
 
   void _onFormSubmitted(

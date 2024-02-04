@@ -38,4 +38,25 @@ class SelectFlexDate extends DateSelectionEvent {}
 
 class SelectFixDate extends DateSelectionEvent {}
 
+class UpdateDateTime1 extends DateSelectionEvent {
+  final DateTime? date;
+  final TimeOfDay? time;
+
+  const UpdateDateTime1({this.date, this.time});
+}
+
+class UpdateDateTime2 extends DateSelectionEvent {
+  final DateTime? date;
+  final TimeOfDay? time;
+
+  const UpdateDateTime2({this.date, this.time});
+}
+
+class UpdateDateTime3 extends DateSelectionEvent {
+  final DateTime? date;
+  final TimeOfDay? time;
+
+  const UpdateDateTime3({this.date, this.time});
+}
+
 class FormSubmitted extends DateSelectionEvent {}

@@ -15,7 +15,13 @@ class SwimPoolLoading extends SwimPoolEvent {
   List<Object> get props => [isBooking];
 }
 
-class LoadSwimPools extends SwimPoolEvent {}
+class LoadSwimPools extends SwimPoolEvent {
+  final int swimCourseID;
+  const LoadSwimPools(this.swimCourseID);
+
+  @override
+  List<Object> get props => [swimCourseID];
+}
 
 class SwimPoolOptionToggled extends SwimPoolEvent {
   final int index;

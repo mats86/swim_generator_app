@@ -19,17 +19,17 @@ class _SwimPoolForm extends State<SwimPoolForm> {
   @override
   void initState() {
     super.initState();
-    context.read<SwimPoolBloc>().add(SwimPoolLoading(context
-            .read<SwimGeneratorCubit>()
-            .state
-            .swimLevel
-            .swimSeason
-            ?.swimSeasonEnum ==
-        SwimSeasonEnum.BUCHEN));
-    context.read<SwimPoolBloc>().add(LoadSwimPools());
+    final swimGeneratorCubit = context.read<SwimGeneratorCubit>();
+    final swimPools = swimGeneratorCubit.state.swimPools;
 
-    if (context.read<SwimGeneratorCubit>().state.swimPools.isNotEmpty) {
-      for (var swimPool in context.read<SwimGeneratorCubit>().state.swimPools) {
+    context.read<SwimPoolBloc>().add(SwimPoolLoading(
+        swimGeneratorCubit.state.swimLevel.swimSeason?.swimSeasonEnum ==
+            SwimSeasonEnum.BUCHEN));
+    context.read<SwimPoolBloc>().add(LoadSwimPools(
+        swimGeneratorCubit.state.swimCourseInfo.swimCourse.swimCourseID));
+
+    if (swimPools.isNotEmpty) {
+      for (var swimPool in swimPools) {
         BlocProvider.of<SwimPoolBloc>(context).add(
           SwimPoolOptionToggled(
               swimPool.swimPool.index, swimPool.swimPool.isSelected),

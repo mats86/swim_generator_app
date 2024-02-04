@@ -6,6 +6,7 @@ import 'package:swim_generator_app/db_manager/view/db_manager_page.dart';
 import 'package:swim_generator_app/swim_generator/swim_generator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_web/webview_flutter_web.dart';
+import 'auth/pages/login/view/login_page.dart';
 import 'models/special_feature_mode.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -157,6 +158,11 @@ class AppView extends StatelessWidget {
       case '/db_swim_course':
         return MaterialPageRoute(
             builder: (context) => DbSwimCoursePage(
+                  graphQLClient: graphQLClient,
+                ));
+      case '/login':
+        return MaterialPageRoute(
+            builder: (context) => LoginPage(
                   graphQLClient: graphQLClient,
                 ));
       default:
