@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
       create: (context) => LoginBloc(
         LoginRepository(graphQLClient: graphQLClient),
       ),
-      child: const LoginForm(),
+      child: LoginForm(),
     );
   }
 }

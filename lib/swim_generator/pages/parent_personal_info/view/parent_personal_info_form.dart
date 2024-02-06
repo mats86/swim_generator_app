@@ -258,7 +258,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
                       // Schließen des Dialogs
                       Navigator.of(dialogContext).pop();
                     },
-                    child: const Text('Ja'),
+                    child: const Text('Für zusätzliches Kind buchen'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -270,7 +270,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
                           .add(const IsEmailExists(false));
                       Navigator.of(dialogContext).pop();
                     },
-                    child: const Text('Nein'),
+                    child: const Text('Email ändern'),
                   ),
                 ],
               );

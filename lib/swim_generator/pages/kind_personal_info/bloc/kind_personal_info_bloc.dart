@@ -23,9 +23,9 @@ class KindPersonalInfoBloc
   }
 
   void _onFirstNameChanged(
-    FirstNameChanged event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      FirstNameChanged event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final firstName = FirstNameModel.dirty(event.firstName);
     emit(
       state.copyWith(
@@ -36,9 +36,9 @@ class KindPersonalInfoBloc
   }
 
   void _onFirstNameUnfocused(
-    FirstNameUnfocused event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      FirstNameUnfocused event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final firstName = FirstNameModel.dirty(state.firstName.value);
     emit(state.copyWith(
       firstName: firstName,
@@ -47,9 +47,9 @@ class KindPersonalInfoBloc
   }
 
   void _onLastNameChanged(
-    LastNameChanged event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      LastNameChanged event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final lastName = LastNameModel.dirty(event.lastName);
     bool isCheckboxSelected = state.isPhysicalDelay.value ||
         state.isMentalDelay.value ||
@@ -57,15 +57,16 @@ class KindPersonalInfoBloc
     emit(
       state.copyWith(
         lastName: lastName,
-        isValid: Formz.validate([state.firstName, lastName]) && isCheckboxSelected,
+        isValid:
+        Formz.validate([state.firstName, lastName]) && isCheckboxSelected,
       ),
     );
   }
 
   void _onLastNameUnfocused(
-    LastNameUnfocused event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      LastNameUnfocused event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final lastName = LastNameModel.dirty(state.lastName.value);
     bool isCheckboxSelected = state.isPhysicalDelay.value ||
         state.isMentalDelay.value ||
@@ -73,69 +74,91 @@ class KindPersonalInfoBloc
     emit(state.copyWith(
       lastName: lastName,
       isValid:
-          Formz.validate([state.firstName, lastName]) && isCheckboxSelected,
+      Formz.validate([state.firstName, lastName]) && isCheckboxSelected,
     ));
   }
 
   void _onPhysicalDelayChanged(
-    PhysicalDelayChanged event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      PhysicalDelayChanged event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final isPhysicalDelay = CheckboxModel.dirty(event.isChecked);
-    bool isCheckboxSelected = event.isChecked ||
-        state.isMentalDelay.value ||
-        state.isNoLimit.value;
+    bool isCheckboxSelected =
+        event.isChecked || state.isMentalDelay.value || state.isNoLimit.value;
+    List<String> updatedOptions = List.from(state.kidsDevelopState);
+    if (event.isChecked) {
+      updatedOptions.add('Körperliche Entwicklungsverzögerungen');
+      updatedOptions.remove('Keine Einschränkungen');
+    } else {
+      updatedOptions.remove('Körperliche Entwicklungsverzögerungen');
+    }
     emit(
       state.copyWith(
+        kidsDevelopState: updatedOptions,
         isPhysicalDelay: isPhysicalDelay,
         isNoLimit: const CheckboxModel.pure(),
-        isValid:
-        Formz.validate([state.firstName, state.lastName]) && isCheckboxSelected,
+        isValid: Formz.validate([state.firstName, state.lastName]) &&
+            isCheckboxSelected,
       ),
     );
   }
 
   void _onMentalDelayChanged(
-    MentalDelayChanged event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      MentalDelayChanged event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final isMentalDelay = CheckboxModel.dirty(event.isChecked);
-    bool isCheckboxSelected = state.isPhysicalDelay.value ||
-        event.isChecked ||
-        state.isNoLimit.value;
+    bool isCheckboxSelected =
+        state.isPhysicalDelay.value || event.isChecked || state.isNoLimit.value;
+    List<String> updatedOptions = List.from(state.kidsDevelopState);
+    if (event.isChecked) {
+      updatedOptions.add('GEISTIGE Entwicklungsverzögerungen');
+      updatedOptions.remove('Keine Einschränkungen');
+    } else {
+      updatedOptions.remove('GEISTIGE Entwicklungsverzögerungen');
+    }
     emit(
       state.copyWith(
+        kidsDevelopState: updatedOptions,
         isMentalDelay: isMentalDelay,
         isNoLimit: const CheckboxModel.pure(),
-        isValid:
-        Formz.validate([state.firstName, state.lastName]) && isCheckboxSelected,
+        isValid: Formz.validate([state.firstName, state.lastName]) &&
+            isCheckboxSelected,
       ),
     );
   }
 
   void _onNoLimitsChanged(
-    NoLimitsChanged event,
-    Emitter<KindPersonalInfoState> emit,
-  ) {
+      NoLimitsChanged event,
+      Emitter<KindPersonalInfoState> emit,
+      ) {
     final isNoLimit = CheckboxModel.dirty(event.isChecked);
     bool isCheckboxSelected = state.isPhysicalDelay.value ||
         state.isMentalDelay.value ||
         event.isChecked;
+    List<String> updatedOptions = List.from(state.kidsDevelopState);
+    if (event.isChecked) {
+      updatedOptions.clear();
+      updatedOptions.add('Keine Einschränkungen');
+    } else {
+      updatedOptions.remove('Keine Einschränkungen');
+    }
     emit(
       state.copyWith(
+        kidsDevelopState: updatedOptions,
         isPhysicalDelay: const CheckboxModel.pure(),
         isMentalDelay: const CheckboxModel.pure(),
         isNoLimit: isNoLimit,
-        isValid:
-        Formz.validate([state.firstName, state.lastName]) && isCheckboxSelected,
+        isValid: Formz.validate([state.firstName, state.lastName]) &&
+            isCheckboxSelected,
       ),
     );
   }
 
   void _onFormSubmitted(
-    FormSubmitted event,
-    Emitter<KindPersonalInfoState> emit,
-  ) async {
+      FormSubmitted event,
+      Emitter<KindPersonalInfoState> emit,
+      ) async {
     final firstName = FirstNameModel.dirty(state.firstName.value);
     final lastName = LastNameModel.dirty(state.lastName.value);
     emit(

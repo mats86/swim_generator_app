@@ -82,7 +82,6 @@ class SwimCourseBloc extends Bloc<SwimCourseEvent, SwimCourseState> {
           swimCourseOptions: swimCourses,
           loadingCourseStatus: FormzSubmissionStatus.success));
     } catch (e) {
-      // Hier können Sie spezifische Fehler loggen
       if (kDebugMode) {
         print('Fehler beim Laden der Schwimmkurse: $e');
       }

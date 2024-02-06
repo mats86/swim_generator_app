@@ -47,3 +47,13 @@ class FormSubmitted extends ResultEvent {
   @override
   List<Object> get props => [completeSwimCourseBookingInput, isEmailExists];
 }
+
+class FormSubmittedVerein extends ResultEvent {
+  final VereinInput vereinInput;
+  const FormSubmittedVerein(this.vereinInput);
+
+  @override
+  List<Object> get props => [
+    vereinInput,
+  ];
+}

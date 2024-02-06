@@ -139,14 +139,6 @@ class _DateSelectionForm extends State<DateSelectionForm> {
                       'Möglichkeit per FLEX-Termine Kurze zu buchen'),
             ),
           ],
-          // const Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(
-          //       'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
-          //       'Am 1.3 laden wir Dich per Mail ein, Dir uns Deine'
-          //       'VERFÜGBAREN Termine für den Schwimmsommer zu nennen. Wir planen'
-          //       'dann euren Schwimmkurs NACH DEINER individuellen VERFÜGBARKEIT'),
-          // ),
           const SizedBox(
             height: 32,
           ),
@@ -428,11 +420,20 @@ class DesiredDateTimeInput extends StatelessWidget {
     );
 
     if (pickedTime != null) {
+      // Runden der Minuten auf den nächsten 15-Minuten-Takt
+      final int roundedMinute = ((pickedTime.minute + 7) ~/ 15 * 15) % 60;
+      final int additionalHour = ((pickedTime.minute + 7) ~/ 15 * 15) ~/ 60;
+      final TimeOfDay adjustedTime = TimeOfDay(
+          hour: (pickedTime.hour + additionalHour) % 24, minute: roundedMinute);
+
       final DateTime? existingDate = _getDateFromController();
       if (existingDate != null) {
-        onDateTimeSelected(existingDate, pickedTime);
+        // Verwenden Sie `adjustedTime` statt `pickedTime`
+        onDateTimeSelected(existingDate, adjustedTime);
       }
-      var formattedTime = _formatTimeOfDay(pickedTime);
+
+      // Formatieren und setzen des Textes mit der angepassten Zeit
+      var formattedTime = _formatTimeOfDay(adjustedTime);
       timeController.text = formattedTime;
     }
   }
@@ -518,86 +519,101 @@ class _FixDatesRadioButton extends StatelessWidget {
             color: Colors.lightBlueAccent,
             size: 50.0,
           )
-              : Visibility(
-            visible: state.hasFixedDesiredDate &&
-                ((state.flexFixDate &&
-                    context
-                        .read<SwimGeneratorCubit>()
-                        .state
-                        .swimCourseInfo
-                        .swimCourse
-                        .swimCourseDateTypID ==
-                        1) ||
-                    context
-                        .read<SwimGeneratorCubit>()
-                        .state
-                        .swimCourseInfo
-                        .swimCourse
-                        .swimCourseDateTypID ==
-                        3),
-            child: Card(
-              elevation: 4.0,
-              margin: const EdgeInsets.all(10.0),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              : Column(
+            children: [
+              Visibility(
+                visible: state.hasFixedDesiredDate &&
+                    ((state.flexFixDate &&
+                        context
+                            .read<SwimGeneratorCubit>()
+                            .state
+                            .swimCourseInfo
+                            .swimCourse
+                            .swimCourseDateTypID ==
+                            1) ||
+                        context
+                            .read<SwimGeneratorCubit>()
+                            .state
+                            .swimCourseInfo
+                            .swimCourse
+                            .swimCourseDateTypID ==
+                            3),
+                child: Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.all(10.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
                       children: [
-                        Text(
-                          'Passende Termin auswählen',
-                          style: TextStyle(fontSize: 16),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Passende Termin auswählen',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(3.0),
+                            ),
+                            Text('*',
+                                style: TextStyle(
+                                    color: Colors.red, fontSize: 16)),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(3.0),
+                        const SizedBox(
+                          height: 24.0,
                         ),
-                        Text('*',
-                            style:
-                            TextStyle(color: Colors.red, fontSize: 16)),
+                        ListView.separated(
+                          separatorBuilder: (_, __) =>
+                              Divider(color: Colors.grey[300]),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: state.fixDates.length,
+                          itemBuilder: (context, index) {
+                            return SizedBox(
+                              // height: 50,
+                              child: Row(
+                                children: [
+                                  Radio(
+                                    activeColor: Colors.lightBlueAccent,
+                                    groupValue: state.fixDateModel.value,
+                                    value: state.fixDates[index].fixDateID,
+                                    onChanged: (val) {
+                                      BlocProvider.of<DateSelectionBloc>(
+                                          context)
+                                          .add(FixDateChanged(
+                                          val!, state.fixDates[index]));
+                                    },
+                                  ),
+                                  Flexible(
+                                    child: Wrap(
+                                      children: [
+                                        buildDateText(context, state, index),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 24.0,
-                    ),
-                    ListView.separated(
-                      separatorBuilder: (_, __) =>
-                          Divider(color: Colors.grey[300]),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: state.fixDates.length,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          // height: 50,
-                          child: Row(
-                            children: [
-                              Radio(
-                                activeColor: Colors.lightBlueAccent,
-                                groupValue: state.fixDateModel.value,
-                                value: state.fixDates[index].fixDateID,
-                                onChanged: (val) {
-                                  BlocProvider.of<DateSelectionBloc>(context)
-                                      .add(FixDateChanged(
-                                      val!, state.fixDates[index]));
-                                },
-                              ),
-                              Flexible(
-                                child: Wrap(
-                                  children: [
-                                    buildDateText(context, state, index),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              if (!state.flexFixDate) ...[
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                      'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
+                          'Am 1.3 laden wir Dich per Mail ein, Dir uns Deine'
+                          'VERFÜGBAREN Termine für den Schwimmsommer zu nennen. Wir planen'
+                          'dann euren Schwimmkurs NACH DEINER individuellen VERFÜGBARKEIT'),
+                ),
+              ],
+            ],
           );
         });
   }

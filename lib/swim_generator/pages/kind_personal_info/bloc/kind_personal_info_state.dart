@@ -7,6 +7,7 @@ class KindPersonalInfoState extends Equatable {
     this.isPhysicalDelay = const CheckboxModel.pure(),
     this.isMentalDelay = const CheckboxModel.pure(),
     this.isNoLimit = const CheckboxModel.pure(),
+    this.kidsDevelopState = const [],
     this.isValid = false,
     this.submissionStatus = FormzSubmissionStatus.initial,
   });
@@ -16,6 +17,7 @@ class KindPersonalInfoState extends Equatable {
   final CheckboxModel isPhysicalDelay;
   final CheckboxModel isMentalDelay;
   final CheckboxModel isNoLimit;
+  final List<String> kidsDevelopState;
   final bool isValid;
   final FormzSubmissionStatus submissionStatus;
 
@@ -25,6 +27,7 @@ class KindPersonalInfoState extends Equatable {
     CheckboxModel? isPhysicalDelay,
     CheckboxModel? isMentalDelay,
     CheckboxModel? isNoLimit,
+    List<String>? kidsDevelopState,
     bool? isValid,
     FormzSubmissionStatus? submissionStatus,
   }) {
@@ -34,6 +37,7 @@ class KindPersonalInfoState extends Equatable {
       isPhysicalDelay: isPhysicalDelay ?? this.isPhysicalDelay,
       isMentalDelay: isMentalDelay ?? this.isMentalDelay,
       isNoLimit: isNoLimit ?? this.isNoLimit,
+      kidsDevelopState: kidsDevelopState ?? this.kidsDevelopState,
       isValid: isValid ?? this.isValid,
       submissionStatus: submissionStatus ?? this.submissionStatus,
     );
@@ -41,11 +45,12 @@ class KindPersonalInfoState extends Equatable {
 
   @override
   List<Object> get props => [
-        firstName,
-        lastName,
-        isPhysicalDelay,
-        isMentalDelay,
-        isNoLimit,
-        submissionStatus,
-      ];
+    firstName,
+    lastName,
+    isPhysicalDelay,
+    isMentalDelay,
+    isNoLimit,
+    kidsDevelopState,
+    submissionStatus,
+  ];
 }

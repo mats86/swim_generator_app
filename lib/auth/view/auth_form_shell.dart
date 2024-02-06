@@ -5,19 +5,22 @@ class AuthFormShell extends StatelessWidget {
   final double maxWidth;
   final String title;
 
-  const AuthFormShell({
-    super.key,
-    required this.child,
-    this.maxWidth = 500.0,
-    required this.title
-  });
+  const AuthFormShell(
+      {super.key,
+        required this.child,
+        this.maxWidth = 500.0,
+        required this.title});
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(title: Text(title),),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(title),
+        centerTitle: true,
+      ),
       backgroundColor: Colors.white,
       body: Stack(
         children: [
@@ -26,8 +29,11 @@ class AuthFormShell extends StatelessWidget {
             decoration: const BoxDecoration(
               color: Colors.white,
               image: DecorationImage(
-                image: AssetImage("images/Rectangle3704.png",), // Pfad zu Ihrem Hintergrundbild
-                fit: BoxFit.cover, // Sorgt dafür, dass das Bild den ganzen Container ausfüllt
+                image: AssetImage(
+                  "images/Rectangle3704.png",
+                ), // Pfad zu Ihrem Hintergrundbild
+                fit: BoxFit
+                    .cover, // Sorgt dafür, dass das Bild den ganzen Container ausfüllt
               ),
             ),
           ),
@@ -42,7 +48,9 @@ class AuthFormShell extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: maxWidth),
@@ -52,12 +60,15 @@ class AuthFormShell extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: SizedBox(
                               height: screenSize.height * 0.80,
-                              child: child), // Der Inhalt der spezifischen Formularseite
+                              child:
+                              child), // Der Inhalt der spezifischen Formularseite
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                 ],
               ),
             ),

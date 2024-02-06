@@ -23,7 +23,6 @@ class SwimLevelForm extends StatefulWidget {
 }
 
 class _SwimLevelForm extends State<SwimLevelForm> {
-
   @override
   void initState() {
     super.initState();
@@ -34,25 +33,20 @@ class _SwimLevelForm extends State<SwimLevelForm> {
     int year = now.year;
     DateTime startSeason =
     DateTime(year, 3, 1, 00, 00); // 31.1 23:59 end january
-    DateTime endSeason =
-    DateTime(year, 8, 31, 23, 59); // 31.8 23:59 end August
+    DateTime endSeason = DateTime(year, 8, 31, 23, 59); // 31.8 23:59 end August
 
-    DateTime startFixDate =
-    DateTime(year, 2, 1, 00, 00);
+    DateTime startFixDate = DateTime(year, 2, 1, 00, 00);
 
     context.read<SwimGeneratorCubit>().updateConfigApp(
         isDirectLinks: widget.isDirectLinks,
-        isBooking: now.isAfter(startSeason) && now.isBefore(endSeason) ? true : false,
-        isStartFixDate: now.isAfter(startFixDate) && now.isBefore(endSeason) ? true : false,
+        isBooking:
+        now.isAfter(startSeason) && now.isBefore(endSeason) ? true : false,
+        isStartFixDate:
+        now.isAfter(startFixDate) && now.isBefore(endSeason) ? true : false,
         isEmailExists: false);
 
-
     SwimLevelEnum swimLevel =
-    context
-        .read<SwimGeneratorCubit>()
-        .state
-        .swimLevel
-        .swimLevel!;
+    context.read<SwimGeneratorCubit>().state.swimLevel.swimLevel!;
     if (swimLevel != SwimLevelEnum.UNDEFINED) {
       context.read<SwimLevelBloc>().add(SwimLevelChanged(
           SwimLevelModel.dirty(SwimLevelEnum.values[swimLevel.index])));
@@ -65,17 +59,8 @@ class _SwimLevelForm extends State<SwimLevelForm> {
         ?.refDate !=
         null) {
       context.read<SwimLevelBloc>().add(SwimSeasonChanged(
-          context
-              .read<SwimGeneratorCubit>()
-              .state
-              .swimLevel
-              .swimSeason!
-              .name,
-          context
-              .read<SwimGeneratorCubit>()
-              .state
-              .swimLevel
-              .swimSeason!,
+          context.read<SwimGeneratorCubit>().state.swimLevel.swimSeason!.name,
+          context.read<SwimGeneratorCubit>().state.swimLevel.swimSeason!,
           widget.isDirectLinks));
     }
   }
@@ -179,10 +164,7 @@ class _SwimLevelSelected extends StatelessWidget {
 
   Widget _buildToggleButton(IconData icon, String text, bool isSelected,
       int index, BuildContext context) {
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     String buttonText = screenWidth > 500 ? "${text}KURS" : text;
 
@@ -190,9 +172,8 @@ class _SwimLevelSelected extends StatelessWidget {
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: TextButton(
-        onPressed: () =>
-            context.read<SwimLevelBloc>().add(SwimLevelChanged(
-                SwimLevelModel.dirty(SwimLevelEnum.values[index]))),
+        onPressed: () => context.read<SwimLevelBloc>().add(SwimLevelChanged(
+            SwimLevelModel.dirty(SwimLevelEnum.values[index]))),
         style: TextButton.styleFrom(
           backgroundColor: Colors.lightBlue,
           foregroundColor: isSelected ? Colors.blue : Colors.grey,
@@ -229,46 +210,31 @@ class _SwimSeasonRadioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String getSeasonText() {
-
       if (context.read<SwimGeneratorCubit>().state.configApp.isBooking) {
         context.read<SwimLevelBloc>().add(
           LoadSwimSeasonOptions(
             [
               SwimSeason(
                 name: 'Für laufenden Sommer Saison buchen',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year, 6, 1),
+                refDate: DateTime(DateTime.now().year, 6, 1),
                 swimSeasonEnum: SwimSeasonEnum.BUCHEN,
               ),
               SwimSeason(
                 name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 1))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 1, 6),
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 1))} reservieren',
+                refDate: DateTime(DateTime.now().year + 1, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
               SwimSeason(
                 name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 2))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 2, 6),
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 2))} reservieren',
+                refDate: DateTime(DateTime.now().year + 2, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
               SwimSeason(
                 name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 3))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 3, 6),
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 3))} reservieren',
+                refDate: DateTime(DateTime.now().year + 3, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
             ],
@@ -281,39 +247,25 @@ class _SwimSeasonRadioButton extends StatelessWidget {
             [
               SwimSeason(
                 name: 'Buchen für Sommersaison 2024',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year, 6, 1),
+                refDate: DateTime(DateTime.now().year, 6, 1),
+                swimSeasonEnum: SwimSeasonEnum.BUCHEN,
+              ),
+              SwimSeason(
+                name:
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 1))} reservieren',
+                refDate: DateTime(DateTime.now().year + 1, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
               SwimSeason(
                 name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 1))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 1, 6),
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 2))} reservieren',
+                refDate: DateTime(DateTime.now().year + 2, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
               SwimSeason(
                 name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 2))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 2, 6),
-                swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
-              ),
-              SwimSeason(
-                name:
-                'Für ${DateFormat('yyyy').format(DateTime(DateTime
-                    .now()
-                    .year + 3))} reservieren',
-                refDate: DateTime(DateTime
-                    .now()
-                    .year + 3, 6),
+                'Für ${DateFormat('yyyy').format(DateTime(DateTime.now().year + 3))} reservieren',
+                refDate: DateTime(DateTime.now().year + 3, 6),
                 swimSeasonEnum: SwimSeasonEnum.RESERVIEREN,
               ),
             ],
@@ -373,8 +325,7 @@ class _SwimSeasonRadioButton extends StatelessWidget {
                                     groupValue: state.swimSeason.value,
                                     value: state.swimSeasonOptions[index].name,
                                     onChanged: (val) {
-                                      BlocProvider.of<SwimLevelBloc>(context)
-                                          .add(
+                                      BlocProvider.of<SwimLevelBloc>(context).add(
                                           SwimSeasonChanged(
                                               val.toString(),
                                               state.swimSeasonOptions[index],
@@ -385,8 +336,7 @@ class _SwimSeasonRadioButton extends StatelessWidget {
                                     child: Wrap(
                                       children: [
                                         Text(
-                                          '${state.swimSeasonOptions[index]
-                                              .name} ',
+                                          '${state.swimSeasonOptions[index].name} ',
                                           overflow: TextOverflow.visible,
                                         ),
                                       ],
@@ -419,6 +369,11 @@ class _SubmitButton extends StatelessWidget {
           context.read<SwimGeneratorCubit>().stepContinued();
           context.read<SwimGeneratorCubit>().updateSwimLevel(
               state.swimLevelModel.value, state.selectedSwimSeason);
+          context.read<SwimGeneratorCubit>().updateConfigApp(
+              isBooking: state.selectedSwimSeason.swimSeasonEnum ==
+                  SwimSeasonEnum.BUCHEN
+                  ? true
+                  : false);
         }
       },
       buildWhen: (previous, current) =>

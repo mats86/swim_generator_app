@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
+import 'package:swim_generator_app/auth/view/auth_form_shell.dart';
 
 import '../bloc/login_bloc.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({super.key});
+  LoginForm({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state.submissionStatus == FormzSubmissionStatus.failure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(content: Text('Something went wrong!')),
+            );
+        }
+      },
+      child: AuthFormShell(
+        title: 'LOGIN',
+        child:
+        Column(children: [_LoginEmailInput(controller: _emailController)]),
+      ),
+    );
   }
-
 }
 
 class _LoginEmailInput extends StatelessWidget {

@@ -332,10 +332,13 @@ class _SubmitButton extends StatelessWidget {
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
-          context.read<SwimGeneratorCubit>().updateKindPersonalInfo(
-              KindPersonalInfo(
-                  firstName: state.firstName.value.trim(),
-                  lastName: state.lastName.value.trim()));
+          context
+              .read<SwimGeneratorCubit>()
+              .updateKindPersonalInfo(KindPersonalInfo(
+            firstName: state.firstName.value.trim(),
+            lastName: state.lastName.value.trim(),
+            kidsDevelopState: state.kidsDevelopState,
+          ));
         }
       },
       buildWhen: (previous, current) =>
