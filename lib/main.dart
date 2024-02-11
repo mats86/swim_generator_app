@@ -167,6 +167,8 @@ class AppView extends StatelessWidget {
                 ));
       default:
         mode = SpecialFeatureMode.disabled;
+        title = 'KURSFINDER';
+        isDirectLinks = false;
     }
 
     page = MyHomePage(

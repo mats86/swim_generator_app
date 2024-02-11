@@ -18,6 +18,7 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
 
   BirthDayBloc(this.service) : super(const BirthDayState()) {
     on<BirthDayChanged>(_onBirthDayChanged);
+    on<CancelAlert>(_onCancelAlert);
     on<FormSubmitted>(_onFormSubmitted);
   }
 
@@ -58,6 +59,11 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
     return age;
   }
 
+  void _onCancelAlert(
+      CancelAlert event, Emitter<BirthDayState> emit,
+      ) {
+    emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
+  }
   void _onFormSubmitted(
     FormSubmitted event,
     Emitter<BirthDayState> emit,

@@ -87,6 +87,7 @@ class _BirthDayForm extends State<BirthDayForm> {
                   TextButton(
                     child: const Text('Zurück zur Hauptseite'),
                     onPressed: () {
+                      context.read<BirthDayBloc>().add(CancelAlert());
                       Navigator.of(dialogContext).pop();
                     },
                   ),

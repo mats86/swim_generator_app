@@ -549,7 +549,7 @@ class _FixDatesRadioButton extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Passende Termin auswählen',
+                              'Passenden Termin auswählen',
                               style: TextStyle(fontSize: 16),
                             ),
                             Padding(
@@ -608,9 +608,11 @@ class _FixDatesRadioButton extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                       'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
-                          'Am 1.3 laden wir Dich per Mail ein, Dir uns Deine'
-                          'VERFÜGBAREN Termine für den Schwimmsommer zu nennen. Wir planen'
-                          'dann euren Schwimmkurs NACH DEINER individuellen VERFÜGBARKEIT'),
+                          'Am 1.3. laden wir Dich per Email ein uns DEINE '
+                          'VERFÜGBAREN Termine für den Schwimmsommer den Du '
+                          'gebucht hast zu nennen.\n\n'
+                          'WIR PLANEN euren Schwimmkurs nach DEINER '
+                          'INDIVIDUELLEN VERFÜGBARKEIT.'),
                 ),
               ],
             ],

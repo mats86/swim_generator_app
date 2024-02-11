@@ -241,9 +241,9 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
                 content: SizedBox(
                   width: width < 400.0 ? width * 0.9 : 400,
                   child: const Text(
-                      'Das E-Mail-Konto existiert bereits. Möchten Sie einen weiteren '
-                      'Schwimmkurs für ein zusätzliches Kind buchen? \n\nFalls nicht, '
-                      'geben Sie bitte eine andere E-Mail-Adresse ein.'),
+                      'Das E-Mail-Konto existiert bereits. Möchtest Du einen weiteren '
+                      'Schwimmkurs für ein zusätzliches Kind buchen? \n\nFalls '
+                          'nicht, gib bitte eine andere E-Mail-Adresse ein.'),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -268,6 +268,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
                       outerContext
                           .read<ParentPersonalInfoBloc>()
                           .add(const IsEmailExists(false));
+                      FocusScope.of(context).requestFocus(_emailFocusNode);
                       Navigator.of(dialogContext).pop();
                     },
                     child: const Text('Email ändern'),
@@ -301,6 +302,7 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
           ),
           _EmailInput(
             controller: _emailController,
+            focusNode: _emailFocusNode,
           ),
           _EmailConfirmInput(
             controller: _emailConfirmController,
@@ -639,8 +641,9 @@ class _CityInput extends StatelessWidget {
 
 class _EmailInput extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
 
-  const _EmailInput({required this.controller});
+  const _EmailInput({required this.controller, required this.focusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -649,6 +652,7 @@ class _EmailInput extends StatelessWidget {
         builder: (context, state) {
           return TextFormField(
             controller: controller,
+            focusNode: focusNode,
             enableInteractiveSelection: false,
             keyboardType: TextInputType.text,
             inputFormatters: [

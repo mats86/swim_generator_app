@@ -34,7 +34,7 @@ class SwimLevel extends Equatable {
   List<Object?> get props => [swimLevel, swimSeason];
 }
 
-enum SwimLevelEnum {EINSTIEGERKURS, AUFSTIEGERKURS, UNDEFINED, }
+enum SwimLevelEnum {EINSTEIGERKURS, AUFSTEIGERKURS, UNDEFINED, }
 
 SwimLevelEnum valueOf(int index) {
   return SwimLevelEnum.values[index];

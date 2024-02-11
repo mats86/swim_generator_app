@@ -71,6 +71,7 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
     bool? isBooking,
     bool? isDirectLinks,
     bool? isEmailExists,
+    String? referenceBooking,
   }) {
     emit(
       state.copyWith(
@@ -79,6 +80,8 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
           isBooking: isBooking ?? state.configApp.isBooking,
           isDirectLinks: isDirectLinks ?? state.configApp.isDirectLinks,
           isEmailExists: isEmailExists ?? state.configApp.isEmailExists,
+          referenceBooking:
+              referenceBooking ?? state.configApp.referenceBooking,
         ),
       ),
     );

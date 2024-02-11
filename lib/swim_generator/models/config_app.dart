@@ -5,12 +5,14 @@ class ConfigApp extends Equatable {
   final bool isDirectLinks;
   final bool isBooking;
   final bool isStartFixDate;
+  final String referenceBooking;
 
   const ConfigApp({
     required this.isEmailExists,
     required this.isDirectLinks,
     required this.isBooking,
     required this.isStartFixDate,
+    required this.referenceBooking,
   });
 
   const ConfigApp.empty()
@@ -19,6 +21,7 @@ class ConfigApp extends Equatable {
           isDirectLinks: false,
           isBooking: false,
           isStartFixDate: false,
+          referenceBooking: '',
         );
 
   ConfigApp copyWith({
@@ -26,12 +29,15 @@ class ConfigApp extends Equatable {
     bool? isDirectLinks,
     bool? isBooking,
     bool? isStartFixDate,
+    String? referenceBooking,
   }) {
     return ConfigApp(
-        isEmailExists: isEmailExists ?? this.isEmailExists,
-        isDirectLinks: isDirectLinks ?? this.isDirectLinks,
-        isBooking: isBooking ?? this.isBooking,
-        isStartFixDate: isStartFixDate ?? this.isStartFixDate);
+      isEmailExists: isEmailExists ?? this.isEmailExists,
+      isDirectLinks: isDirectLinks ?? this.isDirectLinks,
+      isBooking: isBooking ?? this.isBooking,
+      isStartFixDate: isStartFixDate ?? this.isStartFixDate,
+      referenceBooking: referenceBooking ?? this.referenceBooking,
+    );
   }
 
   @override
@@ -40,5 +46,6 @@ class ConfigApp extends Equatable {
         isDirectLinks,
         isBooking,
         isStartFixDate,
+        referenceBooking,
       ];
 }

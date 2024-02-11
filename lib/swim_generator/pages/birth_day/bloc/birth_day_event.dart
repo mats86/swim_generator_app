@@ -15,6 +15,8 @@ class BirthDayChanged extends BirthDayEvent {
   List<Object> get props => [birthDay];
 }
 
+class CancelAlert extends BirthDayEvent {}
+
 class FormSubmitted extends BirthDayEvent {
   final int swimCourseID;
   final bool isDirectLinks;

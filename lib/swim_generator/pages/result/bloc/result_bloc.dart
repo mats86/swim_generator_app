@@ -112,8 +112,8 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
             event.completeSwimCourseBookingInput.studentFirstName,
             studentLastName:
             event.completeSwimCourseBookingInput.studentLastName,
-            studentBirthDate:
-            event.completeSwimCourseBookingInput.studentBirthDate,
+            birthDate:
+            event.completeSwimCourseBookingInput.birthDate,
             swimCourseID: event.completeSwimCourseBookingInput.swimCourseID,
             swimPoolIDs: event.completeSwimCourseBookingInput.swimPoolIDs,
             referenceBooking:

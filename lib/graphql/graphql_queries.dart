@@ -123,8 +123,6 @@ class GraphQLQueries {
     createCompleteSwimCourseBooking(input: \$input) {
       swimCourseBookingID
       swimCourseID
-      studentID
-      guardianID
     }
   }
 ''';

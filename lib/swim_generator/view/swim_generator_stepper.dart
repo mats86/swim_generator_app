@@ -39,7 +39,10 @@ class SwimGeneratorStepper extends StatelessWidget {
                   context.read<SwimGeneratorCubit>().stepTapped(index);
                 },
               ),
-              header(state.activeStepperIndex),
+              header(
+                state.activeStepperIndex,
+                context.read<SwimGeneratorCubit>().state.configApp.isBooking,
+              ),
               body(
                 state.activeStepperIndex,
                 swimCourseID,
@@ -53,7 +56,7 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   /// Returns the header wrapping the header text.
-  Widget header(int activeStepperIndex) {
+  Widget header(int activeStepperIndex, bool isBooking) {
     return Container(
       decoration: BoxDecoration(
         // color: Colors.orange,
@@ -62,7 +65,7 @@ class SwimGeneratorStepper extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          headerText(activeStepperIndex, isDirectLinks),
+          headerText(activeStepperIndex, isDirectLinks, isBooking),
           style: const TextStyle(
             // color: Colors.black,
             fontSize: 20,
@@ -73,7 +76,11 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   // Returns the header text based on the activeStep.
-  String headerText(int activeStepperIndex, bool isDirectLinks) {
+  String headerText(
+    int activeStepperIndex,
+    bool isDirectLinks,
+    bool isBooking,
+  ) {
     int pageIndex = order[activeStepperIndex];
 
     switch (pageIndex) {
@@ -85,19 +92,23 @@ class SwimGeneratorStepper extends StatelessWidget {
         }
 
       case 1:
-        return 'GeburstDatum';
+        return 'Geburtsdatum';
 
       case 2:
-        return 'Schwimm Kurs';
+        return 'Schwimmkurs';
 
       case 3:
         return 'Schwimmbad';
 
       case 4:
-        return 'TIME AUSWAHL';
+        if (isBooking) {
+          return 'TERMIWAHL';
+        } else {
+          return 'Hinweis Verein';
+        }
 
       case 5:
-        return 'Kind Information';
+        return 'DATEN zum SCHWIMSCHÜLER:IN';
 
       case 6:
         return 'Erziehungsberechtigten Information';
@@ -111,12 +122,18 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   /// Returns the body.
-  Widget body(int activeStepperIndex, int swimCourseID, bool isDirectLinks) {
+  Widget body(
+    int activeStepperIndex,
+    int swimCourseID,
+    bool isDirectLinks,
+  ) {
     int pageIndex = order[activeStepperIndex];
 
     switch (pageIndex) {
       case 0:
-        return SwimLevelPage(isDirectLinks: isDirectLinks);
+        return SwimLevelPage(
+          isDirectLinks: isDirectLinks,
+        );
 
       case 1:
         return BirthDayPage(

@@ -128,7 +128,7 @@ class _KindPersonalInfoForm extends State<KindPersonalInfoForm> {
                   const Divider(),
                   _buildCheckboxRow(
                     context,
-                    'GEISTIGE Entwicklungsverzögerungen',
+                    'Geistige Entwicklungsverzögerungen',
                         (state) => state.isMentalDelay.value,
                         (val) => context
                         .read<KindPersonalInfoBloc>()

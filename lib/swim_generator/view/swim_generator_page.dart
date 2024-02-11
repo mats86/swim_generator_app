@@ -29,7 +29,8 @@ class SwimGeneratorPage extends StatelessWidget {
           graphQLClient: graphQLClient,
           order: order,
           swimCourseID: swimCourseID,
-          isDirectLinks: isDirectLinks),
+          isDirectLinks: isDirectLinks,
+      ),
     );
   }
 }

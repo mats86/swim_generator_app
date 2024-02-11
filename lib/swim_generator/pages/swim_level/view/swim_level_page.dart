@@ -6,11 +6,17 @@ import 'swim_level_form.dart';
 
 class SwimLevelPage extends StatelessWidget {
   final bool isDirectLinks;
-  const SwimLevelPage({super.key, required this.isDirectLinks,});
+
+  const SwimLevelPage({
+    super.key,
+    required this.isDirectLinks,
+  });
 
   route() {
     return MaterialPageRoute<void>(
-      builder: (_) => SwimLevelPage(isDirectLinks: isDirectLinks),
+      builder: (_) => SwimLevelPage(
+        isDirectLinks: isDirectLinks,
+      ),
     );
   }
 
@@ -19,9 +25,10 @@ class SwimLevelPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12.0),
       child: BlocProvider(
-        create: (context) => SwimLevelBloc(
+        create: (context) => SwimLevelBloc(),
+        child: SwimLevelForm(
+          isDirectLinks: isDirectLinks,
         ),
-        child: SwimLevelForm(isDirectLinks: isDirectLinks),
       ),
     );
   }

@@ -1,46 +1,58 @@
 class CompleteSwimCourseBookingInput {
   final String loginEmail;
-  final String guardianFirstName;
-  final String guardianLastName;
-  final String guardianAddress;
-  final String guardianPhoneNumber;
+  final String firstName;
+  final String lastName;
+  final String address;
+  final String phoneNumber;
   final String studentFirstName;
   final String studentLastName;
-  final DateTime studentBirthDate; // Format: "YYYY-MM-DD"
+  final DateTime birthDate; // Format: "YYYY-MM-DD"
   final int swimCourseID;
   final List<int> swimPoolIDs;
   final String referenceBooking;
+  final int bookingDateTypID;
   final int fixDateID;
+  final List<DateTime> desiredDateTimes;
+  final bool isAdult;
+  final bool isGroupCourse;
 
   CompleteSwimCourseBookingInput({
     required this.loginEmail,
-    required this.guardianFirstName,
-    required this.guardianLastName,
-    required this.guardianAddress,
-    required this.guardianPhoneNumber,
+    required this.firstName,
+    required this.lastName,
+    required this.address,
+    required this.phoneNumber,
     required this.studentFirstName,
     required this.studentLastName,
-    required this.studentBirthDate,
+    required this.birthDate,
     required this.swimCourseID,
     required this.swimPoolIDs,
     required this.referenceBooking,
+    required this.bookingDateTypID,
     required this.fixDateID,
+    required this.desiredDateTimes,
+    required this.isAdult,
+    required this.isGroupCourse,
   });
 
   Map<String, dynamic> toGraphqlJson() {
     return {
       'loginEmail': loginEmail,
-      'guardianFirstName': guardianFirstName,
-      'guardianLastName': guardianLastName,
-      'guardianAddress': guardianAddress,
-      'guardianPhoneNumber': guardianPhoneNumber,
+      'firstName': firstName,
+      'lastName': lastName,
+      'address': address,
+      'phoneNumber': phoneNumber,
       'studentFirstName': studentFirstName,
       'studentLastName': studentLastName,
-      'studentBirthDate': studentBirthDate.toIso8601String(),
+      'birthDate': birthDate.toIso8601String(),
       'swimCourseID': swimCourseID,
       'swimPoolIDs': swimPoolIDs,
       'referenceBooking': referenceBooking,
+      'bookingDateTypID': bookingDateTypID,
       'fixDateID': fixDateID,
+      'desiredDateTimes': desiredDateTimes.map((dt) => dt.toIso8601String()).toList(),
+      'isAdult': isAdult,
+      'isGroupCourse': isGroupCourse,
     };
   }
 }
@@ -50,7 +62,7 @@ class NewStudentAndBookingInput {
   final String loginEmail;
   final String studentFirstName;
   final String studentLastName;
-  final DateTime studentBirthDate; // Format: "YYYY-MM-DD"
+  final DateTime birthDate; // Format: "YYYY-MM-DD"
   final int swimCourseID;
   final List<int> swimPoolIDs;
   final String referenceBooking;
@@ -60,7 +72,7 @@ class NewStudentAndBookingInput {
     required this.loginEmail,
     required this.studentFirstName,
     required this.studentLastName,
-    required this.studentBirthDate,
+    required this.birthDate,
     required this.swimCourseID,
     required this.swimPoolIDs,
     required this.referenceBooking,
@@ -72,7 +84,7 @@ class NewStudentAndBookingInput {
       'loginEmail': loginEmail,
       'studentFirstName': studentFirstName,
       'studentLastName': studentLastName,
-      'studentBirthDate': studentBirthDate.toIso8601String(),
+      'birthDate': birthDate.toIso8601String(),
       'swimCourseID': swimCourseID,
       'swimPoolIDs': swimPoolIDs,
       'referenceBooking': referenceBooking,
