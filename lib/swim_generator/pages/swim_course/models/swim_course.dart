@@ -13,6 +13,8 @@ class SwimCourse {
   final DateTime? swimCourseEndBooking;
   final DateTime? swimCourseStartVisible;
   final DateTime? swimCourseEndVisible;
+  final bool isAdultCourse;
+  final bool isGroupCourse;
 
   SwimCourse({
     required this.swimCourseID,
@@ -29,6 +31,8 @@ class SwimCourse {
     required this.swimCourseEndBooking,
     required this.swimCourseStartVisible,
     required this.swimCourseEndVisible,
+    required this.isAdultCourse,
+    required this.isGroupCourse,
   });
 
   factory SwimCourse.fromJson(Map<String, dynamic> json) {
@@ -55,6 +59,8 @@ class SwimCourse {
       swimCourseEndVisible: json['swimCourseEndVisible'] != null
           ? DateTime.parse(json['swimCourseEndVisible'])
           : null,
+      isAdultCourse: json['isAdultCourse'],
+      isGroupCourse: json['isGroupCourse'],
     );
   }
 
@@ -72,7 +78,9 @@ class SwimCourse {
         swimCourseStartBooking = null,
         swimCourseEndBooking = null,
         swimCourseStartVisible = null,
-        swimCourseEndVisible = null;
+        swimCourseEndVisible = null,
+        isAdultCourse = false,
+        isGroupCourse = false;
 
   bool get isEmpty {
     return swimCourseID == 0 &&
@@ -88,7 +96,9 @@ class SwimCourse {
         swimCourseStartBooking == null &&
         swimCourseEndBooking == null &&
         swimCourseStartVisible == null &&
-        swimCourseEndVisible == null;
+        swimCourseEndVisible == null &&
+        isAdultCourse == false &&
+        isGroupCourse == false;
   }
 
   bool get isNotEmpty {

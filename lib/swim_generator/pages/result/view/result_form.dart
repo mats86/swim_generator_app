@@ -106,14 +106,14 @@ class _ResultForm extends State<ResultForm> {
             child: context.read<SwimGeneratorCubit>().state.configApp.isBooking
                 ? const Text(
                     "Du erhältst in den nächsten 30 min eine Email als "
-                        "ANMELDEBESTÄTIGUNG mit obigen Daten. Entsprechend "
-                        "deiner gebuchten Kurse wirst Du zur ANZAHLUNG "
-                        "aufgefordert. Die Höhe der Anzahlung liegt bei Kursen "
-                        "unter €150 bei €50. Bei Kursen ÜBER € 150 bei €100. "
-                        "Die Zahlung muss innerhalb 7 Werktagen auf unserem "
-                        "Konto verbucht sein. ANDERNFALLS WÜRDEN WIR DEINE "
-                        "BUCHUNG WIEDER STORNIEREN, den Platz für Andere "
-                        "freigeben.",
+                    "ANMELDEBESTÄTIGUNG mit obigen Daten. Entsprechend "
+                    "deiner gebuchten Kurse wirst Du zur ANZAHLUNG "
+                    "aufgefordert. Die Höhe der Anzahlung liegt bei Kursen "
+                    "unter €150 bei €50. Bei Kursen ÜBER € 150 bei €100. "
+                    "Die Zahlung muss innerhalb 7 Werktagen auf unserem "
+                    "Konto verbucht sein. ANDERNFALLS WÜRDEN WIR DEINE "
+                    "BUCHUNG WIEDER STORNIEREN, den Platz für Andere "
+                    "freigeben.",
                   )
                 : Column(
                     children: [
@@ -167,8 +167,7 @@ class _ResultForm extends State<ResultForm> {
                       const _LinkTextWidget(),
                       RichText(
                         text: const TextSpan(
-                          style:
-                              TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                           children: <TextSpan>[
                             TextSpan(
                                 text: 'Zweck des Vereins gemäß seiner Satzung '
@@ -430,72 +429,91 @@ class _SubmitButton extends StatelessWidget {
               cubit.kindPersonalInfo.isNotEmpty;
         }
 
-        final List<DateTime> desiredDateTimes = [
-          DateTime(2024, 1, 10),
-          DateTime(2024, 2, 20),
-          DateTime(2024, 3, 30),
-        ];
-
         CompleteSwimCourseBookingInput? bookingInput;
         VereinInput? vereinInput;
         if (isDataValid()) {
           bookingInput = CompleteSwimCourseBookingInput(
-              loginEmail:
-                  context.read<SwimGeneratorCubit>().state.personalInfo.email,
-              firstName: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .personalInfo
-                  .firstName,
-              lastName: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .personalInfo
-                  .lastName,
-              address:
-                  '${context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet} '
-                  '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
-                  '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode} '
-                  '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
-              phoneNumber: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .personalInfo
-                  .phoneNumber,
-              studentFirstName: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .kindPersonalInfo
-                  .firstName,
-              studentLastName: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .kindPersonalInfo
-                  .lastName,
-              birthDate:
-                  context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
-              swimCourseID: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .swimCourseInfo
-                  .swimCourse
-                  .swimCourseID,
-              swimPoolIDs: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .swimPools
-                  .map((pool) => pool.swimPoolID)
-                  .toList(),
-              referenceBooking: context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .configApp
-                  .referenceBooking,
-              bookingDateTypID: 3,
-              fixDateID: 1,
-              desiredDateTimes: desiredDateTimes,
-              isAdult: false,
-              isGroupCourse: true);
+            loginEmail:
+                context.read<SwimGeneratorCubit>().state.personalInfo.email,
+            firstName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.firstName,
+            lastName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.lastName,
+            address:
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.parentStreet} '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.streetNumber}, '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.zipCode} '
+                '${context.read<SwimGeneratorCubit>().state.personalInfo.city}',
+            phoneNumber: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .personalInfo
+                .phoneNumber,
+            studentFirstName: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .kindPersonalInfo
+                .firstName,
+            studentLastName: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .kindPersonalInfo
+                .lastName,
+            birthDate:
+                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
+            swimCourseID: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimCourseInfo
+                .swimCourse
+                .swimCourseID,
+            swimPoolIDs: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimPools
+                .map((pool) => pool.swimPoolID)
+                .toList(),
+            referenceBooking: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .configApp
+                .referenceBooking,
+            bookingDateTypID: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .dateSelection
+                .bookingDateTypID,
+            fixDateID: context
+                        .read<SwimGeneratorCubit>()
+                        .state
+                        .dateSelection
+                        .bookingDateTypID ==
+                    2
+                ? context
+                    .read<SwimGeneratorCubit>()
+                    .state
+                    .dateSelection
+                    .fixDate
+                    .fixDateID
+                : null,
+            desiredDateTimes: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .dateSelection
+                .dateTimes,
+            isAdult: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimCourseInfo
+                .swimCourse
+                .isAdultCourse,
+            isGroupCourse: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .swimCourseInfo
+                .swimCourse
+                .isGroupCourse,
+          );
         }
 
         final isValid = context.select((ResultBloc bloc) => bloc.state.isValid);
@@ -523,8 +541,7 @@ class _SubmitButton extends StatelessWidget {
                                   .state
                                   .configApp
                                   .isEmailExists));
-                        }
-                        else {
+                        } else {
                           vereinInput = VereinInput(
                               panrede: context
                                   .read<SwimGeneratorCubit>()

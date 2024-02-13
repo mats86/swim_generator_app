@@ -26,10 +26,10 @@ class SwimGeneratorPage extends StatelessWidget {
     return BlocProvider<SwimGeneratorCubit>(
       create: (_) => SwimGeneratorCubit(order.length),
       child: SwimGeneratorStepper(
-          graphQLClient: graphQLClient,
-          order: order,
-          swimCourseID: swimCourseID,
-          isDirectLinks: isDirectLinks,
+        graphQLClient: graphQLClient,
+        order: order,
+        swimCourseID: swimCourseID,
+        isDirectLinks: isDirectLinks,
       ),
     );
   }

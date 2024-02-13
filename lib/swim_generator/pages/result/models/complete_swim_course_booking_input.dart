@@ -11,7 +11,7 @@ class CompleteSwimCourseBookingInput {
   final List<int> swimPoolIDs;
   final String referenceBooking;
   final int bookingDateTypID;
-  final int fixDateID;
+  final int? fixDateID;
   final List<DateTime> desiredDateTimes;
   final bool isAdult;
   final bool isGroupCourse;
@@ -66,7 +66,7 @@ class NewStudentAndBookingInput {
   final int swimCourseID;
   final List<int> swimPoolIDs;
   final String referenceBooking;
-  final int fixDateID;
+  final int? fixDateID;
 
   NewStudentAndBookingInput({
     required this.loginEmail,

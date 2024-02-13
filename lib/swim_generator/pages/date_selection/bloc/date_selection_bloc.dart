@@ -30,13 +30,13 @@ class DateSelectionBloc extends Bloc<DateSelectionEvent, DateSelectionState> {
   }
 
   void _onLoadFixDates(
-      LoadFixDates event,
-      Emitter<DateSelectionState> emit,
-      ) async {
+    LoadFixDates event,
+    Emitter<DateSelectionState> emit,
+  ) async {
     emit(state.copyWith(loadingFixDates: FormzSubmissionStatus.inProgress));
     try {
       var fixDates =
-      await service.loadFixDates(event.swimCourseID, event.swimPoolIDs);
+          await service.loadFixDates(event.swimCourseID, event.swimPoolIDs);
       emit(state.copyWith(
           fixDates: fixDates, loadingFixDates: FormzSubmissionStatus.success));
     } catch (e) {
@@ -45,20 +45,25 @@ class DateSelectionBloc extends Bloc<DateSelectionEvent, DateSelectionState> {
   }
 
   void _onUpdateHasFixedDesiredDate(
-      UpdateHasFixedDesiredDate event,
-      Emitter<DateSelectionState> emit,
-      ) {
+    UpdateHasFixedDesiredDate event,
+    Emitter<DateSelectionState> emit,
+  ) {
     emit(state.copyWith(hasFixedDesiredDate: event.hasFixedDesiredDate));
   }
 
   void _onSelectFlexDate(
       SelectFlexDate event, Emitter<DateSelectionState> emit) {
-    emit(state.copyWith(flexFixDate: false, isValid: true));
+    emit(
+        state.copyWith(flexFixDate: false, isValid: true, bookingDateTypID: 1));
   }
 
   void _onSelectFixDate(SelectFixDate event, Emitter<DateSelectionState> emit) {
     final isValid = (state.flexFixDate);
-    emit(state.copyWith(flexFixDate: true, isValid: false));
+    emit(state.copyWith(
+      flexFixDate: true,
+      isValid: false,
+      bookingDateTypID: event.bookingDateTypID,
+    ));
   }
 
   void _onFixDateChanged(
@@ -76,9 +81,9 @@ class DateSelectionBloc extends Bloc<DateSelectionEvent, DateSelectionState> {
   }
 
   void _onUpdateDateTime1(
-      UpdateDateTime1 event,
-      Emitter<DateSelectionState> emit,
-      ) {
+    UpdateDateTime1 event,
+    Emitter<DateSelectionState> emit,
+  ) {
     if (event.date != null && event.time != null) {
       final dateTime1 = DateTimeModel.dirty(
         DateTime(
@@ -105,9 +110,9 @@ class DateSelectionBloc extends Bloc<DateSelectionEvent, DateSelectionState> {
   }
 
   void _onUpdateDateTime2(
-      UpdateDateTime2 event,
-      Emitter<DateSelectionState> emit,
-      ) {
+    UpdateDateTime2 event,
+    Emitter<DateSelectionState> emit,
+  ) {
     if (event.date != null && event.time != null) {
       final dateTime2 = DateTimeModel.dirty(
         DateTime(
@@ -134,9 +139,9 @@ class DateSelectionBloc extends Bloc<DateSelectionEvent, DateSelectionState> {
   }
 
   void _onUpdateDateTime3(
-      UpdateDateTime3 event,
-      Emitter<DateSelectionState> emit,
-      ) {
+    UpdateDateTime3 event,
+    Emitter<DateSelectionState> emit,
+  ) {
     if (event.date != null && event.time != null) {
       final dateTime3 = DateTimeModel.dirty(
         DateTime(

@@ -44,15 +44,18 @@ class _SwimLevelForm extends State<SwimLevelForm> {
     DateTime startFixDate = DateTime(year, 2, 1, 00, 00);
 
     context.read<SwimGeneratorCubit>().updateConfigApp(
-        isDirectLinks: widget.isDirectLinks,
-        isBooking:
-            now.isAfter(startSeason) && now.isBefore(endSeason) ? true : false,
-        isStartFixDate:
-            now.isAfter(startFixDate) && now.isBefore(endSeason) ? true : false,
-        isEmailExists: false,
-        referenceBooking: _getReferrer() == ''
-            ? 'https://wassermenschen.org/'
-            : _getReferrer());
+          isDirectLinks: widget.isDirectLinks,
+          isBooking: now.isAfter(startSeason) && now.isBefore(endSeason)
+              ? true
+              : false,
+          isStartFixDate: now.isAfter(startFixDate) && now.isBefore(endSeason)
+              ? true
+              : false,
+          isEmailExists: false,
+          referenceBooking: _getReferrer() == ''
+              ? 'https://wassermenschen.org/'
+              : _getReferrer(),
+        );
 
     SwimLevelEnum swimLevel =
         context.read<SwimGeneratorCubit>().state.swimLevel.swimLevel!;

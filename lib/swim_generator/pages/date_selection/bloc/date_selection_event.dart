@@ -36,7 +36,11 @@ class UpdateHasFixedDesiredDate extends DateSelectionEvent {
 
 class SelectFlexDate extends DateSelectionEvent {}
 
-class SelectFixDate extends DateSelectionEvent {}
+class SelectFixDate extends DateSelectionEvent {
+  final int? bookingDateTypID;
+
+  const SelectFixDate({this.bookingDateTypID});
+}
 
 class UpdateDateTime1 extends DateSelectionEvent {
   final DateTime? date;

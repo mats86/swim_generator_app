@@ -12,9 +12,9 @@ import 'package:url_strategy/url_strategy.dart';
 
 void main() {
   setPathUrlStrategy(); // Setzt die URL-Strategie auf Path-basiert um
-  // final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
-  final HttpLink httpLink = HttpLink(
-      'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
+  final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
+  // final HttpLink httpLink = HttpLink(
+  //     'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
 
   final ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
@@ -68,7 +68,10 @@ class AppView extends StatelessWidget {
   }
 
   String enumName(SpecialFeatureMode mode) {
-    return capitalize(mode.toString().split('.').last);
+    return capitalize(mode
+        .toString()
+        .split('.')
+        .last);
   }
 
   Route _generateRoute(RouteSettings settings) {
@@ -157,26 +160,36 @@ class AppView extends StatelessWidget {
             builder: (context) => DbManagerPage(graphQLClient: graphQLClient));
       case '/db_swim_course':
         return MaterialPageRoute(
-            builder: (context) => DbSwimCoursePage(
+            builder: (context) =>
+                DbSwimCoursePage(
                   graphQLClient: graphQLClient,
                 ));
       case '/login':
         return MaterialPageRoute(
-            builder: (context) => LoginPage(
+            builder: (context) =>
+                LoginPage(
                   graphQLClient: graphQLClient,
                 ));
       default:
-        mode = SpecialFeatureMode.disabled;
-        title = 'KURSFINDER';
-        isDirectLinks = false;
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: '/'),
+          builder: (_) =>
+              MyHomePage(
+                graphQLClient: graphQLClient,
+                title: title,
+                specialFeatureMode: SpecialFeatureMode.disabled,
+                swimCourseID: 0,
+                isDirectLinks: false,
+              ),
+        );
     }
 
     page = MyHomePage(
-      graphQLClient: graphQLClient,
-      title: title,
-      specialFeatureMode: mode,
-      swimCourseID: swimCourseID,
-      isDirectLinks: isDirectLinks,
+        graphQLClient: graphQLClient,
+        title: title,
+        specialFeatureMode: mode,
+        swimCourseID: swimCourseID,
+        isDirectLinks: isDirectLinks,
     );
 
     return MaterialPageRoute(builder: (_) => page);

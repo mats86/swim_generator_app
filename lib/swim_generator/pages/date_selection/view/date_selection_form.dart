@@ -23,7 +23,12 @@ class _DateSelectionForm extends State<DateSelectionForm> {
   void initState() {
     super.initState();
     if (context.read<SwimGeneratorCubit>().state.dateSelection.flexFixDate) {
-      BlocProvider.of<DateSelectionBloc>(context).add(SelectFixDate());
+      BlocProvider.of<DateSelectionBloc>(context).add(SelectFixDate(
+          bookingDateTypID: context
+              .read<SwimGeneratorCubit>()
+              .state
+              .dateSelection
+              .bookingDateTypID));
     } else {
       BlocProvider.of<DateSelectionBloc>(context).add(SelectFlexDate());
     }
@@ -58,17 +63,17 @@ class _DateSelectionForm extends State<DateSelectionForm> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController desiredDateController1 =
-    TextEditingController();
+        TextEditingController();
     final TextEditingController desiredTimeController1 =
-    TextEditingController();
+        TextEditingController();
     final TextEditingController desiredDateController2 =
-    TextEditingController();
+        TextEditingController();
     final TextEditingController desiredTimeController2 =
-    TextEditingController();
+        TextEditingController();
     final TextEditingController desiredDateController3 =
-    TextEditingController();
+        TextEditingController();
     final TextEditingController desiredTimeController3 =
-    TextEditingController();
+        TextEditingController();
     return BlocListener<DateSelectionBloc, DateSelectionState>(
       listener: (context, state) {
         if (state.submissionStatus.isFailure) {
@@ -134,9 +139,9 @@ class _DateSelectionForm extends State<DateSelectionForm> {
               alignment: Alignment.centerLeft,
               child: Text(
                   'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
-                      'Wir senden Dir zum 1.2 per Mail die Fixtermine zu. Sollten'
-                      ' diese nicht in Euren Zeitplan passen hast du immer noch die '
-                      'Möglichkeit per FLEX-Termine Kurze zu buchen'),
+                  'Wir senden Dir zum 1.2 per Mail die Fixtermine zu. Sollten'
+                  ' diese nicht in Euren Zeitplan passen hast du immer noch die '
+                  'Möglichkeit per FLEX-Termine Kurze zu buchen'),
             ),
           ],
           const SizedBox(
@@ -162,11 +167,11 @@ class _FlexFixDateSelected extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDesiredDate = context
-        .read<SwimGeneratorCubit>()
-        .state
-        .swimCourseInfo
-        .swimCourse
-        .swimCourseDateTypID ==
+            .read<SwimGeneratorCubit>()
+            .state
+            .swimCourseInfo
+            .swimCourse
+            .swimCourseDateTypID ==
         5;
     double xAlign;
     Color loginColor;
@@ -182,95 +187,98 @@ class _FlexFixDateSelected extends StatelessWidget {
     signInColor = normalColor;
     return BlocBuilder<DateSelectionBloc, DateSelectionState>(
         builder: (context, state) {
-          if (state.flexFixDate) {
-            // FlexTermin ist ausgewählt
-            xAlign = fixDateAlign; // fixDateAlign
-            loginColor = Colors.black54;
-            signInColor = Colors.white;
-          } else {
-            xAlign = flexDateAlign; // flexDateAlign
-            loginColor = Colors.white;
-            signInColor = Colors.black54;
-          }
-          return Visibility(
-            visible:
+      if (state.flexFixDate) {
+        // FlexTermin ist ausgewählt
+        xAlign = fixDateAlign; // fixDateAlign
+        loginColor = Colors.black54;
+        signInColor = Colors.white;
+      } else {
+        xAlign = flexDateAlign; // flexDateAlign
+        loginColor = Colors.white;
+        signInColor = Colors.black54;
+      }
+      return Visibility(
+        visible:
             context.read<SwimGeneratorCubit>().state.configApp.isStartFixDate,
-            child: Center(
-              child: Container(
-                width: width,
-                height: height,
-                decoration: const BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(50.0),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    AnimatedAlign(
-                      alignment: Alignment(xAlign, 0),
-                      duration: const Duration(milliseconds: 300),
-                      child: Container(
-                        width: width * 0.5,
-                        height: height,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF009EE1),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<DateSelectionBloc>(context)
-                            .add(const FixDateChanged(0, FixDate.empty()));
-                        BlocProvider.of<DateSelectionBloc>(context)
-                            .add(SelectFlexDate());
-                      },
-                      child: Align(
-                        alignment: const Alignment(-1, 0),
-                        child: Container(
-                          width: width * 0.5,
-                          color: Colors.transparent,
-                          alignment: Alignment.center,
-                          child: Text(
-                            'FLEXTERMIN',
-                            style: TextStyle(
-                              color: loginColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<DateSelectionBloc>(context)
-                            .add(SelectFixDate());
-                      },
-                      child: Align(
-                        alignment: const Alignment(1, 0),
-                        child: Container(
-                          width: width * 0.5,
-                          color: Colors.transparent,
-                          alignment: Alignment.center,
-                          child: Text(
-                            isDesiredDate ? 'WUNSCHTERMIN' : 'FIXTERMIN',
-                            style: TextStyle(
-                              color: signInColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+        child: Center(
+          child: Container(
+            width: width,
+            height: height,
+            decoration: const BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.all(
+                Radius.circular(50.0),
               ),
             ),
-          );
-        });
+            child: Stack(
+              children: [
+                AnimatedAlign(
+                  alignment: Alignment(xAlign, 0),
+                  duration: const Duration(milliseconds: 300),
+                  child: Container(
+                    width: width * 0.5,
+                    height: height,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF009EE1),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50.0),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<DateSelectionBloc>(context)
+                        .add(const FixDateChanged(0, FixDate.empty()));
+                    BlocProvider.of<DateSelectionBloc>(context)
+                        .add(SelectFlexDate());
+                  },
+                  child: Align(
+                    alignment: const Alignment(-1, 0),
+                    child: Container(
+                      width: width * 0.5,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'FLEXTERMIN',
+                        style: TextStyle(
+                          color: loginColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<DateSelectionBloc>(context).add(
+                      SelectFixDate(
+                        bookingDateTypID: isDesiredDate ? 3 : 2,
+                      ),
+                    );
+                  },
+                  child: Align(
+                    alignment: const Alignment(1, 0),
+                    child: Container(
+                      width: width * 0.5,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child: Text(
+                        isDesiredDate ? 'WUNSCHTERMIN' : 'FIXTERMIN',
+                        style: TextStyle(
+                          color: signInColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -298,19 +306,19 @@ class DesiredDateTimeInput extends StatelessWidget {
         }
         return Visibility(
           visible: (state.flexFixDate &&
+                  context
+                          .read<SwimGeneratorCubit>()
+                          .state
+                          .swimCourseInfo
+                          .swimCourse
+                          .swimCourseDateTypID ==
+                      5) ||
               context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .swimCourseInfo
-                  .swimCourse
-                  .swimCourseDateTypID ==
-                  5) ||
-              context
-                  .read<SwimGeneratorCubit>()
-                  .state
-                  .swimCourseInfo
-                  .swimCourse
-                  .swimCourseDateTypID ==
+                      .read<SwimGeneratorCubit>()
+                      .state
+                      .swimCourseInfo
+                      .swimCourse
+                      .swimCourseDateTypID ==
                   2,
           child: Container(
             padding: const EdgeInsets.all(10),
@@ -478,19 +486,19 @@ class _FixDatesRadioButton extends StatelessWidget {
   Widget buildDateText(
       BuildContext context, DateSelectionState state, int index) {
     final fixDateFrom =
-    DateFormat('dd.MM').format(state.fixDates[index].fixDateFrom!);
+        DateFormat('dd.MM').format(state.fixDates[index].fixDateFrom!);
     final fixDateTo =
-    DateFormat('dd.MM').format(state.fixDates[index].fixDateTo!);
+        DateFormat('dd.MM').format(state.fixDates[index].fixDateTo!);
     final fixDateTimeFrom =
-    DateFormat('HH:mm').format(DateTime(2024, 1, 1, 12, 30));
+        DateFormat('HH:mm').format(DateTime(2024, 1, 1, 12, 30));
     final fixDateTimeTo =
-    DateFormat('HH:mm').format(DateTime(2024, 1, 1, 13, 30));
+        DateFormat('HH:mm').format(DateTime(2024, 1, 1, 13, 30));
     final swimPoolIndex = context
         .read<SwimGeneratorCubit>()
         .state
         .swimPools
         .indexWhere((element) =>
-    element.swimPoolID == state.fixDates[index].swimPoolID);
+            element.swimPoolID == state.fixDates[index].swimPoolID);
 
     String swimPoolName;
     if (swimPoolIndex != -1) {
@@ -514,110 +522,110 @@ class _FixDatesRadioButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DateSelectionBloc, DateSelectionState>(
         builder: (context, state) {
-          return !state.loadingFixDates.isSuccess
-              ? const SpinKitWaveSpinner(
-            color: Colors.lightBlueAccent,
-            size: 50.0,
-          )
-              : Column(
-            children: [
-              Visibility(
-                visible: state.hasFixedDesiredDate &&
-                    ((state.flexFixDate &&
-                        context
-                            .read<SwimGeneratorCubit>()
-                            .state
-                            .swimCourseInfo
-                            .swimCourse
-                            .swimCourseDateTypID ==
-                            1) ||
-                        context
-                            .read<SwimGeneratorCubit>()
-                            .state
-                            .swimCourseInfo
-                            .swimCourse
-                            .swimCourseDateTypID ==
-                            3),
-                child: Card(
-                  elevation: 4.0,
-                  margin: const EdgeInsets.all(10.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Passenden Termin auswählen',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(3.0),
-                            ),
-                            Text('*',
-                                style: TextStyle(
-                                    color: Colors.red, fontSize: 16)),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 24.0,
-                        ),
-                        ListView.separated(
-                          separatorBuilder: (_, __) =>
-                              Divider(color: Colors.grey[300]),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          itemCount: state.fixDates.length,
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                              // height: 50,
-                              child: Row(
-                                children: [
-                                  Radio(
-                                    activeColor: Colors.lightBlueAccent,
-                                    groupValue: state.fixDateModel.value,
-                                    value: state.fixDates[index].fixDateID,
-                                    onChanged: (val) {
-                                      BlocProvider.of<DateSelectionBloc>(
-                                          context)
-                                          .add(FixDateChanged(
-                                          val!, state.fixDates[index]));
-                                    },
-                                  ),
-                                  Flexible(
-                                    child: Wrap(
-                                      children: [
-                                        buildDateText(context, state, index),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+      return !state.loadingFixDates.isSuccess
+          ? const SpinKitWaveSpinner(
+              color: Colors.lightBlueAccent,
+              size: 50.0,
+            )
+          : Column(
+              children: [
+                Visibility(
+                  visible: state.hasFixedDesiredDate &&
+                      ((state.flexFixDate &&
+                              context
+                                      .read<SwimGeneratorCubit>()
+                                      .state
+                                      .swimCourseInfo
+                                      .swimCourse
+                                      .swimCourseDateTypID ==
+                                  1) ||
+                          context
+                                  .read<SwimGeneratorCubit>()
+                                  .state
+                                  .swimCourseInfo
+                                  .swimCourse
+                                  .swimCourseDateTypID ==
+                              3),
+                  child: Card(
+                    elevation: 4.0,
+                    margin: const EdgeInsets.all(10.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Passenden Termin auswählen',
+                                style: TextStyle(fontSize: 16),
                               ),
-                            );
-                          },
-                        ),
-                      ],
+                              Padding(
+                                padding: EdgeInsets.all(3.0),
+                              ),
+                              Text('*',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 16)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 24.0,
+                          ),
+                          ListView.separated(
+                            separatorBuilder: (_, __) =>
+                                Divider(color: Colors.grey[300]),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: state.fixDates.length,
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                // height: 50,
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                      activeColor: Colors.lightBlueAccent,
+                                      groupValue: state.fixDateModel.value,
+                                      value: state.fixDates[index].fixDateID,
+                                      onChanged: (val) {
+                                        BlocProvider.of<DateSelectionBloc>(
+                                                context)
+                                            .add(FixDateChanged(
+                                                val!, state.fixDates[index]));
+                                      },
+                                    ),
+                                    Flexible(
+                                      child: Wrap(
+                                        children: [
+                                          buildDateText(context, state, index),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (!state.flexFixDate) ...[
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                      'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
-                          'Am 1.3. laden wir Dich per Email ein uns DEINE '
-                          'VERFÜGBAREN Termine für den Schwimmsommer den Du '
-                          'gebucht hast zu nennen.\n\n'
-                          'WIR PLANEN euren Schwimmkurs nach DEINER '
-                          'INDIVIDUELLEN VERFÜGBARKEIT.'),
-                ),
+                if (!state.flexFixDate) ...[
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        'Wir nehmen Deine Buchung als RESERVIERUNG entgegen.\n\n'
+                        'Am 1.3. laden wir Dich per Email ein uns DEINE '
+                        'VERFÜGBAREN Termine für den Schwimmsommer den Du '
+                        'gebucht hast zu nennen.\n\n'
+                        'WIR PLANEN euren Schwimmkurs nach DEINER '
+                        'INDIVIDUELLEN VERFÜGBARKEIT.'),
+                  ),
+                ],
               ],
-            ],
-          );
-        });
+            );
+    });
   }
 }
 
@@ -626,49 +634,54 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<DateSelectionBloc, DateSelectionState>(
       listenWhen: (previous, current) =>
-      previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
-
           context.read<SwimGeneratorCubit>().updateDateSelection(DateSelection(
-              fixDate: state.selectedFixDate, flexFixDate: state.flexFixDate));
+                fixDate: state.selectedFixDate,
+                flexFixDate: state.flexFixDate,
+                bookingDateTypID: state.bookingDateTypID,
+                dateTimes: state.bookingDateTypID == 3
+                    ? [state.dateTime1!, state.dateTime2!, state.dateTime3!]
+                    : [],
+              ));
         }
       },
       buildWhen: (previous, current) =>
-      previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
         final isValid = context
-            .read<SwimGeneratorCubit>()
-            .state
-            .swimCourseInfo
-            .swimCourse
-            .swimCourseDateTypID ==
-            4
+                    .read<SwimGeneratorCubit>()
+                    .state
+                    .swimCourseInfo
+                    .swimCourse
+                    .swimCourseDateTypID ==
+                4
             ? true
             : context.select((DateSelectionBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
-          color: Colors.lightBlueAccent,
-          size: 50.0,
-        )
+                color: Colors.lightBlueAccent,
+                size: 50.0,
+              )
             : ElevatedButton(
-          key: const Key('swimCourseForm_submitButton_elevatedButton'),
-          style: ElevatedButton.styleFrom(
-              elevation: 0, backgroundColor: Colors.lightBlueAccent),
-          onPressed: isValid
-              ? () =>
-              context.read<DateSelectionBloc>().add(FormSubmitted())
-              : null,
-          child: const Text(
-            'Weiter',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        );
+                key: const Key('swimCourseForm_submitButton_elevatedButton'),
+                style: ElevatedButton.styleFrom(
+                    elevation: 0, backgroundColor: Colors.lightBlueAccent),
+                onPressed: isValid
+                    ? () =>
+                        context.read<DateSelectionBloc>().add(FormSubmitted())
+                    : null,
+                child: const Text(
+                  'Weiter',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
       },
     );
   }
@@ -679,16 +692,16 @@ class _CancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DateSelectionBloc, DateSelectionState>(
         buildWhen: (previous, current) =>
-        previous.submissionStatus != current.submissionStatus,
+            previous.submissionStatus != current.submissionStatus,
         builder: (context, state) {
           return state.submissionStatus.isInProgress
               ? const SizedBox.shrink()
               : TextButton(
-            key: const Key('swimCourseForm_cancelButton_elevatedButton'),
-            onPressed: () =>
-                context.read<SwimGeneratorCubit>().stepCancelled(),
-            child: const Text('Zurück'),
-          );
+                  key: const Key('swimCourseForm_cancelButton_elevatedButton'),
+                  onPressed: () =>
+                      context.read<SwimGeneratorCubit>().stepCancelled(),
+                  child: const Text('Zurück'),
+                );
         });
   }
 }

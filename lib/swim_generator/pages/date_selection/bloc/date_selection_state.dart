@@ -6,6 +6,7 @@ class DateSelectionState extends Equatable {
   final FixDate selectedFixDate;
   final FormzSubmissionStatus loadingFixDates;
   final bool hasFixedDesiredDate;
+  final int bookingDateTypID;
   final bool flexFixDate;
   final DateTime? dateTime1;
   final DateTime? dateTime2;
@@ -19,6 +20,7 @@ class DateSelectionState extends Equatable {
     this.selectedFixDate = const FixDate.empty(),
     this.loadingFixDates = FormzSubmissionStatus.initial,
     this.hasFixedDesiredDate = false,
+    this.bookingDateTypID = 0,
     this.flexFixDate = false,
     this.dateTime1,
     this.dateTime2,
@@ -33,6 +35,7 @@ class DateSelectionState extends Equatable {
     FixDate? selectedFixDate,
     FormzSubmissionStatus? loadingFixDates,
     bool? hasFixedDesiredDate,
+    int? bookingDateTypID,
     bool? flexFixDate,
     DateTime? dateTime1,
     DateTime? dateTime2,
@@ -46,6 +49,7 @@ class DateSelectionState extends Equatable {
       selectedFixDate: selectedFixDate ?? this.selectedFixDate,
       loadingFixDates: loadingFixDates ?? this.loadingFixDates,
       hasFixedDesiredDate: hasFixedDesiredDate ?? this.hasFixedDesiredDate,
+      bookingDateTypID: bookingDateTypID ?? this.bookingDateTypID,
       flexFixDate: flexFixDate ?? this.flexFixDate,
       dateTime1: dateTime1 ?? this.dateTime1,
       dateTime2: dateTime2 ?? this.dateTime2,
@@ -61,6 +65,7 @@ class DateSelectionState extends Equatable {
     fixDateModel,
     loadingFixDates,
     hasFixedDesiredDate,
+    bookingDateTypID,
     flexFixDate,
     dateTime1,
     dateTime2,
