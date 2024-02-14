@@ -5,7 +5,7 @@ class ResultRepository {
 
   ResultRepository({required this.graphQLClient});
 
-  Future<void> executeCreateCompleteSwimCourseBooking(
+  Future<bool> executeCreateCompleteSwimCourseBooking(
       CompleteSwimCourseBookingInput input) async {
     final MutationOptions options = MutationOptions(
       document: gql(GraphQLQueries.createCompleteSwimCourseBooking),
@@ -20,14 +20,16 @@ class ResultRepository {
       if (kDebugMode) {
         print(result.exception.toString());
       }
+      return false;
     } else {
       if (kDebugMode) {
         print('Mutation erfolgreich');
       }
+      return true;
     }
   }
 
-  Future<void> executeBookingForExistingGuardian(
+  Future<bool> executeBookingForExistingGuardian(
       NewStudentAndBookingInput input) async {
     final MutationOptions options = MutationOptions(
       document: gql(GraphQLQueries.createBookingForExistingGuardian),
@@ -42,10 +44,12 @@ class ResultRepository {
       if (kDebugMode) {
         print(result.exception.toString());
       }
+      return false;
     } else {
       if (kDebugMode) {
         print('Mutation erfolgreich');
       }
+      return true;
     }
   }
 }

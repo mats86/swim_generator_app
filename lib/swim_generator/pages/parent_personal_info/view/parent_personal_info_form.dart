@@ -64,18 +64,18 @@ class _ParentPersonalInfoForm extends State<ParentPersonalInfoForm> {
     super.initState();
     context.read<ParentPersonalInfoBloc>().add(LoadParentTitleOptions());
 
-    _addFocusNodeListener(_titleFocusNode, _firstNameFocusNode, null);
-    _addFocusNodeListener(_firstNameFocusNode, _lastNameFocusNode, null);
-    _addFocusNodeListener(_lastNameFocusNode, _streetFocusNode, null);
-    _addFocusNodeListener(_streetFocusNode, _streetNumberFocusNode, null);
-    _addFocusNodeListener(_streetNumberFocusNode, _zipCodeFocusNode, null);
-    _addFocusNodeListener(_zipCodeFocusNode, _cityFocusNode, null);
-    _addFocusNodeListener(_cityFocusNode, _emailFocusNode, null);
-    _addFocusNodeListener(_emailFocusNode, _emailConfirmFocusNode, null);
-    _addFocusNodeListener(_emailConfirmFocusNode, _phoneNumberFocusNode, null);
-    _addFocusNodeListener(
-        _phoneNumberFocusNode, _phoneNumberConfirmFocusNode, null);
-    _addFocusNodeListener(_phoneNumberConfirmFocusNode, null, null);
+    // _addFocusNodeListener(_titleFocusNode, _firstNameFocusNode, null);
+    // _addFocusNodeListener(_firstNameFocusNode, _lastNameFocusNode, null);
+    // _addFocusNodeListener(_lastNameFocusNode, _streetFocusNode, null);
+    // _addFocusNodeListener(_streetFocusNode, _streetNumberFocusNode, null);
+    // _addFocusNodeListener(_streetNumberFocusNode, _zipCodeFocusNode, null);
+    // _addFocusNodeListener(_zipCodeFocusNode, _cityFocusNode, null);
+    // _addFocusNodeListener(_cityFocusNode, _emailFocusNode, null);
+    // _addFocusNodeListener(_emailFocusNode, _emailConfirmFocusNode, null);
+    // _addFocusNodeListener(_emailConfirmFocusNode, _phoneNumberFocusNode, null);
+    // _addFocusNodeListener(
+    //     _phoneNumberFocusNode, _phoneNumberConfirmFocusNode, null);
+    // _addFocusNodeListener(_phoneNumberConfirmFocusNode, null, null);
 
     if (context
         .read<SwimGeneratorCubit>()

@@ -256,29 +256,6 @@ class _SwimCourseRadioButton extends StatelessWidget {
   }
 }
 
-double berechneAlterInDezimal(DateTime geburtsdatum, DateTime zukunftsdatum) {
-  int jahre = zukunftsdatum.year - geburtsdatum.year;
-  int monate = zukunftsdatum.month - geburtsdatum.month;
-  int tage = zukunftsdatum.day - geburtsdatum.day;
-
-  // Anpassung für negative Monate/Tage
-  if (tage < 0) {
-    var vormonat =
-        DateTime(zukunftsdatum.year, zukunftsdatum.month - 1, geburtsdatum.day);
-    tage = DateTime(zukunftsdatum.year, zukunftsdatum.month, 0).day + tage;
-    monate -= 1;
-  }
-  if (monate < 0) {
-    monate += 12;
-    jahre -= 1;
-  }
-
-  // Umwandlung in Dezimaljahre
-  double dezimalJahre = jahre + (monate / 12) + (tage / 365.25);
-
-  return dezimalJahre;
-}
-
 class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -287,7 +264,9 @@ class _SubmitButton extends StatelessWidget {
           previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
-          context.read<SwimGeneratorCubit>().stepContinued();
+          context
+              .read<SwimGeneratorCubit>()
+              .stepContinued(isAdultCourse: state.selectedCourse.isAdultCourse);
           SwimCourseInfo swimCourseInfo = SwimCourseInfo(
               season: state.swimSeason.value, swimCourse: state.selectedCourse);
           context

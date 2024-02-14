@@ -18,11 +18,16 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
     ));
   }
 
-  void stepContinued() {
+  void stepContinued({bool isAdultCourse = false}) {
     if (state.activeStepperIndex < stepperLength - 1) {
-      emit(state.copyWith(
-        activeStepperIndex: state.activeStepperIndex + 1,
-      ));
+      emit(
+        state.copyWith(
+          activeStepperIndex: state.activeStepperIndex + 1,
+        ),
+      );
+      if (isAdultCourse) {
+        emit(state.copyWith(isAdultCourse: isAdultCourse));
+      }
     }
   }
 

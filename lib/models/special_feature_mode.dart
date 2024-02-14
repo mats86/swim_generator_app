@@ -17,4 +17,6 @@ enum SpecialFeatureMode {
   freundes3Kurs2,               // 15
   elternKindKurs,               // 16
   elternLehrenSwim,             // 17
+  codeKidsCourse,
+  codeAdultsCourse,
 }

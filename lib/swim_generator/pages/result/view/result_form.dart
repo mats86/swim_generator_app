@@ -48,20 +48,22 @@ class _ResultForm extends State<ResultForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _CustomHeader('DATEN SCHWIMMSCHÜLER:IN'),
-          _CustomText(
-            'Name',
-            '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName} '
-                '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName}',
-          ),
-          _CustomText(
-            'Geburtstag',
-            DateFormat('dd.MM.yyy').format(
-                context.read<SwimGeneratorCubit>().state.birthDay.birthDay!),
-          ),
-          const SizedBox(
-            height: 12.0,
-          ),
+          if (!context.read<SwimGeneratorCubit>().state.isAdultCourse) ...[
+            const _CustomHeader('DATEN SCHWIMMSCHÜLER:IN'),
+            _CustomText(
+              'Name',
+              '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.firstName} '
+                  '${context.read<SwimGeneratorCubit>().state.kindPersonalInfo.lastName}',
+            ),
+            _CustomText(
+              'Geburtstag',
+              DateFormat('dd.MM.yyy').format(
+                  context.read<SwimGeneratorCubit>().state.birthDay.birthDay!),
+            ),
+            const SizedBox(
+              height: 12.0,
+            ),
+          ],
           const _CustomHeader('DATEN ERZIEHUNGSBERECHTIGTER'),
           _CustomText(
             'Name',
@@ -412,7 +414,6 @@ class _SubmitButton extends StatelessWidget {
           previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
-          //context.read<SwimGeneratorCubit>().stepContinued();
           _showSuccessDialog(context);
         }
       },
@@ -425,8 +426,7 @@ class _SubmitButton extends StatelessWidget {
               cubit.birthDay.isNotEmpty &&
               cubit.swimCourseInfo.isNotEmpty &&
               cubit.swimPools.isNotEmpty &&
-              cubit.personalInfo.isNotEmpty &&
-              cubit.kindPersonalInfo.isNotEmpty;
+              cubit.personalInfo.isNotEmpty;
         }
 
         CompleteSwimCourseBookingInput? bookingInput;
@@ -449,16 +449,22 @@ class _SubmitButton extends StatelessWidget {
                 .state
                 .personalInfo
                 .phoneNumber,
-            studentFirstName: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .kindPersonalInfo
-                .firstName,
-            studentLastName: context
-                .read<SwimGeneratorCubit>()
-                .state
-                .kindPersonalInfo
-                .lastName,
+            studentFirstName:
+                context.read<SwimGeneratorCubit>().state.isAdultCourse
+                    ? ''
+                    : context
+                        .read<SwimGeneratorCubit>()
+                        .state
+                        .kindPersonalInfo
+                        .firstName,
+            studentLastName:
+                context.read<SwimGeneratorCubit>().state.isAdultCourse
+                    ? ''
+                    : context
+                        .read<SwimGeneratorCubit>()
+                        .state
+                        .kindPersonalInfo
+                        .lastName,
             birthDate:
                 context.read<SwimGeneratorCubit>().state.birthDay.birthDay!,
             swimCourseID: context
@@ -501,7 +507,7 @@ class _SubmitButton extends StatelessWidget {
                 .state
                 .dateSelection
                 .dateTimes,
-            isAdult: context
+            isAdultCourse: context
                 .read<SwimGeneratorCubit>()
                 .state
                 .swimCourseInfo

@@ -26,6 +26,13 @@ class SwimGeneratorStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SwimGeneratorCubit, SwimGeneratorState>(
       builder: (context, state) {
+        List<int> generateStepNumbers(int length, bool isAdultCourse) {
+          List<int> steps = List.generate(length, (index) => index + 1);
+          if (isAdultCourse) {
+            steps.removeLast(); // Entferne den Kinder Step aus der Liste
+          }
+          return steps;
+        }
         return SwimGeneratorFormShell(
           child: Column(
             children: [
@@ -33,7 +40,7 @@ class SwimGeneratorStepper extends StatelessWidget {
                 enableNextPreviousButtons: false,
                 enableStepTapping: false,
                 activeStepColor: Colors.lightBlueAccent,
-                numbers: List.generate(order.length, (index) => index + 1),
+                numbers: generateStepNumbers(order.length, state.isAdultCourse),
                 activeStep: state.activeStepperIndex,
                 onStepReached: (index) {
                   context.read<SwimGeneratorCubit>().stepTapped(index);
@@ -42,11 +49,13 @@ class SwimGeneratorStepper extends StatelessWidget {
               header(
                 state.activeStepperIndex,
                 context.read<SwimGeneratorCubit>().state.configApp.isBooking,
+                state.isAdultCourse,
               ),
               body(
                 state.activeStepperIndex,
                 swimCourseID,
                 isDirectLinks,
+                state.isAdultCourse,
               ),
             ],
           ),
@@ -56,7 +65,11 @@ class SwimGeneratorStepper extends StatelessWidget {
   }
 
   /// Returns the header wrapping the header text.
-  Widget header(int activeStepperIndex, bool isBooking) {
+  Widget header(
+    int activeStepperIndex,
+    bool isBooking,
+    bool isAdultCourse,
+  ) {
     return Container(
       decoration: BoxDecoration(
         // color: Colors.orange,
@@ -65,7 +78,12 @@ class SwimGeneratorStepper extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          headerText(activeStepperIndex, isDirectLinks, isBooking),
+          headerText(
+            activeStepperIndex,
+            isDirectLinks,
+            isBooking,
+            isAdultCourse,
+          ),
           style: const TextStyle(
             // color: Colors.black,
             fontSize: 20,
@@ -80,6 +98,7 @@ class SwimGeneratorStepper extends StatelessWidget {
     int activeStepperIndex,
     bool isDirectLinks,
     bool isBooking,
+    bool isAdultCourse,
   ) {
     int pageIndex = order[activeStepperIndex];
 
@@ -111,7 +130,11 @@ class SwimGeneratorStepper extends StatelessWidget {
         return 'DATEN zum SCHWIMSCHÜLER:IN';
 
       case 6:
-        return 'Erziehungsberechtigten Information';
+        if (isAdultCourse) {
+          return 'Deine erfassten Daten';
+        } else {
+          return 'Erziehungsberechtigten Information';
+        }
 
       case 7:
         return 'Deine erfassten Daten';
@@ -126,6 +149,7 @@ class SwimGeneratorStepper extends StatelessWidget {
     int activeStepperIndex,
     int swimCourseID,
     bool isDirectLinks,
+    bool isAdultCourse,
   ) {
     int pageIndex = order[activeStepperIndex];
 
@@ -151,12 +175,22 @@ class SwimGeneratorStepper extends StatelessWidget {
         return DateSelectionPage(graphQLClient: graphQLClient);
 
       case 5:
-        return const KindPersonalInfoPage();
+        if (isAdultCourse) {
+          return ParentPersonalInfoPage(
+            graphQLClient: graphQLClient,
+          );
+        } else {
+          return const KindPersonalInfoPage();
+        }
 
       case 6:
-        return ParentPersonalInfoPage(
-          graphQLClient: graphQLClient,
-        );
+        if (isAdultCourse) {
+          return ResultPage(graphQLClient: graphQLClient);
+        } else {
+          return ParentPersonalInfoPage(
+            graphQLClient: graphQLClient,
+          );
+        }
 
       case 7:
         return ResultPage(graphQLClient: graphQLClient);

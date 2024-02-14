@@ -3,6 +3,7 @@ part of 'swim_generator_cubit.dart';
 class SwimGeneratorState extends Equatable {
   const SwimGeneratorState({
     this.activeStepperIndex = 0,
+    this.isAdultCourse = false,
     this.swimLevel = const SwimLevel.empty(),
     this.birthDay = const BirthDay.empty(),
     this.swimCourseInfo = const SwimCourseInfo.empty(),
@@ -14,6 +15,7 @@ class SwimGeneratorState extends Equatable {
   });
 
   final int activeStepperIndex;
+  final bool isAdultCourse;
   final SwimLevel swimLevel;
   final BirthDay birthDay;
   final SwimCourseInfo swimCourseInfo;
@@ -25,6 +27,7 @@ class SwimGeneratorState extends Equatable {
 
   SwimGeneratorState copyWith({
     int? activeStepperIndex,
+    bool? isAdultCourse,
     List<bool>? shouldUseFutureBuilderList,
     SwimLevel? swimLevel,
     BirthDay? birthDay,
@@ -38,6 +41,7 @@ class SwimGeneratorState extends Equatable {
   }) {
     return SwimGeneratorState(
       activeStepperIndex: activeStepperIndex ?? this.activeStepperIndex,
+      isAdultCourse: isAdultCourse ?? this.isAdultCourse,
       swimLevel: swimLevel ?? this.swimLevel,
       birthDay: birthDay ?? this.birthDay,
       swimCourseInfo: swimCourseInfo ?? this.swimCourseInfo,
@@ -52,6 +56,7 @@ class SwimGeneratorState extends Equatable {
   @override
   List<Object> get props => [
         activeStepperIndex,
+        isAdultCourse,
         swimLevel,
         birthDay,
         swimCourseInfo,

@@ -12,9 +12,9 @@ import 'package:url_strategy/url_strategy.dart';
 
 void main() {
   setPathUrlStrategy(); // Setzt die URL-Strategie auf Path-basiert um
-  final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
-  // final HttpLink httpLink = HttpLink(
-  //     'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
+  // final HttpLink httpLink = HttpLink('https://localhost:7188/graphql');
+  final HttpLink httpLink = HttpLink(
+      'https://backend.elated-morse.212-227-206-78.plesk.page:5051/graphql');
 
   final ValueNotifier<GraphQLClient> client = ValueNotifier(
     GraphQLClient(
@@ -81,7 +81,10 @@ class AppView extends StatelessWidget {
     int swimCourseID = 0;
     bool isDirectLinks = true;
 
-    switch (settings.name) {
+    Uri uri = Uri.parse(settings.name!);
+    String? code = uri.queryParameters['code'];
+
+    switch (uri.path) {
       case '/':
         mode = SpecialFeatureMode.disabled;
         title = 'KURSFINDER';
@@ -155,6 +158,14 @@ class AppView extends StatelessWidget {
         mode = SpecialFeatureMode.elternLehrenSwim;
         swimCourseID = SpecialFeatureMode.elternLehrenSwim.index;
         break;
+      case '/codeKidsCourse':
+        mode = SpecialFeatureMode.codeKidsCourse;
+        isDirectLinks = true;
+        break;
+      case '/codeAdultsCourse':
+        mode = SpecialFeatureMode.codeAdultsCourse;
+        isDirectLinks = true;
+        break;
       case '/db':
         return MaterialPageRoute(
             builder: (context) => DbManagerPage(graphQLClient: graphQLClient));
@@ -215,6 +226,10 @@ class MyHomePage extends StatelessWidget {
 
   static List<int> _generateOrder(SpecialFeatureMode mode) {
     switch (mode) {
+      case SpecialFeatureMode.codeKidsCourse:
+        return [];
+        case SpecialFeatureMode.codeAdultsCourse:
+          return [];
       case SpecialFeatureMode.minis:
         return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.modul0:

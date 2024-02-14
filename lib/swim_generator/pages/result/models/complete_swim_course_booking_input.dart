@@ -13,7 +13,7 @@ class CompleteSwimCourseBookingInput {
   final int bookingDateTypID;
   final int? fixDateID;
   final List<DateTime> desiredDateTimes;
-  final bool isAdult;
+  final bool isAdultCourse;
   final bool isGroupCourse;
 
   CompleteSwimCourseBookingInput({
@@ -31,7 +31,7 @@ class CompleteSwimCourseBookingInput {
     required this.bookingDateTypID,
     required this.fixDateID,
     required this.desiredDateTimes,
-    required this.isAdult,
+    required this.isAdultCourse,
     required this.isGroupCourse,
   });
 
@@ -51,7 +51,7 @@ class CompleteSwimCourseBookingInput {
       'bookingDateTypID': bookingDateTypID,
       'fixDateID': fixDateID,
       'desiredDateTimes': desiredDateTimes.map((dt) => dt.toIso8601String()).toList(),
-      'isAdult': isAdult,
+      'isAdultCourse': isAdultCourse,
       'isGroupCourse': isGroupCourse,
     };
   }

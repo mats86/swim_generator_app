@@ -102,10 +102,11 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
         ),
       );
     }
+    bool bSuccess;
     if (state.isValid) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
       if (event.isEmailExists) {
-        await service.executeBookingForExistingGuardian(
+        bSuccess = await service.executeBookingForExistingGuardian(
           NewStudentAndBookingInput(
             loginEmail: event.completeSwimCourseBookingInput.loginEmail,
             studentFirstName:
@@ -122,10 +123,12 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
           ),
         );
       } else {
-        await service.executeCreateCompleteSwimCourseBooking(
+        bSuccess = await service.executeCreateCompleteSwimCourseBooking(
             event.completeSwimCourseBookingInput);
       }
-      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      if (bSuccess) {
+        emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      }
     }
   }
 

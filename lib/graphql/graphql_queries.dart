@@ -79,6 +79,8 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      isAdultCourse
+      isGroupCourse
     }
   }
 ''';
