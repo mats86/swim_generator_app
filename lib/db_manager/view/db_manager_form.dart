@@ -31,6 +31,14 @@ class DbManagerForm extends StatelessWidget {
               },
               child: const Text('Schwimm Kurse'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                context
+                    .read<DbManagerCubit>()
+                    .navigateToPage(PagesEnum.dbFixDate);
+              },
+              child: const Text('FixDates'),
+            ),
           ],
         ),
       );

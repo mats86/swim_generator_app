@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:swim_generator_app/db_manager/pages/db_fix_date/view/db_fix_date_page.dart';
 import 'package:swim_generator_app/db_manager/pages/db_swim_course/view/db_swim_course_page.dart';
 import 'package:swim_generator_app/db_manager/view/db_manager_page.dart';
 import 'package:swim_generator_app/swim_generator/swim_generator.dart';
@@ -68,10 +69,7 @@ class AppView extends StatelessWidget {
   }
 
   String enumName(SpecialFeatureMode mode) {
-    return capitalize(mode
-        .toString()
-        .split('.')
-        .last);
+    return capitalize(mode.toString().split('.').last);
   }
 
   Route _generateRoute(RouteSettings settings) {
@@ -171,36 +169,38 @@ class AppView extends StatelessWidget {
             builder: (context) => DbManagerPage(graphQLClient: graphQLClient));
       case '/db_swim_course':
         return MaterialPageRoute(
-            builder: (context) =>
-                DbSwimCoursePage(
+            builder: (context) => DbSwimCoursePage(
+                  graphQLClient: graphQLClient,
+                ));
+      case '/db_fix_date':
+        return MaterialPageRoute(
+            builder: (context) => DbFixDatePage(
                   graphQLClient: graphQLClient,
                 ));
       case '/login':
         return MaterialPageRoute(
-            builder: (context) =>
-                LoginPage(
+            builder: (context) => LoginPage(
                   graphQLClient: graphQLClient,
                 ));
       default:
         return MaterialPageRoute(
           settings: const RouteSettings(name: '/'),
-          builder: (_) =>
-              MyHomePage(
-                graphQLClient: graphQLClient,
-                title: title,
-                specialFeatureMode: SpecialFeatureMode.disabled,
-                swimCourseID: 0,
-                isDirectLinks: false,
-              ),
+          builder: (_) => MyHomePage(
+            graphQLClient: graphQLClient,
+            title: title,
+            specialFeatureMode: SpecialFeatureMode.disabled,
+            swimCourseID: 0,
+            isDirectLinks: false,
+          ),
         );
     }
 
     page = MyHomePage(
-        graphQLClient: graphQLClient,
-        title: title,
-        specialFeatureMode: mode,
-        swimCourseID: swimCourseID,
-        isDirectLinks: isDirectLinks,
+      graphQLClient: graphQLClient,
+      title: title,
+      specialFeatureMode: mode,
+      swimCourseID: swimCourseID,
+      isDirectLinks: isDirectLinks,
     );
 
     return MaterialPageRoute(builder: (_) => page);
@@ -227,9 +227,9 @@ class MyHomePage extends StatelessWidget {
   static List<int> _generateOrder(SpecialFeatureMode mode) {
     switch (mode) {
       case SpecialFeatureMode.codeKidsCourse:
-        return [];
-        case SpecialFeatureMode.codeAdultsCourse:
-          return [];
+        return [0, 1, 5, 6, 7];
+      case SpecialFeatureMode.codeAdultsCourse:
+        return [0, 1, 6, 7];
       case SpecialFeatureMode.minis:
         return [0, 1, 3, 4, 5, 6, 7];
       case SpecialFeatureMode.modul0:

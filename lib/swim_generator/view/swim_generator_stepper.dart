@@ -121,7 +121,7 @@ class SwimGeneratorStepper extends StatelessWidget {
 
       case 4:
         if (isBooking) {
-          return 'TERMIWAHL';
+          return 'TERMINWAHL';
         } else {
           return 'Hinweis Verein';
         }

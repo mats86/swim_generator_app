@@ -153,6 +153,21 @@ class GraphQLQueries {
     }
   ''';
 
+  static const String getFixDatesWithDetails = '''
+    query getFixDatesWithDetails {
+      fixDatesWithDetails {
+        fixDateID
+        swimCourseID
+        swimCourseName
+        swimPoolID
+        swimPoolName
+        fixDateFrom
+        fixDateTo
+        isFixDateActive
+      }
+    }
+  ''';
+
   static const String getFixDatesBySwimCourseID = '''
     query getFixDatesBySwimCourseID(\$swimCourseID: Int!) {
       fixDatesBySwimCourseID(swimCourseID: \$swimCourseID) {

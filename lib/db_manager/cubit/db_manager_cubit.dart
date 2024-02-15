@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'db_manager_state.dart';
 
-enum PagesEnum { unknown, dbSwimCourse, dbSwimPoll }
+enum PagesEnum { unknown, dbSwimCourse, dbSwimPoll, dbFixDate }
 
 class DbManagerCubit extends Cubit<DbManagerState> {
   DbManagerCubit() : super(const DbManagerState());

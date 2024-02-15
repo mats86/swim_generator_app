@@ -134,8 +134,9 @@ class _SwimLevelForm extends State<SwimLevelForm> {
               child: RichText(
                   text: const TextSpan(children: [
                 TextSpan(
-                  text: "Alle unsere Neukunden-Kurse starten im Sommer. "
-                      "Bestandkunden-Kurse bieten wir auch ganzjährig Kurse an.",
+                  text: "Kurse für Neukunden starten Grundsätzlich im Freibad. "
+                      "AUSNAHME: Individual-Kurse und Kurse für Bestandskunden "
+                      "bieten wir GANZJÄHRIG an.",
                   style: TextStyle(
                     fontSize: 16,
                   ),
