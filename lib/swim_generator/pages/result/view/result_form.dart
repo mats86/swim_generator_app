@@ -124,45 +124,36 @@ class _ResultForm extends State<ResultForm> {
                           style: TextStyle(fontSize: 16),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'Wir nehmen Monaten vor den eigentlichen '
-                                    'Kurstermin keine Buchungen entgegen.'
+                                text: 'Schwimmkursplätze sind knapp und wir '
+                                    'verstehen dass Du bereits lang im Voraus '
+                                    'planst. Viele unserer Kunden möchten '
+                                    'Schwimmkursplätze Monate , teils Jahre im '
+                                    'Voraus buchen. Da allerdings Buchungen mit '
+                                    'Anzahlungen bis zu € 100 verbunden sind und '
+                                    'Kinder in diesem Alter nicht über so lange '
+                                    'Zeiträume im Voraus planbar sind, nehmen '
+                                    'wir nur RESERVIERUNGEN entgegen. Diese sind '
+                                    'zudem kostengünstiger und weniger bindend.'
                                     '\n\n'),
                             TextSpan(
-                                text: '1. ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                text: 'VORTEIL VON RESERVIERUNGEN - Du kannst '
+                                    'diese, zwischen dem 1.2. und 28.2 in dem '
+                                    'von Dir reservierten Jahr, zu einer BUCHUNG '
+                                    'umwandeln - und zwar VOR Beginn des '
+                                    'regulären Buchungsprozesses.\n\n'),
                             TextSpan(
-                                text: 'es ist nicht absehbar wie sich ein Kind '
-                                    'in den nächsten Monaten entwickelt. 6 '
-                                    'Monate sehen wir als max. überschaubaren '
-                                    'Zeitraum.\n'),
+                                text: 'Die Verwaltung von RESERVIERUNG übernimmt '
+                                    'für seine Mitglieder der WASSERMENSCHEN '
+                                    'e.V. Bereits ab €10 pro Jahr bist Du dabei. '
+                                    'Zu deinen Reservierungsdaten hast Du per '
+                                    'App immer Zugang und bekommst auch laufende '
+                                    'Informationen darüber.\n\n'),
                             TextSpan(
-                                text: '2. ',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(
-                                text: 'Buchungen die nicht mit Anzahlungen '
-                                    '(bis zu €100) verbunden sind führen '
-                                    'dazu, '
-                                    'dass sich Schwimmkurssuchende in '
-                                    'vielen Schwimmschulen anmelden - was '
-                                    'allerdings viel Chaos stiftet. '
-                                    'Zum Zeitpunkt des Kurses kommt nicht mehr '
-                                    'mal die Hälfte der angemeldeten.\n\n'),
-                            TextSpan(
-                                text: 'Um dir ein wenig Flexibilität zu '
-                                    'geben, aber dennoch bereits ein '
-                                    'RESERVIERUNG '
-                                    'platzieren zu können - auch Jahre im '
-                                    'Voraus, kannst du Mitglied im '
-                                    'Wassermenschen-Verein ab '
-                                    '€10 werden. Dort reservieren wir Dir '
-                                    'jährlich bis 1.3. einen Platz den '
-                                    'du dann in eine verbindliche '
-                                    'Buchung umwandeln kannst. FIX BUCHEN '
-                                    'kannst Du bei deiner Schwimmschule '
-                                    'ab dem 1.2. jeden Jahres für '
-                                    'den kommenden Sommer. Reservierung haben '
-                                    'natürlich Vorrang - reduzieren somit '
-                                    'die Anzahl der dann buchbaren Plätze.\n'),
+                                text: 'RESERVIERUNGEN HABEN VORRANG VOR '
+                                    'BUCHUNGEN. Dadurch reduziert sich die '
+                                    'Anzahl der zu Buchung zur Verfügung '
+                                    'stehenden Plätze. Direkt-Buchungen sind ab '
+                                    'dem 1.3., im Jahr des Kurses, möglich.\n'),
                           ],
                         ),
                       ),
@@ -172,15 +163,12 @@ class _ResultForm extends State<ResultForm> {
                           style: TextStyle(fontSize: 16),
                           children: <TextSpan>[
                             TextSpan(
-                                text: 'Zweck des Vereins gemäß seiner Satzung '
-                                    'ist es zum einen eben dieses '
-                                    'Reservierungsportal zu unterhalten. '
-                                    'Und 2. die Schwimmmethode '
-                                    '#angstfreiSchwimmenLernen '
-                                    'in der Presse und den '
-                                    'Socialen Medien zu verbreiten. '
-                                    'Wir freuen uns auf Deine Unterstützung '
-                                    'und deine Reservierung.\n')
+                                text: 'Hauptaufgabe des WASSERMENSCHEN e.V., '
+                                    'außerhalb dieses Reservierungsportals, ist '
+                                    'die Verbreitung der #angstfreiSchwimmenLernen -Methode '
+                                    'mittels Pressekontakten und SocialMedia-Arbeit. '
+                                    'Entsprechend freuen wir uns über deine Unterstützung. '
+                                    '(Die Höhe der Unterstützung ist frei wählbar.)\n')
                           ],
                         ),
                       ),
@@ -275,7 +263,9 @@ class _ResultForm extends State<ResultForm> {
                           ),
                           const Expanded(
                             child: Text(
-                              'Bei Stornierung nach dem 28.02. verfällt die Anzahlung.',
+                              'Stornierungen sind nach Anmeldung nur bis 1.3 '
+                                  'möglich. Bis zum 28.2 erstatten wir  alle '
+                                  'Arten geleisteter von Zahlungen 50% zurück.',
                             ),
                           ),
                         ],
@@ -731,8 +721,11 @@ class _LinkTextWidget extends StatelessWidget {
           throw Exception('Could not launch ${link.url}');
         }
       },
-      text: "Wenn Du jetzt RESERVIEREN drückst, leiten wir Dich mit samt "
-          "deiner Eingaben zum https://WASERMENSCHEN-Verein.de weiter.\n",
+      text: "Wenn Du jetzt den RESERVIEREN-Button drückst leiten wir Dich mit "
+          "den obigen Anmeldedaten an den https://WASERMENSCHEN-Verein.de "
+          "weiter. Dort kannst Du Dich nochmals entscheiden ob Du dem Verein "
+          "beitreten willst. Eine Einsicht in seine Satzung ist vor Beitritt "
+          "möglich.\n",
       style: const TextStyle(fontSize: 16),
       linkStyle: const TextStyle(color: Colors.blue, fontSize: 16),
     );
