@@ -40,6 +40,29 @@ class ResultRepository {
 
     final QueryResult result = await graphQLClient.mutate(options);
 
+        if (result.hasException) {
+          if (kDebugMode) {
+            print(result.exception.toString());
+          }
+          return false;
+        } else {
+          if (kDebugMode) {
+            print('Mutation erfolgreich');
+      }
+      return true;
+    }
+  }
+
+  Future<bool> createContact(CreateContactInput input) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(GraphQLQueries.createContact),
+      variables: {
+        'input': input.toGraphqlJson(),
+      },
+    );
+
+    final QueryResult result = await graphQLClient.mutate(options);
+
     if (result.hasException) {
       if (kDebugMode) {
         print(result.exception.toString());

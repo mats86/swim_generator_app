@@ -140,6 +140,14 @@ class GraphQLQueries {
   }
 ''';
 
+  static const String createContact = '''
+    mutation CreateContact(\$input: CreateContactInput!) {
+      createContact(input: \$input) {
+        id
+      }
+    }
+  ''';
+
   static const String getFixDates = '''
     query getFixDates {
       fixDates {

@@ -9,6 +9,7 @@ abstract class ResultEvent extends Equatable {
 
 class ResultLoading extends ResultEvent {
   final bool isBooking;
+
   const ResultLoading(this.isBooking);
 
   @override
@@ -17,6 +18,7 @@ class ResultLoading extends ResultEvent {
 
 class ConfirmedChanged extends ResultEvent {
   final bool isChecked;
+
   const ConfirmedChanged(this.isChecked);
 
   @override
@@ -25,6 +27,7 @@ class ConfirmedChanged extends ResultEvent {
 
 class CancellationChanged extends ResultEvent {
   final bool isChecked;
+
   const CancellationChanged(this.isChecked);
 
   @override
@@ -33,6 +36,7 @@ class CancellationChanged extends ResultEvent {
 
 class ConsentGDPRChanged extends ResultEvent {
   final bool isChecked;
+
   const ConsentGDPRChanged(this.isChecked);
 
   @override
@@ -41,19 +45,30 @@ class ConsentGDPRChanged extends ResultEvent {
 
 class FormSubmitted extends ResultEvent {
   final CompleteSwimCourseBookingInput completeSwimCourseBookingInput;
+  final CreateContactInput contactInputBrevo;
   final bool isEmailExists;
-  const FormSubmitted(this.completeSwimCourseBookingInput, this.isEmailExists);
+
+  const FormSubmitted(
+    this.completeSwimCourseBookingInput,
+    this.contactInputBrevo,
+    this.isEmailExists,
+  );
 
   @override
-  List<Object> get props => [completeSwimCourseBookingInput, isEmailExists];
+  List<Object> get props => [
+        completeSwimCourseBookingInput,
+        contactInputBrevo,
+        isEmailExists,
+      ];
 }
 
 class FormSubmittedVerein extends ResultEvent {
   final VereinInput vereinInput;
+
   const FormSubmittedVerein(this.vereinInput);
 
   @override
   List<Object> get props => [
-    vereinInput,
-  ];
+        vereinInput,
+      ];
 }

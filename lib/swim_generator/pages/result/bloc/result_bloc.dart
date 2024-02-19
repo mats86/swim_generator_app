@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../graphql/graphql_queries.dart';
 import '../models/checkbox_model.dart';
 import '../models/complete_swim_course_booking_input.dart';
+import '../models/create_contact_input.dart';
 
 part 'result_event.dart';
 
@@ -123,10 +124,11 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
           ),
         );
       } else {
+        bSuccess = await service.createContact(event.contactInputBrevo);
         bSuccess = await service.executeCreateCompleteSwimCourseBooking(
             event.completeSwimCourseBookingInput);
       }
-      if (bSuccess) {
+      if (bSuccess ) {
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
       }
     }

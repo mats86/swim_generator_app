@@ -52,7 +52,7 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
+      initialRoute: '/', // /db_fix_date?ref=50&code=40    '/?ref=10&code=10'
       onGenerateRoute: _generateRoute,
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
@@ -81,6 +81,7 @@ class AppView extends StatelessWidget {
 
     Uri uri = Uri.parse(settings.name!);
     String? code = uri.queryParameters['code'];
+    String? ref = uri.queryParameters['ref'];
 
     switch (uri.path) {
       case '/':
@@ -170,18 +171,18 @@ class AppView extends StatelessWidget {
       case '/db_swim_course':
         return MaterialPageRoute(
             builder: (context) => DbSwimCoursePage(
-                  graphQLClient: graphQLClient,
-                ));
+              graphQLClient: graphQLClient,
+            ));
       case '/db_fix_date':
         return MaterialPageRoute(
             builder: (context) => DbFixDatePage(
-                  graphQLClient: graphQLClient,
-                ));
+              graphQLClient: graphQLClient,
+            ));
       case '/login':
         return MaterialPageRoute(
             builder: (context) => LoginPage(
-                  graphQLClient: graphQLClient,
-                ));
+              graphQLClient: graphQLClient,
+            ));
       default:
         return MaterialPageRoute(
           settings: const RouteSettings(name: '/'),

@@ -33,6 +33,15 @@ class LoadSwimSeasonOptions extends SwimLevelEvent {
   List<Object> get props => [swimSeasonOptions];
 }
 
+class LoadSwimLevelOptions extends SwimLevelEvent {
+  final List<SwimLevelRadioButton> swimLevelOptions;
+
+  const LoadSwimLevelOptions(this.swimLevelOptions);
+
+  @override
+  List<Object> get props => [swimLevelOptions];
+}
+
 class SwimSeasonChanged extends SwimLevelEvent {
   final String swimSeasonName;
   final SwimSeason season;
@@ -42,6 +51,26 @@ class SwimSeasonChanged extends SwimLevelEvent {
 
   @override
   List<Object> get props => [swimSeasonName, season, isDirectLinks];
+}
+
+class SwimLevelRBChanged extends SwimLevelEvent {
+  final String swimLevelName;
+  final SwimLevelRadioButton swimLeveRB;
+
+  const SwimLevelRBChanged(this.swimLevelName, this.swimLeveRB);
+
+  @override
+  List<Object> get props => [swimLevelName, swimLeveRB];
+}
+
+class SwimLevelOptionCheckboxChanged extends SwimLevelEvent {
+  final SwimLevelRadioButton option;
+  final bool isChecked;
+
+  const SwimLevelOptionCheckboxChanged(this.option, this.isChecked);
+
+  @override
+  List<Object> get props => [option, isChecked];
 }
 
 class FormSubmitted extends SwimLevelEvent {}

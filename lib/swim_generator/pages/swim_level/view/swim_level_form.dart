@@ -9,6 +9,7 @@ import 'package:swim_generator_app/swim_generator/pages/swim_level/bloc/swim_lev
 import '../../../cubit/swim_generator_cubit.dart';
 import '../../../models/swim_level.dart';
 import '../models/swim_level_model.dart';
+import '../models/swim_level_radio_button.dart';
 import '../models/swim_season.dart';
 
 class SwimLevelForm extends StatefulWidget {
@@ -120,9 +121,10 @@ class _SwimLevelForm extends State<SwimLevelForm> {
               height: 24.0,
             ),
             const _SwimLevelSelected(),
+            const SwimLevelRadioButtonClass(),
           ],
           const SizedBox(
-            height: 32.0,
+            height: 24.0,
           ),
           Card(
             shape: RoundedRectangleBorder(
@@ -207,8 +209,75 @@ class _SwimLevelSelected extends StatelessWidget {
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: TextButton(
-        onPressed: () => context.read<SwimLevelBloc>().add(SwimLevelChanged(
-            SwimLevelModel.dirty(SwimLevelEnum.values[index]))),
+        onPressed: () {
+          context.read<SwimLevelBloc>().add(SwimLevelChanged(
+              SwimLevelModel.dirty(SwimLevelEnum.values[index])));
+          if (SwimLevelEnum.values[index] == SwimLevelEnum.EINSTEIGERKURS) {
+            context.read<SwimLevelBloc>().add(const LoadSwimLevelOptions([]));
+            context.read<SwimLevelBloc>().add(
+                  LoadSwimLevelOptions(
+                    [
+                      SwimLevelRadioButton(
+                        name: 'Mein Kind ist völliger Schwimmanfänger',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name: 'Mein Kind hat Spritzwasser Erfahrung',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name:
+                            'Tauchen kann mein Kind gut. Nur über Wasser kann es noch nicht schwimmen',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name:
+                            'Mein Kind kann schon schwimmen - ein bisschen Unterstützung durch Schwimmhilfen braucht er/sie noch',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name:
+                            'Mein Kind kann schon schwimmen. Es kann sich nur noch nicht über Wasser halten',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name:
+                            'Mein Kind kann schon ein paar Meter (ca. 5m ) schwimmen',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name: 'Mein Kind kann schon schwimmen (ca. 10m )',
+                        isChecked: false,
+                      ),
+                      SwimLevelRadioButton(
+                        name:
+                            'Mein Kind schwimmt schon mehr als 10 m hat aber noch kein Seepferdchen',
+                        isChecked: false,
+                      ),
+                    ],
+                  ),
+                );
+          } else {
+            BlocProvider.of<SwimLevelBloc>(context).add(
+              const SwimLevelRBChanged(
+                '',
+                SwimLevelRadioButton.empty(),
+              ),
+            );
+            context.read<SwimLevelBloc>().add(const LoadSwimLevelOptions([]));
+            context.read<SwimLevelBloc>().add(
+                  LoadSwimLevelOptions(
+                    [
+                      SwimLevelRadioButton(
+                        name:
+                            'Mein Kind hat bereits das Seepferdchen. Ich möchte, dass es sicherer schwimmt',
+                        isChecked: false,
+                      ),
+                    ],
+                  ),
+                );
+          }
+        },
         style: TextButton.styleFrom(
           backgroundColor: Colors.lightBlue,
           foregroundColor: isSelected ? Colors.blue : Colors.grey,
@@ -234,6 +303,108 @@ class _SwimLevelSelected extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SwimLevelRadioButtonClass extends StatelessWidget {
+  const SwimLevelRadioButtonClass({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SwimLevelBloc, SwimLevelState>(
+        builder: (context, state) {
+      // Ersetzen der buildOptions Funktion, um eine ListView.separated zu verwenden
+      Widget buildOptions(SwimLevelState state) {
+        return ListView.separated(
+          separatorBuilder: (_, __) => Divider(color: Colors.grey[300]),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: state.swimLevelOptions.length,
+          itemBuilder: (context, index) {
+            final option = state.swimLevelOptions[index];
+            if (state.swimLevelModel.value == SwimLevelEnum.EINSTEIGERKURS) {
+              return ListTile(
+                leading: Radio(
+                  activeColor: Colors.lightBlueAccent,
+                  groupValue: state.swimLevelRB.value,
+                  value: option.name,
+                  onChanged: (val) {
+                    BlocProvider.of<SwimLevelBloc>(context).add(
+                      SwimLevelRBChanged(
+                        val.toString(),
+                        option,
+                      ),
+                    );
+                  },
+                ),
+                title: Text(option.name),
+              );
+            } else if (state.swimLevelModel.value ==
+                SwimLevelEnum.AUFSTEIGERKURS) {
+              return ListTile(
+                leading: Checkbox(
+                  value: option.isChecked,
+                  onChanged: (bool? newValue) {
+                    context.read<SwimLevelBloc>().add(
+                          SwimLevelOptionCheckboxChanged(option, newValue!),
+                        );
+                  },
+                ),
+                title: Text(option.name),
+                onTap: () {
+                  // Aktualisieren Sie den Wert, wenn auf das ListTile getippt wird
+                  bool? newValue = !option.isChecked;
+                  context.read<SwimLevelBloc>().add(
+                        SwimLevelOptionCheckboxChanged(option, newValue),
+                      );
+                },
+              );
+            } else {
+              return const SizedBox
+                  .shrink(); // Für den Fall, dass keine Bedingung zutrifft
+            }
+          },
+        );
+      }
+
+      return Visibility(
+        visible: (state.swimLevelModel.value == SwimLevelEnum.EINSTEIGERKURS) ||
+            (state.swimLevelModel.value == SwimLevelEnum.AUFSTEIGERKURS),
+        child: Column(
+          children: [
+            // Keine Änderungen hier
+            RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: "",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              overflow: TextOverflow.visible,
+            ),
+            Card(
+              elevation: 4.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Column(
+                  children: [
+                    // Verwendung der angepassten buildOptions Funktion
+                    buildOptions(state),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 

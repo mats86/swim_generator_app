@@ -53,9 +53,45 @@ class ExpandableListViewPage extends StatelessWidget {
               size: 50.0,
             )
           : Scaffold(
+              appBar: AppBar(
+                title: const Text('Beispiel AppBar'),
+                actions: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Buchungsdetails'),
+                            content: const SingleChildScrollView(
+                              child: SwimForm(),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Abbrechen'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Buchen'),
+                                onPressed: () {
+                                  // Hier Logik zum Buchen hinzufügen
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
               body: SfDataGrid(
                 source: FixDateDataSource(fixDateData: state.fixDateOptions),
-                //columnWidthMode: ColumnWidthMode.fill,
+                columnWidthMode: ColumnWidthMode.fill,
                 columns: <GridColumn>[
                   GridColumn(
                       columnName: 'fixDateID',
@@ -143,5 +179,109 @@ class FixDateDataSource extends DataGridSource {
         child: Text(dataGridCell.value.toString()),
       );
     }).toList());
+  }
+}
+
+class SwimForm extends StatefulWidget {
+  const SwimForm({super.key});
+
+  @override
+  SwimFormState createState() => SwimFormState();
+}
+
+class SwimFormState extends State<SwimForm> {
+  String? selectedSwimCourse;
+  String? selectedSwimPool;
+  DateTime? selectedDate;
+  TimeOfDay? timeFrom;
+  TimeOfDay? timeTo;
+
+  List<String> swimCourses = [
+    'Kraulen',
+    'Brustschwimmen',
+    'Schmetterling',
+    'Rücken'
+  ];
+  List<String> swimPools = ['Pool A', 'Pool B', 'Pool C', 'Pool D'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        DropdownButton<String>(
+          hint: const Text('Wähle Schwimmkurs'),
+          value: selectedSwimCourse,
+          onChanged: (newValue) {
+            setState(() {
+              selectedSwimCourse = newValue;
+            });
+          },
+          items: swimCourses.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+        DropdownButton<String>(
+          hint: const Text('Wähle Schwimmbad'),
+          value: selectedSwimPool,
+          onChanged: (newValue) {
+            setState(() {
+              selectedSwimPool = newValue;
+            });
+          },
+          items: swimPools.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+        ElevatedButton(
+          onPressed: () => _selectDate(context),
+          child: const Text('Wähle Datum'),
+        ),
+        ElevatedButton(
+          onPressed: () => _selectTime(context, true),
+          child: const Text('Startzeit wählen'),
+        ),
+        ElevatedButton(
+          onPressed: () => _selectTime(context, false),
+          child: const Text('Endzeit wählen'),
+        ),
+      ],
+    );
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  _selectTime(BuildContext context, bool isFrom) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime:
+          isFrom ? timeFrom ?? TimeOfDay.now() : timeTo ?? TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isFrom) {
+          timeFrom = picked;
+        } else {
+          timeTo = picked;
+        }
+      });
+    }
   }
 }

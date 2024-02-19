@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
+import '../models/create_contact_input.dart';
 import '../models/models.dart';
 
 class ResultForm extends StatefulWidget {
@@ -142,7 +143,8 @@ class _ResultForm extends State<ResultForm> {
                                     'umwandeln - und zwar VOR Beginn des '
                                     'regulären Buchungsprozesses.\n\n'),
                             TextSpan(
-                                text: 'Die Verwaltung von RESERVIERUNG übernimmt '
+                                text:
+                                    'Die Verwaltung von RESERVIERUNG übernimmt '
                                     'für seine Mitglieder der WASSERMENSCHEN '
                                     'e.V. Bereits ab €10 pro Jahr bist Du dabei. '
                                     'Zu deinen Reservierungsdaten hast Du per '
@@ -263,9 +265,9 @@ class _ResultForm extends State<ResultForm> {
                           ),
                           const Expanded(
                             child: Text(
-                              'Stornierungen sind nach Anmeldung nur bis 1.3 '
-                                  'möglich. Bis zum 28.2 erstatten wir  alle '
-                                  'Arten geleisteter von Zahlungen 50% zurück.',
+                              'Kostenfreie Stornierungen sind nur bis zum 28.2. '
+                                  'möglich. Von vorher geleisteten Zahlungen '
+                                  'erstatten wir bis zu diesem Datum 50% zurück.',
                             ),
                           ),
                         ],
@@ -420,8 +422,26 @@ class _SubmitButton extends StatelessWidget {
         }
 
         CompleteSwimCourseBookingInput? bookingInput;
+        CreateContactInput? contactInputBrevo;
         VereinInput? vereinInput;
         if (isDataValid()) {
+          contactInputBrevo = CreateContactInput(
+            email: context.read<SwimGeneratorCubit>().state.personalInfo.email,
+            firstName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.firstName,
+            lastName:
+                context.read<SwimGeneratorCubit>().state.personalInfo.lastName,
+            sms: context
+                .read<SwimGeneratorCubit>()
+                .state
+                .personalInfo
+                .phoneNumber,
+            listIds: [2],
+            emailBlacklisted: false,
+            smsBlacklisted: false,
+            updateEnabled: false,
+            smtpBlacklistSender: [context.read<SwimGeneratorCubit>().state.personalInfo.email],
+          );
           bookingInput = CompleteSwimCourseBookingInput(
             loginEmail:
                 context.read<SwimGeneratorCubit>().state.personalInfo.email,
@@ -531,7 +551,7 @@ class _SubmitButton extends StatelessWidget {
                             .configApp
                             .isBooking) {
                           context.read<ResultBloc>().add(FormSubmitted(
-                              bookingInput!,
+                              bookingInput!, contactInputBrevo!,
                               context
                                   .read<SwimGeneratorCubit>()
                                   .state

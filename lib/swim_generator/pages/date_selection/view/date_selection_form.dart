@@ -95,6 +95,7 @@ class _DateSelectionForm extends State<DateSelectionForm> {
               height: 16,
             ),
             _FixDatesRadioButton(),
+            const DesiredDateTimeText(),
             DesiredDateTimeInput(
               dateController: desiredDateController1,
               timeController: desiredTimeController1,
@@ -282,6 +283,58 @@ class _FlexFixDateSelected extends StatelessWidget {
   }
 }
 
+class DesiredDateTimeText extends StatelessWidget {
+  const DesiredDateTimeText({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DateSelectionBloc, DateSelectionState>(
+        builder: (context, state) {
+      return Visibility(
+        visible: (state.flexFixDate &&
+                context
+                        .read<SwimGeneratorCubit>()
+                        .state
+                        .swimCourseInfo
+                        .swimCourse
+                        .swimCourseDateTypID ==
+                    5) ||
+            context
+                    .read<SwimGeneratorCubit>()
+                    .state
+                    .swimCourseInfo
+                    .swimCourse
+                    .swimCourseDateTypID ==
+                2,
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          elevation: 4.0,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text:
+                        "Wähle die Termine so dass wir uns min 2mal innerhalb "
+                        "6 Tagen treffen. Viel effektiver wären 3 Termine. "
+                        "Einmal die Woche macht keinen Sinn.",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+
 class DesiredDateTimeInput extends StatelessWidget {
   final TextEditingController dateController;
   final TextEditingController timeController;
@@ -320,62 +373,68 @@ class DesiredDateTimeInput extends StatelessWidget {
                       .swimCourse
                       .swimCourseDateTypID ==
                   2,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(3.0),
-                    ),
-                    const Text('*',
-                        style: TextStyle(color: Colors.red, fontSize: 14)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: dateController,
-                        readOnly: true,
-                        onTap: () async {
-                          await _selectDate(context);
-                          if (context.mounted) {
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            elevation: 4.0,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(3.0),
+                      ),
+                      const Text('*',
+                          style: TextStyle(color: Colors.red, fontSize: 14)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: dateController,
+                          readOnly: true,
+                          onTap: () async {
+                            await _selectDate(context);
+                            if (context.mounted) {
+                              await _selectTime(context);
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Datum',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: timeController,
+                          readOnly: true,
+                          onTap: () async {
                             await _selectTime(context);
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Datum',
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Uhrzeit',
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: timeController,
-                        readOnly: true,
-                        onTap: () async {
-                          await _selectTime(context);
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Uhrzeit',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -428,9 +487,9 @@ class DesiredDateTimeInput extends StatelessWidget {
     );
 
     if (pickedTime != null) {
-      // Runden der Minuten auf den nächsten 15-Minuten-Takt
-      final int roundedMinute = ((pickedTime.minute + 7) ~/ 15 * 15) % 60;
-      final int additionalHour = ((pickedTime.minute + 7) ~/ 15 * 15) ~/ 60;
+      // Runden der Minuten auf den nächsten 30-Minuten-Takt
+      final int roundedMinute = ((pickedTime.minute + 15) ~/ 30 * 30) % 60;
+      final int additionalHour = ((pickedTime.minute + 15) ~/ 30 * 30) ~/ 60;
       final TimeOfDay adjustedTime = TimeOfDay(
           hour: (pickedTime.hour + additionalHour) % 24, minute: roundedMinute);
 
