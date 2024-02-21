@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swim_generator_app/swim_generator/models/config_app.dart';
 import 'package:swim_generator_app/swim_generator/models/date_selection.dart';
+import 'package:swim_generator_app/swim_generator/models/school_info.dart';
 
 import '../models/models.dart';
 import '../pages/swim_level/models/models.dart';
@@ -42,9 +43,9 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
   void updateSwimLevel(SwimLevelEnum? swimLevel, SwimSeason? swimSeason) {
     emit(state.copyWith(
         swimLevel: state.swimLevel.copyWith(
-      swimLevel: swimLevel,
-      swimSeason: swimSeason,
-    )));
+          swimLevel: swimLevel,
+          swimSeason: swimSeason,
+        )));
   }
 
   void updateBirthDay(DateTime? birthDay) {
@@ -77,6 +78,7 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
     bool? isDirectLinks,
     bool? isEmailExists,
     String? referenceBooking,
+    SchoolInfo? schoolInfo,
   }) {
     emit(
       state.copyWith(
@@ -86,7 +88,8 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
           isDirectLinks: isDirectLinks ?? state.configApp.isDirectLinks,
           isEmailExists: isEmailExists ?? state.configApp.isEmailExists,
           referenceBooking:
-              referenceBooking ?? state.configApp.referenceBooking,
+          referenceBooking ?? state.configApp.referenceBooking,
+          schoolInfo: schoolInfo ?? state.configApp.schoolInfo,
         ),
       ),
     );

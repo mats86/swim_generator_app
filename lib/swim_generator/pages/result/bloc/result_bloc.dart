@@ -114,8 +114,7 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
             event.completeSwimCourseBookingInput.studentFirstName,
             studentLastName:
             event.completeSwimCourseBookingInput.studentLastName,
-            birthDate:
-            event.completeSwimCourseBookingInput.birthDate,
+            birthDate: event.completeSwimCourseBookingInput.birthDate,
             swimCourseID: event.completeSwimCourseBookingInput.swimCourseID,
             swimPoolIDs: event.completeSwimCourseBookingInput.swimPoolIDs,
             referenceBooking:
@@ -125,10 +124,24 @@ class ResultBloc extends Bloc<ResultEvent, ResultState> {
         );
       } else {
         bSuccess = await service.createContact(event.contactInputBrevo);
+        if (!bSuccess) {
+          // if Handynummer not valid, save without Handynummer
+          bSuccess = await service.createContact(CreateContactInput(
+            email: event.contactInputBrevo.email,
+            firstName: event.contactInputBrevo.firstName,
+            lastName: event.contactInputBrevo.lastName,
+            sms: '',
+            listIds: [2],
+            emailBlacklisted: false,
+            smsBlacklisted: false,
+            updateEnabled: false,
+            smtpBlacklistSender: [event.contactInputBrevo.email],
+          ));
+        }
         bSuccess = await service.executeCreateCompleteSwimCourseBooking(
             event.completeSwimCourseBookingInput);
       }
-      if (bSuccess ) {
+      if (bSuccess) {
         emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
       }
     }

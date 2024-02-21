@@ -23,9 +23,9 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
   }
 
   void _onBirthDayChanged(
-    BirthDayChanged event,
-    Emitter<BirthDayState> emit,
-  ) async {
+      BirthDayChanged event,
+      Emitter<BirthDayState> emit,
+      ) async {
     final birthDay = BirthDayModel.dirty(event.birthDay);
     emit(
       state.copyWith(
@@ -60,14 +60,16 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
   }
 
   void _onCancelAlert(
-      CancelAlert event, Emitter<BirthDayState> emit,
+      CancelAlert event,
+      Emitter<BirthDayState> emit,
       ) {
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
   }
+
   void _onFormSubmitted(
-    FormSubmitted event,
-    Emitter<BirthDayState> emit,
-  ) async {
+      FormSubmitted event,
+      Emitter<BirthDayState> emit,
+      ) async {
     final birthDay = BirthDayModel.dirty(state.birthDay.value);
     emit(
       state.copyWith(birthDay: birthDay, isValid: Formz.validate([birthDay])),
@@ -78,7 +80,7 @@ class BirthDayBloc extends Bloc<BirthDayEvent, BirthDayState> {
       if (event.isDirectLinks) {
         emit(state.copyWith(
           autoSelectedCourse:
-              await service.getSwimCourseById(event.swimCourseID),
+          await service.getSwimCourseById(event.swimCourseID),
         ));
         if ((age >= state.autoSelectedCourse.swimCourseMinAge) &&
             (age <= state.autoSelectedCourse.swimCourseMaxAge)) {

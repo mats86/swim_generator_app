@@ -1,43 +1,21 @@
-import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:formz/formz.dart';
-import 'package:intl/intl.dart';
-import 'package:swim_generator_app/swim_generator/pages/swim_level/bloc/swim_level_bloc.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
-import '../../../models/school_info.dart';
-import '../../../models/swim_level.dart';
-import '../models/swim_level_model.dart';
-import '../models/swim_level_radio_button.dart';
-import '../models/swim_season.dart';
 
-class SwimLevelForm extends StatefulWidget {
-  final bool isDirectLinks;
-  final SchoolInfo schoolInfo;
-
-  const SwimLevelForm({
+class SwimSeasonForm extends StatefulWidget {
+  const SwimSeasonForm({
     super.key,
-    required this.isDirectLinks,
-    required this.schoolInfo,
   });
 
   @override
-  State<SwimLevelForm> createState() => _SwimLevelForm();
+  State<SwimSeasonForm> createState() => _SwimSeasonForm();
 }
 
-class _SwimLevelForm extends State<SwimLevelForm> {
-  String _getReferrer() {
-    String referrer = js.context.callMethod('getReferrer');
-    return referrer;
-  }
-
+class _SwimSeasonForm extends State<SwimSeasonForm> {
   @override
   void initState() {
     super.initState();
-    context.read<SwimLevelBloc>().add(IsDirectLinks(widget.isDirectLinks));
-
     // DateTime now = DateTime(2024, 3, 1, 00, 01);
     DateTime now = DateTime.now();
     int year = now.year;
@@ -48,7 +26,6 @@ class _SwimLevelForm extends State<SwimLevelForm> {
     DateTime startFixDate = DateTime(year, 2, 1, 00, 00);
 
     context.read<SwimGeneratorCubit>().updateConfigApp(
-          isDirectLinks: widget.isDirectLinks,
           isBooking: now.isAfter(startSeason) && now.isBefore(endSeason)
               ? true
               : false,
@@ -56,35 +33,11 @@ class _SwimLevelForm extends State<SwimLevelForm> {
               ? true
               : false,
           isEmailExists: false,
-          referenceBooking: _getReferrer() == ''
-              ? 'https://wassermenschen.org/'
-              : _getReferrer(),
-          schoolInfo: widget.schoolInfo,
         );
-
-    SwimLevelEnum swimLevel =
-        context.read<SwimGeneratorCubit>().state.swimLevel.swimLevel!;
-    if (swimLevel != SwimLevelEnum.UNDEFINED) {
-      context.read<SwimLevelBloc>().add(SwimLevelChanged(
-          SwimLevelModel.dirty(SwimLevelEnum.values[swimLevel.index])));
-    }
-    if (context
-            .read<SwimGeneratorCubit>()
-            .state
-            .swimLevel
-            .swimSeason
-            ?.refDate !=
-        null) {
-      context.read<SwimLevelBloc>().add(SwimSeasonChanged(
-          context.read<SwimGeneratorCubit>().state.swimLevel.swimSeason!.name,
-          context.read<SwimGeneratorCubit>().state.swimLevel.swimSeason!,
-          widget.isDirectLinks));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SwimLevelBloc, SwimLevelState>(
+    return BlocListener<SwimSeasonBloc, SwimSeasonState>(
       listener: (context, state) {
         if (state.submissionStatus.isFailure) {
           ScaffoldMessenger.of(context)

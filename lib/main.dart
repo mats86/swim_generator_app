@@ -4,6 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:swim_generator_app/db_manager/pages/db_fix_date/view/db_fix_date_page.dart';
 import 'package:swim_generator_app/db_manager/pages/db_swim_course/view/db_swim_course_page.dart';
 import 'package:swim_generator_app/db_manager/view/db_manager_page.dart';
+import 'package:swim_generator_app/swim_generator/models/school_info.dart';
 import 'package:swim_generator_app/swim_generator/swim_generator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_web/webview_flutter_web.dart';
@@ -52,7 +53,8 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/', // /db_fix_date?ref=50&code=40    '/?ref=10&code=10'
+      initialRoute:
+      '/?ref=allgaeu', // /db_fix_date?ref=50&code=40    '/?ref=10&code=10'
       onGenerateRoute: _generateRoute,
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
@@ -192,6 +194,7 @@ class AppView extends StatelessWidget {
             specialFeatureMode: SpecialFeatureMode.disabled,
             swimCourseID: 0,
             isDirectLinks: false,
+            schoolInfo: SchoolInfo.fromRef(ref ?? ''),
           ),
         );
     }
@@ -202,6 +205,7 @@ class AppView extends StatelessWidget {
       specialFeatureMode: mode,
       swimCourseID: swimCourseID,
       isDirectLinks: isDirectLinks,
+      schoolInfo: SchoolInfo.fromRef(ref ?? ''),
     );
 
     return MaterialPageRoute(builder: (_) => page);
@@ -215,6 +219,7 @@ class MyHomePage extends StatelessWidget {
   final List<int> order;
   final int swimCourseID;
   final bool isDirectLinks;
+  final SchoolInfo schoolInfo;
 
   MyHomePage({
     super.key,
@@ -223,6 +228,7 @@ class MyHomePage extends StatelessWidget {
     this.specialFeatureMode = SpecialFeatureMode.disabled,
     this.swimCourseID = 0,
     this.isDirectLinks = true,
+    this.schoolInfo = const SchoolInfo(),
   }) : order = _generateOrder(specialFeatureMode);
 
   static List<int> _generateOrder(SpecialFeatureMode mode) {
@@ -289,6 +295,7 @@ class MyHomePage extends StatelessWidget {
         order: order,
         swimCourseID: swimCourseID,
         isDirectLinks: isDirectLinks,
+        schoolInfo: schoolInfo,
       ),
     );
   }

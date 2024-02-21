@@ -175,7 +175,7 @@ class _SwimCourseRadioButton extends StatelessWidget {
                                       children: [
                                         Text(
                                           '${state.swimCourseOptions[index].swimCourseName} '
-                                          'AB ${state.swimCourseOptions[index].swimCoursePrice} €',
+                                          'ab ${state.swimCourseOptions[index].swimCoursePrice} €',
                                           overflow: TextOverflow.visible,
                                         ),
                                       ],
