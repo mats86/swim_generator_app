@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../swim_generator/pages/date_selection/model/model.dart';
+import '../../../../swim_generator/pages/swim_course/models/swim_course.dart';
 import '../bloc/db_fix_date_bloc.dart';
 
 class DbFixDateForm extends StatefulWidget {
@@ -21,6 +22,7 @@ class _DbFixDateForm extends State<DbFixDateForm> {
   void initState() {
     super.initState();
     context.read<DbFixDateBloc>().add(LoadFixDateOptions());
+    context.read<DbFixDateBloc>().add(LoadSwimCourseOptions());
   }
 
   @override
@@ -47,98 +49,99 @@ class ExpandableListViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DbFixDateBloc, DbFixDateState>(
         builder: (context, state) {
-      return !state.loadingFixDateStatus.isSuccess
-          ? const SpinKitWaveSpinner(
-              color: Colors.lightBlueAccent,
-              size: 50.0,
-            )
-          : Scaffold(
-              appBar: AppBar(
-                title: const Text('Beispiel AppBar'),
-                actions: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Buchungsdetails'),
-                            content: const SingleChildScrollView(
-                              child: SwimForm(),
+          return !state.loadingFixDateStatus.isSuccess
+              ? const SpinKitWaveSpinner(
+            color: Colors.lightBlueAccent,
+            size: 50.0,
+          )
+              : Scaffold(
+            appBar: AppBar(
+              title: const Text('Beispiel AppBar'),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    final myBloc = BlocProvider.of<DbFixDateBloc>(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Buchungsdetails'),
+                          content: SingleChildScrollView(
+                            child: SwimForm(myBloc: myBloc),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Abbrechen'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Abbrechen'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: const Text('Buchen'),
-                                onPressed: () {
-                                  // Hier Logik zum Buchen hinzufügen
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-              body: SfDataGrid(
-                source: FixDateDataSource(fixDateData: state.fixDateOptions),
-                columnWidthMode: ColumnWidthMode.fill,
-                columns: <GridColumn>[
-                  GridColumn(
-                      columnName: 'fixDateID',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('ID'),
-                      )),
-                  GridColumn(
-                      columnName: 'swimPoolID',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('PoolID'),
-                      )),
-                  GridColumn(
-                      columnName: 'swimCourseID',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('CourseID'),
-                      )),
-                  GridColumn(
-                      columnName: 'fixDateFrom',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('From'),
-                      )),
-                  GridColumn(
-                      columnName: 'fixDateTo',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('To'),
-                      )),
-                  GridColumn(
-                      columnName: 'isFixDateActive',
-                      label: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const Text('isActive'),
-                      )),
-                ],
-              ),
-            );
-    });
+                            TextButton(
+                              child: const Text('Buchen'),
+                              onPressed: () {
+                                // Hier Logik zum Buchen hinzufügen
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+            body: SfDataGrid(
+              source: FixDateDataSource(fixDateData: state.fixDateOptions),
+              columnWidthMode: ColumnWidthMode.fill,
+              columns: <GridColumn>[
+                GridColumn(
+                    columnName: 'fixDateID',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('ID'),
+                    )),
+                GridColumn(
+                    columnName: 'swimPoolID',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('PoolID'),
+                    )),
+                GridColumn(
+                    columnName: 'swimCourseID',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('CourseID'),
+                    )),
+                GridColumn(
+                    columnName: 'fixDateFrom',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('From'),
+                    )),
+                GridColumn(
+                    columnName: 'fixDateTo',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('To'),
+                    )),
+                GridColumn(
+                    columnName: 'isFixDateActive',
+                    label: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      alignment: Alignment.center,
+                      child: const Text('isActive'),
+                    )),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -147,20 +150,20 @@ class FixDateDataSource extends DataGridSource {
   FixDateDataSource({required List<FixDateDetail> fixDateData}) {
     _fixDateData = fixDateData
         .map<DataGridRow>((fixDate) => DataGridRow(cells: [
-              DataGridCell<int>(
-                  columnName: 'fixDateID', value: fixDate.fixDateID),
-              DataGridCell<String>(
-                  columnName: 'swimPoolID', value: fixDate.swimPoolName),
-              DataGridCell<String>(
-                  columnName: 'swimCourseID', value: fixDate.swimCourseName),
-              DataGridCell<DateTime?>(
-                  columnName: 'fixDateFrom', value: fixDate.fixDateFrom),
-              DataGridCell<DateTime?>(
-                  columnName: 'fixDateTo', value: fixDate.fixDateTo),
-              DataGridCell<bool>(
-                  columnName: 'isFixDateActive',
-                  value: fixDate.isFixDateActive),
-            ]))
+      DataGridCell<int>(
+          columnName: 'fixDateID', value: fixDate.fixDateID),
+      DataGridCell<String>(
+          columnName: 'swimPoolID', value: fixDate.swimPoolName),
+      DataGridCell<String>(
+          columnName: 'swimCourseID', value: fixDate.swimCourseName),
+      DataGridCell<DateTime?>(
+          columnName: 'fixDateFrom', value: fixDate.fixDateFrom),
+      DataGridCell<DateTime?>(
+          columnName: 'fixDateTo', value: fixDate.fixDateTo),
+      DataGridCell<bool>(
+          columnName: 'isFixDateActive',
+          value: fixDate.isFixDateActive),
+    ]))
         .toList();
   }
 
@@ -173,17 +176,18 @@ class FixDateDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8.0),
-        child: Text(dataGridCell.value.toString()),
-      );
-    }).toList());
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: Text(dataGridCell.value.toString()),
+          );
+        }).toList());
   }
 }
 
 class SwimForm extends StatefulWidget {
-  const SwimForm({super.key});
+  final DbFixDateBloc myBloc;
+  const SwimForm({super.key, required this.myBloc});
 
   @override
   SwimFormState createState() => SwimFormState();
@@ -196,33 +200,14 @@ class SwimFormState extends State<SwimForm> {
   TimeOfDay? timeFrom;
   TimeOfDay? timeTo;
 
-  List<String> swimCourses = [
-    'Kraulen',
-    'Brustschwimmen',
-    'Schmetterling',
-    'Rücken'
-  ];
   List<String> swimPools = ['Pool A', 'Pool B', 'Pool C', 'Pool D'];
-
+  late String selectedSwimCourseID = "";
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DropdownButton<String>(
-          hint: const Text('Wähle Schwimmkurs'),
-          value: selectedSwimCourse,
-          onChanged: (newValue) {
-            setState(() {
-              selectedSwimCourse = newValue;
-            });
-          },
-          items: swimCourses.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
+        SwimCourseDropdown(
+            swimCourseOptions: widget.myBloc.state.swimCourseOptions),
         DropdownButton<String>(
           hint: const Text('Wähle Schwimmbad'),
           value: selectedSwimPool,
@@ -272,7 +257,7 @@ class SwimFormState extends State<SwimForm> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime:
-          isFrom ? timeFrom ?? TimeOfDay.now() : timeTo ?? TimeOfDay.now(),
+      isFrom ? timeFrom ?? TimeOfDay.now() : timeTo ?? TimeOfDay.now(),
     );
     if (picked != null) {
       setState(() {
@@ -283,5 +268,41 @@ class SwimFormState extends State<SwimForm> {
         }
       });
     }
+  }
+}
+
+class SwimCourseDropdown extends StatefulWidget {
+  final List<SwimCourse> swimCourseOptions;
+
+  const SwimCourseDropdown({super.key, required this.swimCourseOptions});
+
+  @override
+  SwimCourseDropdownState createState() => SwimCourseDropdownState();
+}
+
+class SwimCourseDropdownState extends State<SwimCourseDropdown> {
+  int? selectedCourseId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: DropdownButton<int>(
+          hint: const Text("Select Swim Course"),
+          value: selectedCourseId,
+          onChanged: (newValue) {
+            setState(() {
+              selectedCourseId = newValue;
+            });
+          },
+          isExpanded: true, // Add this line
+          items: widget.swimCourseOptions.map((SwimCourse course) {
+            String displayName = course.swimCourseName +
+                ((course.swimLevelID == 2) ? " - AUFSTEIGER" : "");
+            return DropdownMenuItem<int>(
+              value: course.swimCourseID,
+              child: Text(displayName),
+            );
+          }).toList(),
+        ));
   }
 }

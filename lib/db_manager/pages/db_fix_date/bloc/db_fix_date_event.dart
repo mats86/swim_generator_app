@@ -8,3 +8,5 @@ abstract class DbFixDateEvent extends Equatable {
 }
 
 class LoadFixDateOptions extends DbFixDateEvent {}
+
+class LoadSwimCourseOptions extends DbFixDateEvent {}

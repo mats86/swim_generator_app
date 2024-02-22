@@ -22,7 +22,7 @@ class DbSwimCourseBloc extends Bloc<DbSwimCourseEvent, DbSwimCourseState> {
       LoadSwimCourseOptions event, Emitter<DbSwimCourseState> emit) async {
     emit(state.copyWith(loadingCourseStatus: FormzSubmissionStatus.inProgress));
     try {
-      final swimCourses = await service.getSwimCourse();
+      final swimCourses = await service.getSwimCourses();
       emit(state.copyWith(
           swimCourseOptions: swimCourses,
           loadingCourseStatus: FormzSubmissionStatus.success));

@@ -1,6 +1,6 @@
 class GraphQLQueries {
-  static const String getSwimCourse = '''
-  query getSwimCourse() {
+  static const String getSwimCourses = '''
+  query getSwimCourses() {
     swimCourses() {
       swimCourseID
       swimCourseName
@@ -16,6 +16,8 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      isAdultCourse
+      isGroupCourse
     }
   }
 ''';

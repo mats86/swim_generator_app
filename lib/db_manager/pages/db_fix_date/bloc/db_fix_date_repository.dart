@@ -5,10 +5,6 @@ class DbFixDateRepository {
 
   DbFixDateRepository({required this.graphQLClient});
 
-  Future<List<String>> fetchSwimSeason() async {
-    return <String>['Laufender Sommer', 'Kommender Sommer'];
-  }
-
   Future<List<FixDate>> getFixDates() async {
     final QueryOptions options = QueryOptions(
       document: gql(GraphQLQueries.getFixDates),
@@ -35,5 +31,20 @@ class DbFixDateRepository {
     List<dynamic> coursesJson = result.data!['fixDatesWithDetails'];
     // Konvertieren Sie jeden JSON-Eintrag in ein SwimCourse-Objekt
     return coursesJson.map((json) => FixDateDetail.fromJson(json)).toList();
+  }
+
+  Future<List<SwimCourse>> getSwimCourses() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(GraphQLQueries
+          .getSwimCourses), // Stellen Sie sicher, dass Sie die korrekte Query hier haben
+    );
+
+    final result = await graphQLClient.query(options);
+    if (result.hasException) {
+      throw result.exception!;
+    }
+
+    List<dynamic> jsonList = result.data!['swimCourses'] as List<dynamic>;
+    return jsonList.map((json) => SwimCourse.fromJson(json)).toList();
   }
 }

@@ -9,9 +9,9 @@ class DbSwimCourseRepository {
     return <String>['Laufender Sommer', 'Kommender Sommer'];
   }
 
-  Future<List<SwimCourse>> getSwimCourse() async {
+  Future<List<SwimCourse>> getSwimCourses() async {
     final QueryOptions options = QueryOptions(
-      document: gql(GraphQLQueries.getSwimCourse),
+      document: gql(GraphQLQueries.getSwimCourses),
     );
 
     final result = await graphQLClient.query(options);
@@ -80,7 +80,7 @@ class DbSwimCourseRepository {
 
     // Hier nehmen wir an, dass die Antwort eine Liste von Kursen ist
     List<dynamic> coursesJson =
-        result.data!['swimCoursesByLevelNameAndFutureAge'];
+    result.data!['swimCoursesByLevelNameAndFutureAge'];
 
     // Konvertieren Sie jeden JSON-Eintrag in ein SwimCourse-Objekt
     return coursesJson.map((json) => SwimCourse.fromJson(json)).toList();
