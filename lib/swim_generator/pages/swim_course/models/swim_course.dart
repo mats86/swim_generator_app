@@ -13,6 +13,7 @@ class SwimCourse {
   final DateTime? swimCourseEndBooking;
   final DateTime? swimCourseStartVisible;
   final DateTime? swimCourseEndVisible;
+  final String? swimCourseUrl;
   final bool isAdultCourse;
   final bool isGroupCourse;
 
@@ -31,6 +32,7 @@ class SwimCourse {
     required this.swimCourseEndBooking,
     required this.swimCourseStartVisible,
     required this.swimCourseEndVisible,
+    required this.swimCourseUrl,
     required this.isAdultCourse,
     required this.isGroupCourse,
   });
@@ -59,6 +61,7 @@ class SwimCourse {
       swimCourseEndVisible: json['swimCourseEndVisible'] != null
           ? DateTime.parse(json['swimCourseEndVisible'])
           : null,
+      swimCourseUrl: json['swimCourseUrl'],
       isAdultCourse: json['isAdultCourse'],
       isGroupCourse: json['isGroupCourse'],
     );
@@ -79,6 +82,7 @@ class SwimCourse {
         swimCourseEndBooking = null,
         swimCourseStartVisible = null,
         swimCourseEndVisible = null,
+        swimCourseUrl = "",
         isAdultCourse = false,
         isGroupCourse = false;
 
@@ -97,6 +101,7 @@ class SwimCourse {
         swimCourseEndBooking == null &&
         swimCourseStartVisible == null &&
         swimCourseEndVisible == null &&
+        swimCourseUrl == "" &&
         isAdultCourse == false &&
         isGroupCourse == false;
   }

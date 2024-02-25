@@ -16,6 +16,7 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      swimCourseUrl
       isAdultCourse
       isGroupCourse
     }
@@ -39,6 +40,9 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      swimCourseUrl
+      isAdultCourse
+      isGroupCourse
     }
   }
 ''';
@@ -60,6 +64,9 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      swimCourseUrl
+      isAdultCourse
+      isGroupCourse
     }
   }
 ''';
@@ -81,6 +88,7 @@ class GraphQLQueries {
       swimCourseEndBooking
       swimCourseStartVisible
       swimCourseEndVisible
+      swimCourseUrl
       isAdultCourse
       isGroupCourse
     }

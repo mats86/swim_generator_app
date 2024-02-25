@@ -24,15 +24,6 @@ class SwimLevelChanged extends SwimLevelEvent {
   List<Object> get props => [swimLevelModel];
 }
 
-class LoadSwimSeasonOptions extends SwimLevelEvent {
-  final List<SwimSeason> swimSeasonOptions;
-
-  const LoadSwimSeasonOptions(this.swimSeasonOptions);
-
-  @override
-  List<Object> get props => [swimSeasonOptions];
-}
-
 class LoadSwimLevelOptions extends SwimLevelEvent {
   final List<SwimLevelRadioButton> swimLevelOptions;
 
@@ -40,17 +31,6 @@ class LoadSwimLevelOptions extends SwimLevelEvent {
 
   @override
   List<Object> get props => [swimLevelOptions];
-}
-
-class SwimSeasonChanged extends SwimLevelEvent {
-  final String swimSeasonName;
-  final SwimSeason season;
-  final bool isDirectLinks;
-
-  const SwimSeasonChanged(this.swimSeasonName, this.season, this.isDirectLinks);
-
-  @override
-  List<Object> get props => [swimSeasonName, season, isDirectLinks];
 }
 
 class SwimLevelRBChanged extends SwimLevelEvent {

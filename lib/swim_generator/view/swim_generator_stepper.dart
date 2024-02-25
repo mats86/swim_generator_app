@@ -4,6 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:swim_generator_app/swim_generator/models/school_info.dart';
 import 'package:swim_generator_app/swim_generator/pages/date_selection/view/date_selection_page.dart';
+import 'package:swim_generator_app/swim_generator/pages/swim_season/view/swim_season_page.dart';
 import 'package:swim_generator_app/swim_generator/view/swim_generator_form_shell.dart';
 
 import '../cubit/swim_generator_cubit.dart';
@@ -32,7 +33,7 @@ class SwimGeneratorStepper extends StatelessWidget {
         List<int> generateStepNumbers(int length, bool isAdultCourse) {
           List<int> steps = List.generate(length, (index) => index + 1);
           if (isAdultCourse) {
-            steps.removeLast(); // Entferne den Kinder Step aus der Liste
+            steps.removeLast();
           }
           return steps;
         }
@@ -116,32 +117,35 @@ class SwimGeneratorStepper extends StatelessWidget {
         }
 
       case 1:
-        return 'Geburtsdatum';
+        return 'TERMIN-WAHL';
 
       case 2:
-        return 'Schwimmkurs';
+        return 'Geburtsdatum';
 
       case 3:
-        return 'Schwimmbad';
+        return 'Schwimmkurs';
 
       case 4:
+        return 'Schwimmbad';
+
+      case 5:
         if (isBooking) {
           return 'TERMINWAHL';
         } else {
           return 'Hinweis Verein';
         }
 
-      case 5:
+      case 6:
         return 'DATEN zum SCHWIMSCHÜLER:IN';
 
-      case 6:
+      case 7:
         if (isAdultCourse) {
           return 'Deine erfassten Daten';
         } else {
           return 'Erziehungsberechtigten Information';
         }
 
-      case 7:
+      case 8:
         return 'Deine erfassten Daten';
 
       default:
@@ -167,21 +171,24 @@ class SwimGeneratorStepper extends StatelessWidget {
         );
 
       case 1:
+        return const SwimSeasonPage();
+
+      case 2:
         return BirthDayPage(
           swimCourseID: swimCourseID,
           graphQLClient: graphQLClient,
         );
 
-      case 2:
+      case 3:
         return SwimCoursePage(graphQLClient: graphQLClient);
 
-      case 3:
+      case 4:
         return SwimPoolPage(graphQLClient: graphQLClient);
 
-      case 4:
+      case 5:
         return DateSelectionPage(graphQLClient: graphQLClient);
 
-      case 5:
+      case 6:
         if (isAdultCourse) {
           return ParentPersonalInfoPage(
             graphQLClient: graphQLClient,
@@ -190,7 +197,7 @@ class SwimGeneratorStepper extends StatelessWidget {
           return const KindPersonalInfoPage();
         }
 
-      case 6:
+      case 7:
         if (isAdultCourse) {
           return ResultPage(graphQLClient: graphQLClient);
         } else {
@@ -199,7 +206,7 @@ class SwimGeneratorStepper extends StatelessWidget {
           );
         }
 
-      case 7:
+      case 8:
         return ResultPage(graphQLClient: graphQLClient);
 
       default:

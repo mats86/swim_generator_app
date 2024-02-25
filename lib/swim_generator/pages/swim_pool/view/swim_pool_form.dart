@@ -5,7 +5,6 @@ import 'package:formz/formz.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../../../models/swim_pool_info.dart';
-import '../../swim_level/models/swim_season.dart';
 import '../bloc/swim_pool_bloc.dart';
 
 class SwimPoolForm extends StatefulWidget {
@@ -22,9 +21,6 @@ class _SwimPoolForm extends State<SwimPoolForm> {
     final swimGeneratorCubit = context.read<SwimGeneratorCubit>();
     final swimPools = swimGeneratorCubit.state.swimPools;
 
-    context.read<SwimPoolBloc>().add(SwimPoolLoading(
-        swimGeneratorCubit.state.swimLevel.swimSeason?.swimSeasonEnum ==
-            SwimSeasonEnum.BUCHEN));
     context.read<SwimPoolBloc>().add(LoadSwimPools(
         swimGeneratorCubit.state.swimCourseInfo.swimCourse.swimCourseID));
 
@@ -105,54 +101,54 @@ class _SwimPoolCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SwimPoolBloc, SwimPoolState>(
         buildWhen: (previous, current) =>
-            previous.swimPools != current.swimPools,
+        previous.swimPools != current.swimPools,
         builder: (context, state) {
           return !state.loadingStatus.isSuccess
               ? const SpinKitWaveSpinner(
-                  color: Colors.lightBlueAccent,
-                  size: 50.0,
-                )
+            color: Colors.lightBlueAccent,
+            size: 50.0,
+          )
               : Card(
-                  elevation: 4.0,
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ListView.separated(
-                        separatorBuilder: (_, __) =>
-                            Divider(color: Colors.grey[300]),
-                        key: const Key('SwimPoolForm_swimPoolList_listView'),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: state.swimPools.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                flex: 9,
-                                child: CheckboxListTile(
-                                    activeColor: Colors.lightBlueAccent,
-                                    key: Key(
-                                        state.swimPools[index].swimPoolName),
-                                    controlAffinity:
-                                        ListTileControlAffinity.leading,
-                                    title: Text(
-                                        state.swimPools[index].swimPoolName),
-                                    onChanged: (val) {
-                                      BlocProvider.of<SwimPoolBloc>(context)
-                                          .add(SwimPoolOptionToggled(
-                                              index, val!));
-                                    },
-                                    value: state.swimPools[index].isSelected),
-                              ),
-                              const SizedBox(
-                                width: 8.0,
-                              )
-                            ],
-                          );
-                        }),
-                  ),
-                );
+            elevation: 4.0,
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView.separated(
+                  separatorBuilder: (_, __) =>
+                      Divider(color: Colors.grey[300]),
+                  key: const Key('SwimPoolForm_swimPoolList_listView'),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: state.swimPools.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          flex: 9,
+                          child: CheckboxListTile(
+                              activeColor: Colors.lightBlueAccent,
+                              key: Key(
+                                  state.swimPools[index].swimPoolName),
+                              controlAffinity:
+                              ListTileControlAffinity.leading,
+                              title: Text(
+                                  state.swimPools[index].swimPoolName),
+                              onChanged: (val) {
+                                BlocProvider.of<SwimPoolBloc>(context)
+                                    .add(SwimPoolOptionToggled(
+                                    index, val!));
+                              },
+                              value: state.swimPools[index].isSelected),
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        )
+                      ],
+                    );
+                  }),
+            ),
+          );
         });
   }
 }
@@ -162,7 +158,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SwimPoolBloc, SwimPoolState>(
       listenWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+      previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
@@ -180,31 +176,31 @@ class _SubmitButton extends StatelessWidget {
         }
       },
       buildWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+      previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
         final isValid =
-            context.select((SwimPoolBloc bloc) => bloc.state.isValid);
+        context.select((SwimPoolBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
-                color: Colors.lightBlueAccent,
-                size: 50.0,
-              )
+          color: Colors.lightBlueAccent,
+          size: 50.0,
+        )
             : ElevatedButton(
-                key: const Key('swimCourseForm_submitButton_elevatedButton'),
-                style: ElevatedButton.styleFrom(
-                    elevation: 0, backgroundColor: Colors.lightBlueAccent),
-                onPressed: isValid
-                    ? () => context.read<SwimPoolBloc>().add(FormSubmitted())
-                    : null,
-                child: const Text(
-                  'Weiter',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
+          key: const Key('swimCourseForm_submitButton_elevatedButton'),
+          style: ElevatedButton.styleFrom(
+              elevation: 0, backgroundColor: Colors.lightBlueAccent),
+          onPressed: isValid
+              ? () => context.read<SwimPoolBloc>().add(FormSubmitted())
+              : null,
+          child: const Text(
+            'Weiter',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
       },
     );
   }
@@ -215,16 +211,16 @@ class _CancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SwimPoolBloc, SwimPoolState>(
         buildWhen: (previous, current) =>
-            previous.toggleStatus != current.toggleStatus,
+        previous.toggleStatus != current.toggleStatus,
         builder: (context, state) {
           return state.toggleStatus.isInProgress
               ? const SizedBox.shrink()
               : TextButton(
-                  key: const Key('swimCourseForm_cancelButton_elevatedButton'),
-                  onPressed: () =>
-                      context.read<SwimGeneratorCubit>().stepCancelled(),
-                  child: const Text('Zurück'),
-                );
+            key: const Key('swimCourseForm_cancelButton_elevatedButton'),
+            onPressed: () =>
+                context.read<SwimGeneratorCubit>().stepCancelled(),
+            child: const Text('Zurück'),
+          );
         });
   }
 }

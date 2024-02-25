@@ -5,7 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:swim_generator_app/swim_generator/pages/swim_course/models/swim_course.dart';
 
 import '../../../../graphql/graphql_queries.dart';
-import '../models/birth_day_model.dart';
+import '../models/models.dart';
 
 part 'birth_day_event.dart';
 

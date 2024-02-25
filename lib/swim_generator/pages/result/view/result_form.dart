@@ -5,12 +5,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:swim_generator_app/swim_generator/models/swim_level.dart';
-import 'package:swim_generator_app/swim_generator/pages/pages.dart';
 import 'package:swim_generator_app/swim_generator/pages/result/bloc/result_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
+import '../../swim_season/models/swim_season.dart';
 import '../models/create_contact_input.dart';
 import '../models/models.dart';
 
@@ -28,7 +28,7 @@ class _ResultForm extends State<ResultForm> {
     context.read<ResultBloc>().add(ResultLoading(context
         .read<SwimGeneratorCubit>()
         .state
-        .swimLevel
+        .swimSeasonInfo
         .swimSeason
         ?.swimSeasonEnum ==
         SwimSeasonEnum.BUCHEN));
@@ -619,7 +619,7 @@ class _SubmitButton extends StatelessWidget {
                   pcfield1: context
                       .read<SwimGeneratorCubit>()
                       .state
-                      .swimLevel
+                      .swimSeasonInfo
                       .swimSeason!
                       .refDate!
                       .year

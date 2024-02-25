@@ -2,10 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-import '../../swim_course/models/swim_season_model.dart';
-import '../models/swim_level_model.dart';
-import '../models/swim_level_radio_button.dart';
-import '../models/swim_season.dart';
+import '../models/models.dart';
 
 part 'swim_level_event.dart';
 
@@ -15,9 +12,7 @@ class SwimLevelBloc extends Bloc<SwimLevelEvent, SwimLevelState> {
   SwimLevelBloc() : super(const SwimLevelState()) {
     on<IsDirectLinks>(_onIsDirectLinks);
     on<SwimLevelChanged>(_onSwimLevelChanged);
-    on<LoadSwimSeasonOptions>(_onLoadSwimSeasonOptions);
     on<LoadSwimLevelOptions>(_onLoadSwimLevelOptions);
-    on<SwimSeasonChanged>(_onSwimSeasonChanged);
     on<SwimLevelRBChanged>(_onSwimLevelRBChanged);
     on<SwimLevelOptionCheckboxChanged>(_onSwimLevelOptionCheckboxChanged);
     on<FormSubmitted>(_onFormSubmitted);
@@ -39,14 +34,9 @@ class SwimLevelBloc extends Bloc<SwimLevelEvent, SwimLevelState> {
     emit(
       state.copyWith(
         swimLevelModel: swimLevelModel,
-        isValid: Formz.validate([swimLevelModel, state.swimSeason]),
+        isValid: Formz.validate([swimLevelModel]),
       ),
     );
-  }
-
-  void _onLoadSwimSeasonOptions(
-      LoadSwimSeasonOptions event, Emitter<SwimLevelState> emit) {
-    emit(state.copyWith(swimSeasonOptions: event.swimSeasonOptions));
   }
 
   void _onLoadSwimLevelOptions(
@@ -54,27 +44,9 @@ class SwimLevelBloc extends Bloc<SwimLevelEvent, SwimLevelState> {
     emit(state.copyWith(swimLevelOptions: event.swimLevelOptions));
   }
 
-  void _onSwimSeasonChanged(
-      SwimSeasonChanged event, Emitter<SwimLevelState> emit) {
-    final swimSeason = SwimSeasonModel.dirty(event.swimSeasonName);
-    emit(
-      state.copyWith(
-        swimSeason: swimSeason,
-        selectedSwimSeason: event.season,
-        isValid: event.isDirectLinks
-            ? Formz.validate(
-          [swimSeason],
-        )
-            : Formz.validate(
-          [state.swimLevelModel, swimSeason],
-        ),
-      ),
-    );
-  }
-
   void _onSwimLevelRBChanged(
       SwimLevelRBChanged event, Emitter<SwimLevelState> emit) {
-    final swimLevel = SwimSeasonModel.dirty(event.swimLevelName);
+    final swimLevel = SwimLevelRBModel.dirty(event.swimLevelName);
     emit(
       state.copyWith(
           swimLevelRB: swimLevel, selectedSeimLevelRB: event.swimLeveRB),
@@ -101,12 +73,8 @@ class SwimLevelBloc extends Bloc<SwimLevelEvent, SwimLevelState> {
     emit(
       state.copyWith(
         swimLevelModel: swimLevelModel,
-        isValid: state.isDirectLinks
-            ? Formz.validate(
-          [state.swimSeason],
-        )
-            : Formz.validate(
-          [swimLevelModel, state.swimSeason],
+        isValid: Formz.validate(
+          [swimLevelModel],
         ),
       ),
     );

@@ -5,6 +5,7 @@ class SwimGeneratorState extends Equatable {
     this.activeStepperIndex = 0,
     this.isAdultCourse = false,
     this.swimLevel = const SwimLevel.empty(),
+    this.swimSeasonInfo = const SwimSeasonInfo.empty(),
     this.birthDay = const BirthDay.empty(),
     this.swimCourseInfo = const SwimCourseInfo.empty(),
     this.swimPools = const [],
@@ -17,6 +18,7 @@ class SwimGeneratorState extends Equatable {
   final int activeStepperIndex;
   final bool isAdultCourse;
   final SwimLevel swimLevel;
+  final SwimSeasonInfo swimSeasonInfo;
   final BirthDay birthDay;
   final SwimCourseInfo swimCourseInfo;
   final List<SwimPoolInfo> swimPools;
@@ -30,6 +32,7 @@ class SwimGeneratorState extends Equatable {
     bool? isAdultCourse,
     List<bool>? shouldUseFutureBuilderList,
     SwimLevel? swimLevel,
+    SwimSeasonInfo? swimSeasonInfo,
     BirthDay? birthDay,
     SwimCourseInfo? swimCourseInfo,
     List<SwimPoolInfo>? swimPools,
@@ -43,6 +46,7 @@ class SwimGeneratorState extends Equatable {
       activeStepperIndex: activeStepperIndex ?? this.activeStepperIndex,
       isAdultCourse: isAdultCourse ?? this.isAdultCourse,
       swimLevel: swimLevel ?? this.swimLevel,
+      swimSeasonInfo: swimSeasonInfo ?? this.swimSeasonInfo,
       birthDay: birthDay ?? this.birthDay,
       swimCourseInfo: swimCourseInfo ?? this.swimCourseInfo,
       swimPools: swimPools ?? this.swimPools,
@@ -55,15 +59,16 @@ class SwimGeneratorState extends Equatable {
 
   @override
   List<Object> get props => [
-        activeStepperIndex,
-        isAdultCourse,
-        swimLevel,
-        birthDay,
-        swimCourseInfo,
-        swimPools,
-        dateSelection,
-        kindPersonalInfo,
-        personalInfo,
-        configApp,
-      ];
+    activeStepperIndex,
+    isAdultCourse,
+    swimLevel,
+    swimSeasonInfo,
+    birthDay,
+    swimCourseInfo,
+    swimPools,
+    dateSelection,
+    kindPersonalInfo,
+    personalInfo,
+    configApp,
+  ];
 }

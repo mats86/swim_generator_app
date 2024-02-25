@@ -2,13 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:swim_generator_app/swim_generator/models/models.dart';
 import 'package:swim_generator_app/util/util_time.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 import '../../../cubit/swim_generator_cubit.dart';
 import '../bloc/swim_course_bloc.dart';
@@ -21,16 +20,6 @@ class SwimCourseForm extends StatefulWidget {
 }
 
 class _SwimCourseForm extends State<SwimCourseForm> {
-  //InAppWebViewController? webViewController;
-  final PlatformWebViewController _controller = PlatformWebViewController(
-    const PlatformWebViewControllerCreationParams(),
-  )..loadRequest(
-      LoadRequestParams(
-        uri: Uri.parse(
-            'https://wassermenschen-schwimmschulen.vercel.app/single-course?id=6594175775506258baab1304'),
-      ),
-    );
-
   @override
   void initState() {
     super.initState();
@@ -41,7 +30,7 @@ class _SwimCourseForm extends State<SwimCourseForm> {
         context
             .read<SwimGeneratorCubit>()
             .state
-            .swimLevel
+            .swimSeasonInfo
             .swimSeason!
             .refDate!));
     if (context
@@ -99,9 +88,7 @@ class _SwimCourseForm extends State<SwimCourseForm> {
               overflow: TextOverflow.visible,
             ),
           ),
-          _SwimCourseRadioButton(
-            controller: _controller,
-          ),
+          const _SwimCourseRadioButton(),
           //const Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -120,11 +107,7 @@ class _SwimCourseForm extends State<SwimCourseForm> {
 }
 
 class _SwimCourseRadioButton extends StatelessWidget {
-  final PlatformWebViewController controller;
-
-  const _SwimCourseRadioButton({
-    required this.controller,
-  });
+  const _SwimCourseRadioButton();
 
   @override
   Widget build(BuildContext context) {
@@ -192,13 +175,15 @@ class _SwimCourseRadioButton extends StatelessWidget {
                                         size: 20,
                                       ),
                                       onPressed: () {
-                                        context
-                                            .read<SwimCourseBloc>()
-                                            .add(WebPageLoading());
+                                        // context
+                                        //     .read<SwimCourseBloc>()
+                                        //     .add(WebPageLoading());
 
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
+                                            print('Obbb');
+                                            print(state.swimCourseOptions[index].swimCourseUrl);
                                             return AlertDialog(
                                               title: Text(state
                                                   .swimCourseOptions[index]
@@ -212,13 +197,19 @@ class _SwimCourseRadioButton extends StatelessWidget {
                                                   : SizedBox(
                                                       height: 400,
                                                       width: 425,
-                                                      child:
-                                                          PlatformWebViewWidget(
-                                                        PlatformWebViewWidgetCreationParams(
-                                                          controller:
-                                                              controller,
-                                                        ),
-                                                      ).build(context),
+                                                      child: InAppWebView(
+                                                        initialUrlRequest: URLRequest(
+                                                            url: WebUri(state
+                                                                .swimCourseOptions[
+                                                                    index]
+                                                                .swimCourseUrl!)),
+                                                      ),
+                                                      // PlatformWebViewWidget(
+                                                      // PlatformWebViewWidgetCreationParams(
+                                                      //   controller:
+                                                      //       controller,
+                                                      // ),
+                                                      // ).build(context),
                                                     ),
                                               actions: <Widget>[
                                                 TextButton(

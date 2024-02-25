@@ -54,43 +54,43 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute:
-      '/?ref=allgaeu', // /db_fix_date?ref=50&code=40    '/?ref=10&code=10'
+      '/', // /db_fix_date?ref=50&code=40    '/?ref=10&code=10'
       onGenerateRoute: _generateRoute,
       debugShowCheckedModeBanner: false,
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.flutterDash,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 7,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 10,
-          blendOnColors: false,
-          useTextTheme: true,
-          alignedDropdown: true,
-          useInputDecoratorThemeInDialogs: true,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: false,
-        // To use the Playground font, add GoogleFonts package and uncomment
-        // fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.flutterDash,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 13,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          useTextTheme: true,
-          alignedDropdown: true,
-          useInputDecoratorThemeInDialogs: true,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: false,
-        // To use the Playground font, add GoogleFonts package and uncomment
-        // fontFamily: GoogleFonts.notoSans().fontFamily,
-      ),
-      // theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
-      // // The Mandy red, dark theme.
-      // darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
+      // theme: FlexThemeData.light(
+      //   scheme: FlexScheme.flutterDash,
+      //   surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+      //   blendLevel: 7,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 10,
+      //     blendOnColors: false,
+      //     useTextTheme: true,
+      //     alignedDropdown: true,
+      //     useInputDecoratorThemeInDialogs: true,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: false,
+      //   // To use the Playground font, add GoogleFonts package and uncomment
+      //   // fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+      // darkTheme: FlexThemeData.dark(
+      //   scheme: FlexScheme.flutterDash,
+      //   surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+      //   blendLevel: 13,
+      //   subThemesData: const FlexSubThemesData(
+      //     blendOnLevel: 20,
+      //     useTextTheme: true,
+      //     alignedDropdown: true,
+      //     useInputDecoratorThemeInDialogs: true,
+      //   ),
+      //   visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      //   useMaterial3: false,
+      //   // To use the Playground font, add GoogleFonts package and uncomment
+      //   // fontFamily: GoogleFonts.notoSans().fontFamily,
+      // ),
+      theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
+      // The Mandy red, dark theme.
+      darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
       // Use dark or light theme based on system setting.
       themeMode: ThemeMode.light,
     );
@@ -265,45 +265,45 @@ class MyHomePage extends StatelessWidget {
   static List<int> _generateOrder(SpecialFeatureMode mode) {
     switch (mode) {
       case SpecialFeatureMode.codeKidsCourse:
-        return [0, 1, 5, 6, 7];
+        return [0, 1, 5, 6, 7, 8];
       case SpecialFeatureMode.codeAdultsCourse:
         return [0, 1, 6, 7];
       case SpecialFeatureMode.minis:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.modul0:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.schnupperModul:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.basic_3x3:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.seepferdchenFerienPfingsten:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.seepferdchenFerienSommer:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.betterSwim:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.betterSwim2:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.summerClass:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.privatkursKind:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.privatkursErwachsen:
-        return [0, 1, 3, 5, 6, 7];
+        return [1, 2, 5, 6, 7, 8];
       case SpecialFeatureMode.privatkursKind2:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.privatkursErwachsen2:
-        return [0, 1, 3, 5, 6, 7];
+        return [1, 2, 5, 6, 7, 8];
       case SpecialFeatureMode.freundes3Kurs:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.freundes3Kurs2:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.elternKindKurs:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       case SpecialFeatureMode.elternLehrenSwim:
-        return [0, 1, 3, 4, 5, 6, 7];
+        return [1, 2, 4, 5, 6, 7, 8];
       default:
-        return [0, 1, 2, 3, 4, 5, 6, 7]; // default
+        return [0, 1, 2, 3, 4, 5, 6, 7, 8]; // default
     }
   }
 

@@ -23,9 +23,7 @@ class SwimSeason {
         swimSeasonEnum = SwimSeasonEnum.UNDEFINED;
 
   bool get isEmpty {
-    return name.isEmpty &&
-        //refDate == null &&
-        swimSeasonEnum == SwimSeasonEnum.UNDEFINED;
+    return name.isEmpty && swimSeasonEnum == SwimSeasonEnum.UNDEFINED;
   }
 }
 

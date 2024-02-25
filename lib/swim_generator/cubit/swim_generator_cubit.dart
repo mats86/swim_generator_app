@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swim_generator_app/swim_generator/models/config_app.dart';
 import 'package:swim_generator_app/swim_generator/models/date_selection.dart';
 import 'package:swim_generator_app/swim_generator/models/school_info.dart';
+import 'package:swim_generator_app/swim_generator/models/swim_season_info.dart';
 
 import '../models/models.dart';
-import '../pages/swim_level/models/models.dart';
+import '../pages/swim_season/models/swim_season.dart';
 
 part 'swim_generator_state.dart';
 
@@ -40,12 +41,16 @@ class SwimGeneratorCubit extends Cubit<SwimGeneratorState> {
     }
   }
 
-  void updateSwimLevel(SwimLevelEnum? swimLevel, SwimSeason? swimSeason) {
+  void updateSwimLevel(SwimLevelEnum? swimLevel) {
     emit(state.copyWith(
         swimLevel: state.swimLevel.copyWith(
           swimLevel: swimLevel,
-          swimSeason: swimSeason,
         )));
+  }
+
+  void updateSwimSeasonInfo(SwimSeason? swimSeason) {
+    emit(state.copyWith(
+        swimSeasonInfo: state.swimSeasonInfo.copyWith(swimSeason: swimSeason)));
   }
 
   void updateBirthDay(DateTime? birthDay) {

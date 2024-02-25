@@ -1,24 +1,17 @@
 import 'package:equatable/equatable.dart';
 
-import '../pages/swim_level/models/models.dart';
-
 class SwimLevel extends Equatable {
   final SwimLevelEnum? swimLevel;
-  final SwimSeason? swimSeason;
 
   const SwimLevel({
     this.swimLevel,
-    this.swimSeason,
   });
 
-  const SwimLevel.empty()
-      : swimLevel = SwimLevelEnum.UNDEFINED,
-        swimSeason = const SwimSeason.empty();
+  const SwimLevel.empty() : swimLevel = SwimLevelEnum.UNDEFINED;
 
-  SwimLevel copyWith({SwimLevelEnum? swimLevel, SwimSeason? swimSeason}) {
+  SwimLevel copyWith({SwimLevelEnum? swimLevel}) {
     return SwimLevel(
       swimLevel: swimLevel ?? this.swimLevel,
-      swimSeason: swimSeason ?? this.swimSeason,
     );
   }
 
@@ -31,10 +24,14 @@ class SwimLevel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [swimLevel, swimSeason];
+  List<Object?> get props => [swimLevel];
 }
 
-enum SwimLevelEnum {EINSTEIGERKURS, AUFSTEIGERKURS, UNDEFINED, }
+enum SwimLevelEnum {
+  EINSTEIGERKURS,
+  AUFSTEIGERKURS,
+  UNDEFINED,
+}
 
 SwimLevelEnum valueOf(int index) {
   return SwimLevelEnum.values[index];

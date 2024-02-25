@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
@@ -94,7 +96,10 @@ class _BirthDayForm extends State<BirthDayForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          BirthDataInputNew(
+          // BirthDataInputNew(
+          //   controller: _birthDayController,
+          // ),
+          BirthDataInputNewTip(
             controller: _birthDayController,
           ),
           const SizedBox(
@@ -113,13 +118,13 @@ class _BirthDayForm extends State<BirthDayForm> {
               ),
               Expanded(
                   child: _SubmitButton(
-                    swimCourseID: widget.swimCourseID,
-                    isDirectLinks: context
-                        .read<SwimGeneratorCubit>()
-                        .state
-                        .configApp
-                        .isDirectLinks,
-                  ))
+                swimCourseID: widget.swimCourseID,
+                isDirectLinks: context
+                    .read<SwimGeneratorCubit>()
+                    .state
+                    .configApp
+                    .isDirectLinks,
+              ))
             ],
           )
         ],
@@ -258,7 +263,7 @@ class BirthDataInputNew extends StatelessWidget {
             labelText: 'Geburtstag des Schwimmschülers *',
             labelStyle: const TextStyle(fontSize: 14),
             errorText:
-            state.birthDay.isValid ? null : state.birthDay.error?.message,
+                state.birthDay.isValid ? null : state.birthDay.error?.message,
             suffixIcon: const Icon(Icons.calendar_today),
           ),
         );
@@ -267,10 +272,11 @@ class BirthDataInputNew extends StatelessWidget {
   }
 }
 
-class BirthDataInputMulti extends StatelessWidget {
+class BirthDataInputNewTip extends StatelessWidget {
   final TextEditingController controller;
 
-  const BirthDataInputMulti({super.key,
+  const BirthDataInputNewTip({
+    super.key,
     required this.controller,
   });
 
@@ -279,94 +285,115 @@ class BirthDataInputMulti extends StatelessWidget {
     return BlocBuilder<BirthDayBloc, BirthDayState>(
       buildWhen: (previous, current) => previous.birthDay != current.birthDay,
       builder: (context, state) {
-        return TextFormField(
-          key: const Key('personalInfoForm_birthDayInput_textField'),
-          controller: controller,
-          readOnly: true,
-          onTap: () async {
-            // Starten Sie den Dialog und warten Sie auf das Ergebnis
-            final List<DateTime>? selectedDates =
-            await showDialog<List<DateTime>>(
-              context: context,
-              builder: (BuildContext context) {
-                // Initialisieren Sie eine temporäre Liste für ausgewählte Daten innerhalb des Dialogs
-                List<DateTime> tempSelectedDates = [];
-                return StatefulBuilder(
-                  builder: (context, setState) {
+        return Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                onChanged: (value) {
+                  final RegExp dateFormat =
+                      RegExp(r'^[0-3][0-9]\.[0-1][0-9]\.[0-9]{4}$');
+                  if (dateFormat.hasMatch(value)) {
+                    context.read<BirthDayBloc>().add(
+                        BirthDayChanged(DateFormat('dd.MM.yyyy').parse(value)));
+                  }
+                },
+                key: const Key('personalInfoForm_birthDayInput_textField'),
+                controller: controller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  _DateInputFormatter(),
+                ],
+                decoration: InputDecoration(
+                  label: const FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Geburtstag des Schwimmschülers',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(3.0),
+                        ),
+                        Text('*', style: TextStyle(color: Colors.red, fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                  errorText: state.birthDay.displayError != null
+                      ? state.birthDay.error?.message
+                      : null,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
                     return AlertDialog(
-                      title: const Text('Wählen Sie bis zu 3 Tage'),
+                      title: const Text('Wähle ein Geburtstagsdatum aus'),
                       content: SizedBox(
-                        height: 400,
+                        height: 300,
+                        width: 300,
                         child: SfDateRangePicker(
-                          onSelectionChanged:
-                              (DateRangePickerSelectionChangedArgs args) {
-                            if (args.value is List<DateTime>) {
-                              tempSelectedDates = args.value;
-                              setState(() {});
+                          selectionMode: DateRangePickerSelectionMode.single,
+                          selectionColor: Colors.lightBlueAccent,
+                          initialSelectedDate: DateTime.now(),
+                          maxDate: DateTime.now(),
+                          initialDisplayDate: DateTime(DateTime.now().year - 4),
+                          showActionButtons: true,
+                          cancelText: 'Abrechen',
+                          onSubmit: (Object? value) {
+                            Navigator.of(dialogContext).pop();
+                            if (value is DateTime) {
+                              controller.text =
+                                  DateFormat('dd.MM.yyyy').format(value);
+                              context
+                                  .read<BirthDayBloc>()
+                                  .add(BirthDayChanged(value));
                             }
                           },
-                          selectionMode: DateRangePickerSelectionMode.multiple,
-                          initialSelectedDate: DateTime.now(),
+                          onCancel: () => Navigator.of(dialogContext).pop(),
                         ),
                       ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Abbrechen'),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        TextButton(
-                          onPressed: tempSelectedDates.length == 3
-                              ? () {
-                            Navigator.of(context).pop(tempSelectedDates);
-                          }
-                              : null,
-                          child: const Text('OK'),
-                        ),
-                      ],
                     );
                   },
                 );
               },
-            );
-            if (selectedDates != null && selectedDates.length == 3) {
-              controller.text = selectedDates
-                  .map((date) => DateFormat('dd.MM.yyyy').format(date))
-                  .join(', ');
-            } else {
-              if ( context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Aktion abgebrochen oder ungültige Auswahl')),
-                );
-              }
-            }
-          },
-          keyboardType: TextInputType.datetime,
-          decoration: InputDecoration(
-            label: const FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Row(
-                children: [
-                  Text(
-                    'Geburtstag des Schwimmschülers',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(3.0),
-                  ),
-                  Text(
-                    '*',
-                    style: TextStyle(color: Colors.red, fontSize: 14),
-                  ),
-                ],
+              icon: const Icon(
+                Icons.calendar_today,
+                size: 30,
               ),
-            ),
-            errorText:
-            state.birthDay.isValid ? state.birthDay.error?.message : null,
-          ),
+            )
+          ],
         );
       },
     );
+  }
+}
+
+class _DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final int newTextLength = newValue.text.length;
+    final int oldTextLength = oldValue.text.length;
+
+    if (newTextLength > oldTextLength) {
+      if (newTextLength == 2 || newTextLength == 5) {
+        return TextEditingValue(
+          text: '${newValue.text}.',
+          selection: newValue.selection.copyWith(
+            baseOffset: newValue.selection.baseOffset + 1,
+            extentOffset: newValue.selection.extentOffset + 1,
+          ),
+        );
+      }
+    }
+
+    return newValue;
   }
 }
 
@@ -383,7 +410,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<BirthDayBloc, BirthDayState>(
       listenWhen: (previous, current) =>
-      previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus,
       listener: (context, state) {
         if (state.submissionStatus.isSuccess) {
           context.read<SwimGeneratorCubit>().stepContinued();
@@ -403,35 +430,35 @@ class _SubmitButton extends StatelessWidget {
         }
       },
       buildWhen: (previous, current) =>
-      previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
         final isValid =
-        context.select((BirthDayBloc bloc) => bloc.state.isValid);
+            context.select((BirthDayBloc bloc) => bloc.state.isValid);
         return state.submissionStatus.isInProgress
             ? const SpinKitWaveSpinner(
-          color: Colors.lightBlueAccent,
-          size: 50.0,
-        )
+                color: Colors.lightBlueAccent,
+                size: 50.0,
+              )
             : ElevatedButton(
-          key: const Key(
-              'kindPersonalInfoForm_submitButton_elevatedButton'),
-          style: ElevatedButton.styleFrom(
-              elevation: 0, backgroundColor: Colors.lightBlueAccent),
-          onPressed: isValid
-              ? () => context.read<BirthDayBloc>().add(FormSubmitted(
-            swimCourseID,
-            isDirectLinks,
-          ))
-              : null,
-          child: const Text(
-            'Weiter',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        );
+                key: const Key(
+                    'kindPersonalInfoForm_submitButton_elevatedButton'),
+                style: ElevatedButton.styleFrom(
+                    elevation: 0, backgroundColor: Colors.lightBlueAccent),
+                onPressed: isValid
+                    ? () => context.read<BirthDayBloc>().add(FormSubmitted(
+                          swimCourseID,
+                          isDirectLinks,
+                        ))
+                    : null,
+                child: const Text(
+                  'Weiter',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
       },
     );
   }
@@ -442,17 +469,17 @@ class _CancelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BirthDayBloc, BirthDayState>(
         buildWhen: (previous, current) =>
-        previous.submissionStatus != current.submissionStatus,
+            previous.submissionStatus != current.submissionStatus,
         builder: (context, state) {
           return state.submissionStatus.isInProgress
               ? const SizedBox.shrink()
               : TextButton(
-            key: const Key(
-                'kindPersonalInfoForm_cancelButton_elevatedButton'),
-            onPressed: () =>
-                context.read<SwimGeneratorCubit>().stepCancelled(),
-            child: const Text('Zurück'),
-          );
+                  key: const Key(
+                      'kindPersonalInfoForm_cancelButton_elevatedButton'),
+                  onPressed: () =>
+                      context.read<SwimGeneratorCubit>().stepCancelled(),
+                  child: const Text('Zurück'),
+                );
         });
   }
 }

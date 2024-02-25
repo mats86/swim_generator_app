@@ -18,7 +18,7 @@ class SwimGeneratorPage extends StatelessWidget {
     super.key,
     required this.graphQLClient,
     required this.title,
-    this.order = const [0, 1, 2, 3, 4, 5, 6],
+    this.order = const [0, 1, 2, 3, 4, 5, 6, 7, 8],
     this.swimCourseID = 0,
     this.isDirectLinks = true,
     this.schoolInfo = const SchoolInfo(),
