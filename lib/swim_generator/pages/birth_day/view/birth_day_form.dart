@@ -315,7 +315,8 @@ class BirthDataInputNewTip extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.all(3.0),
                         ),
-                        Text('*', style: TextStyle(color: Colors.red, fontSize: 14)),
+                        Text('*',
+                            style: TextStyle(color: Colors.red, fontSize: 14)),
                       ],
                     ),
                   ),
@@ -340,7 +341,11 @@ class BirthDataInputNewTip extends StatelessWidget {
                           selectionColor: Colors.lightBlueAccent,
                           initialSelectedDate: DateTime.now(),
                           maxDate: DateTime.now(),
-                          initialDisplayDate: DateTime(DateTime.now().year - 4),
+                          initialDisplayDate: DateTime(
+                            DateTime.now().year - 1,
+                            DateTime.now().month,
+                            DateTime.now().day,
+                          ),
                           showActionButtons: true,
                           cancelText: 'Abrechen',
                           onSubmit: (Object? value) {
