@@ -341,7 +341,7 @@ class DesiredDateTimeText extends StatelessWidget {
   }
 }
 
-class BirthDataInputMulti extends StatelessWidget {
+class BirthDataInputMulti extends StatefulWidget {
   final TextEditingController dateController1;
   final TextEditingController dateController2;
   final TextEditingController dateController3;
@@ -353,6 +353,10 @@ class BirthDataInputMulti extends StatelessWidget {
     required this.dateController3,
   });
 
+  @override
+  _MyCustomDialogState createState() => _MyCustomDialogState();
+}
+class _BirthDataInputMulti extends State<MyCustomDialog> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DateSelectionBloc, DateSelectionState>(
@@ -393,32 +397,47 @@ class BirthDataInputMulti extends StatelessWidget {
                           height: 300,
                           width: 300,
                           child: SfDateRangePicker(
-                              showActionButtons: true,
-                              cancelText: 'Abrechen',
-                              onSubmit: (Object? value) {
-                                Navigator.of(context).pop();
-                                if (value is List<DateTime>) {
-                                  tempSelectedDates = value;
-                                  tempSelectedDates
-                                      .sort((a, b) => a.compareTo(b));
-                                  dateController1.text =
-                                      DateFormat('dd.MM.yyyy')
-                                          .format(tempSelectedDates[0]);
-                                  dateController2.text =
-                                      DateFormat('dd.MM.yyyy')
-                                          .format(tempSelectedDates[1]);
-                                  dateController3.text =
-                                      DateFormat('dd.MM.yyyy')
-                                          .format(tempSelectedDates[2]);
-                                  setState(() {});
-                                }
-                              },
-                              onCancel: () => Navigator.of(context).pop(),
-                              selectionMode:
-                                  DateRangePickerSelectionMode.multiple,
-                              initialSelectedDate: DateTime.now(),
-                              enablePastDates: false),
+                            showActionButtons: true,
+                            cancelText: 'Abbrechen',
+                            onSubmit: (Object? value) {
+                              if (value is List<DateTime> &&
+                                  value.length == 3) {
+                                // Nur fortfahren, wenn genau 3 Tage ausgewählt sind
+                                tempSelectedDates = value;
+                                tempSelectedDates
+                                    .sort((a, b) => a.compareTo(b));
+
+                                // Zuweisung der ausgewählten Daten zu den Textfeldern
+                                dateController1.text = DateFormat('dd.MM.yyyy')
+                                    .format(tempSelectedDates[0]);
+                                dateController2.text = DateFormat('dd.MM.yyyy')
+                                    .format(tempSelectedDates[1]);
+                                dateController3.text = DateFormat('dd.MM.yyyy')
+                                    .format(tempSelectedDates[2]);
+
+                                Navigator.of(context).pop(); // Dialog schließen
+                                setState(() {});
+                              } else {
+                                // Anzeigen einer Benachrichtigung oder Aktualisierung des UI, um den Benutzer zu informieren
+                              }
+                            },
+                            onCancel: () => Navigator.of(context).pop(),
+                            selectionMode:
+                                DateRangePickerSelectionMode.multiple,
+                            initialSelectedDate: DateTime.now(),
+                            enablePastDates: false,
+                          ),
                         ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Abbrechen'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: selectedDates.length == 3 ? () => _submitSelection() : null,
+                          ),
+                        ],
                       );
                     },
                   );
@@ -431,6 +450,7 @@ class BirthDataInputMulti extends StatelessWidget {
       },
     );
   }
+
 }
 
 class DesiredDateTimeInput extends StatelessWidget {
@@ -502,16 +522,15 @@ class DesiredDateTimeInput extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: IgnorePointer(
-                          child: TextField(
-                            controller: dateController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Datum',
-                            ),
+                          child: IgnorePointer(
+                        child: TextField(
+                          controller: dateController,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Datum',
                           ),
-                        )
-                      ),
+                        ),
+                      )),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
